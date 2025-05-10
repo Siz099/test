@@ -1,27 +1,121 @@
 "use client"
 
-import { useState } from "react"
-import { Form, Input, Button, message } from "antd"
-import { UserOutlined, MailOutlined, LockOutlined } from "@ant-design/icons"
-import { Link, useNavigate } from "react-router-dom"
+import { useState, forwardRef, useImperativeHandle } from "react"
+// import { useNavigate } from "react-router-dom"
 import { authApi } from "../../api/authApi"
 import { setToken } from "../../utils/auth"
 import "../../styles/RegisterForm.css"
 
-const RegisterForm = () => {
+const RegisterForm = forwardRef(({ onLoginClick }, ref) => {
   const [loading, setLoading] = useState(false)
-  const navigate = useNavigate()
+  // const navigate = useNavigate()
 
-  const onFinish = async (values) => {
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    mobile: "",
+    password: "",
+    confirmPassword: "",
+    company: "",
+  })
+
+  const [errors, setErrors] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    mobile: "",
+    password: "",
+    confirmPassword: "",
+    company: "",
+  })
+
+  // Expose methods to parent component
+  useImperativeHandle(ref, () => ({
+    resetErrors: () => {
+      setErrors({
+        firstName: "",
+        lastName: "",
+        email: "",
+        mobile: "",
+        password: "",
+        confirmPassword: "",
+        company: "",
+      })
+    },
+  }))
+
+  const handleChange = (e) => {
+    const { name, value } = e.target
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }))
+
+    // Clear error for this field when user types
+    if (errors[name]) {
+      setErrors((prev) => ({
+        ...prev,
+        [name]: "",
+      }))
+    }
+  }
+
+  const validateField = (name, value) => {
+    switch (name) {
+      case "firstName":
+        return value ? "" : "Enter your First Name"
+      case "lastName":
+        return value ? "" : "Enter Your Last Name"
+      case "email":
+        return value ? "" : "Enter your Email"
+      case "mobile":
+        return value ? "" : "Enter Your Contact Number"
+      case "password":
+        return value ? "" : "Enter Your Password"
+      case "confirmPassword":
+        return value ? (value === formData.password ? "" : "Passwords do not match") : "Confirm Password"
+      case "company":
+        return value ? "" : "Enter Your Company Name"
+      default:
+        return ""
+    }
+  }
+
+  const handleBlur = (e) => {
+    const { name, value } = e.target
+    const errorMessage = validateField(name, value)
+    setErrors((prev) => ({
+      ...prev,
+      [name]: errorMessage,
+    }))
+  }
+
+  const onSubmit = async (e) => {
+    e.preventDefault()
+
+    // Validate all fields
+    const newErrors = {}
+    let hasError = false
+
+    Object.keys(formData).forEach((key) => {
+      const errorMessage = validateField(key, formData[key])
+      newErrors[key] = errorMessage
+      if (errorMessage) hasError = true
+    })
+
+    setErrors(newErrors)
+
+    if (hasError) return
+
     setLoading(true)
     try {
-      const response = await authApi.register(values)
+      const response = await authApi.register(formData)
       setToken(response.token)
-      message.success("Registration successful!")
-      navigate("/login")
+      // Instead of navigating, we'll switch to the login form
+      onLoginClick()
     } catch (error) {
       console.error("Registration error:", error)
-      message.error(error.response?.data?.message || "Registration failed. Please try again.")
     } finally {
       setLoading(false)
     }
@@ -29,63 +123,147 @@ const RegisterForm = () => {
 
   return (
     <div className="register-form-container">
-      <h2 className="register-title">Create an account</h2>
+      <h2 className="register-title">Sign up into your account</h2>
 
-      <Form name="register" initialValues={{ remember: true }} onFinish={onFinish} layout="vertical" size="large">
-        <Form.Item name="name" rules={[{ required: true, message: "Please input your name!" }]}>
-          <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Full Name" />
-        </Form.Item>
+      <form onSubmit={onSubmit} className="register-form">
+        <div className="form-row">
+          <div className="form-col">
+            <label htmlFor="firstName">First Name :</label>
+            <div className="input-container">
+              <input
+                type="text"
+                id="firstName"
+                name="firstName"
+                value={formData.firstName}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                placeholder="Enter your name..."
+                className="form-input"
+              />
+              {errors.firstName && <div className="field-error">{errors.firstName}</div>}
+            </div>
+          </div>
 
-        <Form.Item
-          name="email"
-          rules={[
-            { required: true, message: "Please input your email!" },
-            { type: "email", message: "Please enter a valid email!" },
-          ]}
-        >
-          <Input prefix={<MailOutlined className="site-form-item-icon" />} placeholder="Email" />
-        </Form.Item>
+          <div className="form-col">
+            <label htmlFor="lastName">Last Name :</label>
+            <div className="input-container">
+              <input
+                type="text"
+                id="lastName"
+                name="lastName"
+                value={formData.lastName}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                placeholder="Enter your name..."
+                className="form-input"
+              />
+              {errors.lastName && <div className="field-error">{errors.lastName}</div>}
+            </div>
+          </div>
+        </div>
 
-        <Form.Item
-          name="password"
-          rules={[
-            { required: true, message: "Please input your password!" },
-            { min: 6, message: "Password must be at least 6 characters!" },
-          ]}
-        >
-          <Input.Password prefix={<LockOutlined className="site-form-item-icon" />} placeholder="Password" />
-        </Form.Item>
+        <div className="form-row">
+          <div className="form-col">
+            <label htmlFor="email">Email ID :</label>
+            <div className="input-container">
+              <input
+                type="email"
+                id="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                placeholder="info@xyz.com"
+                className="form-input"
+              />
+              {errors.email && <div className="field-error">{errors.email}</div>}
+            </div>
+          </div>
 
-        <Form.Item
-          name="confirmPassword"
-          dependencies={["password"]}
-          rules={[
-            { required: true, message: "Please confirm your password!" },
-            ({ getFieldValue }) => ({
-              validator(_, value) {
-                if (!value || getFieldValue("password") === value) {
-                  return Promise.resolve()
-                }
-                return Promise.reject(new Error("The two passwords do not match!"))
-              },
-            }),
-          ]}
-        >
-          <Input.Password prefix={<LockOutlined className="site-form-item-icon" />} placeholder="Confirm Password" />
-        </Form.Item>
+          <div className="form-col">
+            <label htmlFor="mobile">Mobile No. :</label>
+            <div className="input-container">
+              <input
+                type="text"
+                id="mobile"
+                name="mobile"
+                value={formData.mobile}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                placeholder="+977 - 98596 58000"
+                className="form-input"
+              />
+              {errors.mobile && <div className="field-error">{errors.mobile}</div>}
+            </div>
+          </div>
+        </div>
 
-        <Form.Item>
-          <Button type="primary" htmlType="submit" className="register-button" loading={loading}>
-            Register now
-          </Button>
-        </Form.Item>
+        <div className="form-row">
+          <div className="form-col">
+            <label htmlFor="password">Password :</label>
+            <div className="input-container">
+              <input
+                type="password"
+                id="password"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                placeholder="xxxxxxxxxx"
+                className="form-input"
+              />
+              {errors.password && <div className="field-error">{errors.password}</div>}
+            </div>
+          </div>
+
+          <div className="form-col">
+            <label htmlFor="confirmPassword">Confirm Password :</label>
+            <div className="input-container">
+              <input
+                type="password"
+                id="confirmPassword"
+                name="confirmPassword"
+                value={formData.confirmPassword}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                placeholder="xxxxxxxxxx"
+                className="form-input"
+              />
+              {errors.confirmPassword && <div className="field-error">{errors.confirmPassword}</div>}
+            </div>
+          </div>
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="company">Company Name :</label>
+          <div className="input-container">
+            <input
+              type="text"
+              id="company"
+              name="company"
+              value={formData.company}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              placeholder="Enter company name ..."
+              className="form-input"
+            />
+            {errors.company && <div className="field-error">{errors.company}</div>}
+          </div>
+        </div>
+
+        <button type="submit" className="register-button" disabled={loading}>
+          {loading ? "Signing up..." : "Sign up"}
+        </button>
 
         <div className="login-link">
-          Already have an account? <Link to="/login">Login</Link>
+          Already have an account?{" "}
+          <button type="button" className="text-link" onClick={onLoginClick}>
+            Login
+          </button>
         </div>
-      </Form>
+      </form>
     </div>
   )
-}
+})
 
-export default RegisterForm;
+export default RegisterForm

@@ -1,16 +1,31 @@
+:root {
+  --slide-direction: 100%;
+}
+
 .register-page {
-  min-height: 100vh;
+  width: 100%;
+  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
   background-color: #f5f5f5;
   padding: 20px;
+  opacity: 0;
+  transform: translateX(var(--slide-direction));
+  transition: none;
+}
+
+.register-page.animate-in {
+  opacity: 1;
+  transform: translateX(0);
+  transition: opacity 0.5s ease, transform 0.5s ease;
 }
 
 .register-container {
   display: flex;
+  flex-direction: row;
   width: 100%;
-  max-width: 900px;
+  height: 100%;
   background: white;
   border-radius: 10px;
   overflow: hidden;
@@ -19,9 +34,7 @@
 
 .register-left {
   flex: 1;
-  background-color: white;
   padding: 40px;
-  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -29,33 +42,26 @@
 
 .register-right {
   flex: 1;
-  padding: 40px;
+  background-color: #f0f0ff;
   display: flex;
   justify-content: center;
   align-items: center;
+  overflow: hidden;
 }
 
 .register-illustration {
-  position: relative;
-  width: 100%;
-  height: 400px;
-}
-
-.register-graphic {
-  /* Placeholder for register illustration */
   width: 100%;
   height: 100%;
-  background-color: #f0f0f0;
-  border-radius: 10px;
   display: flex;
   justify-content: center;
   align-items: center;
-  position: relative;
+  padding: 20px;
 }
 
-.register-graphic::after {
-  content: "Register Illustration";
-  color: #999;
+.signup-illustration-image {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
 }
 
 /* Responsive styles */
@@ -64,11 +70,11 @@
     flex-direction: column;
   }
 
-  .register-left {
+  .register-right {
     display: none;
   }
 
-  .register-right {
+  .register-left {
     padding: 20px;
   }
 }

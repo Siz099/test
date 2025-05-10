@@ -1,6 +1,7 @@
 import LoginForm from "../components/auth/loginForm"
 import "../styles/Login.css"
 
+
 const Login = () => {
   return (
     <div className="login-page">
@@ -35,7 +36,8 @@ const Login = () => {
 
             {/* People */}
             <div className="people">
-              <img src="https://via.placeholder.com/120" alt="People looking at phone" />
+              <img src="../images/login-illustration.png" alt="Login illustration" />
+
             </div>
           </div>
         </div>
@@ -48,3 +50,4 @@ const Login = () => {
 }
 
 export default Login;
+

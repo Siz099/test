@@ -1,6 +1,10 @@
 import React from "react"
 import ReactDOM from "react-dom/client"
 import "./styles/index.css"
+// Import Ant Design CSS directly in JavaScript instead
+//import "antd/dist/antd.css" // For Ant Design v4
+// If you're using Ant Design v5, use this instead:
+import "antd/dist/reset.css"
 import App from "./App"
 import reportWebVitals from "./reportWebVitals"
 

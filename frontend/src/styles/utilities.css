@@ -1,47 +1,4 @@
-@import "../styles/utilities.css";
-/* Remove the tilde import that's causing the error */
-/* @import "~antd/dist/antd.css"; */
-
-.App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-/* Add Tailwind-like utility classes */
+/* Utility classes (Tailwind-like) */
 .min-h-screen {
   min-height: 100vh;
 }
@@ -72,6 +29,10 @@
 
 .max-w-5xl {
   max-width: 64rem;
+}
+
+.max-w-md {
+  max-width: 28rem;
 }
 
 .bg-white {
@@ -145,29 +106,25 @@
 .opacity-50 {
   opacity: 0.5;
 }
-/* \
-.-translate-x-1/2 {
+
+.-translate-x-1\/2 {
   transform: translateX(-50%);
 }
 
-.-translate-y-1/2 {
+.-translate-y-1\/2 {
   transform: translateY(-50%);
 }
 
-.translate-x-1/2 {
+.translate-x-1\/2 {
   transform: translateX(50%);
 }
 
-.translate-y-1/2 {
+.translate-y-1\/2 {
   transform: translateY(50%);
-} */
+}
 
 .h-full {
   height: 100%;
-}
-
-.max-w-md {
-  max-width: 28rem;
 }
 
 .h-\[400px\] {
@@ -509,50 +466,4 @@
   .md\:w-1\/2 {
     width: 50%;
   }
-}
-
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans",
-    "Droid Sans", "Helvetica Neue", sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
-}
-
-/* Override Ant Design styles */
-.ant-form-item-label > label {
-  color: #333;
-  font-weight: 500;
-}
-
-.ant-input-affix-wrapper {
-  border-radius: 4px;
-  border: 1px solid #e0e0e0;
-}
-
-.ant-input-affix-wrapper:hover {
-  border-color: #d0d0d0;
-}
-
-.ant-input-affix-wrapper-focused {
-  border-color: #1890ff;
-  box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
-}
-
-.ant-btn-primary {
-  background-color: #c0c0c0;
-  border-color: #c0c0c0;
-}
-
-.ant-btn-primary:hover {
-  background-color: #a0a0a0;
-  border-color: #a0a0a0;
-}
-
-.ant-divider-inner-text {
-  color: #999;
 }
