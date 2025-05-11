@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, forwardRef, useImperativeHandle } from "react"
-// import { useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import { authApi } from "../../api/authApi"
 import { setToken } from "../../utils/auth"
 import "../../styles/LoginForm.css"
@@ -11,7 +11,7 @@ const LoginForm = forwardRef(({ onSignupClick }, ref) => {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [error, setError] = useState("")
-  // const navigate = useNavigate()
+  const navigate = useNavigate()
 
   // Expose methods to parent component
   useImperativeHandle(ref, () => ({
@@ -25,7 +25,7 @@ const LoginForm = forwardRef(({ onSignupClick }, ref) => {
     setError("")
 
     if (!email || !password) {
-      setError("Invalid username or password")
+      setError("Please enter both email and password")
       return
     }
 
@@ -34,11 +34,28 @@ const LoginForm = forwardRef(({ onSignupClick }, ref) => {
       const response = await authApi.login({ email, password })
       setToken(response.token)
       console.log("Login successful:", response)
-      // You would typically redirect here
+
+      // Redirect to dashboard or home page
       // navigate("/dashboard")
     } catch (error) {
       console.error("Login error:", error)
-      setError("Invalid username or password")
+
+      // Handle different types of errors
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        if (error.response.status === 401) {
+          setError("Invalid username or password")
+        } else {
+          setError("Login failed. Please try again later.")
+        }
+      } else if (error.request) {
+        // The request was made but no response was received
+        setError("No response from server. Please check your connection.")
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        setError("An error occurred. Please try again.")
+      }
     } finally {
       setLoading(false)
     }
@@ -117,7 +134,7 @@ const LoginForm = forwardRef(({ onSignupClick }, ref) => {
 
         <div className="form-footer">
           {error && <span className="error-message">{error}</span>}
-          <a href="/" className="forgot-password">
+          <a href="#" className="forgot-password">
             Forgot password?
           </a>
         </div>

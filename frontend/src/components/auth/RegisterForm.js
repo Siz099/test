@@ -1,14 +1,14 @@
 "use client"
 
 import { useState, forwardRef, useImperativeHandle } from "react"
-// import { useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import { authApi } from "../../api/authApi"
-import { setToken } from "../../utils/auth"
 import "../../styles/RegisterForm.css"
 
 const RegisterForm = forwardRef(({ onLoginClick }, ref) => {
   const [loading, setLoading] = useState(false)
-  // const navigate = useNavigate()
+  const [apiError, setApiError] = useState("")
+  const navigate = useNavigate()
 
   const [formData, setFormData] = useState({
     firstName: "",
@@ -42,6 +42,7 @@ const RegisterForm = forwardRef(({ onLoginClick }, ref) => {
         confirmPassword: "",
         company: "",
       })
+      setApiError("")
     },
   }))
 
@@ -59,6 +60,11 @@ const RegisterForm = forwardRef(({ onLoginClick }, ref) => {
         [name]: "",
       }))
     }
+
+    // Clear API error when user makes changes
+    if (apiError) {
+      setApiError("")
+    }
   }
 
   const validateField = (name, value) => {
@@ -68,11 +74,15 @@ const RegisterForm = forwardRef(({ onLoginClick }, ref) => {
       case "lastName":
         return value ? "" : "Enter Your Last Name"
       case "email":
-        return value ? "" : "Enter your Email"
+        return value
+          ? /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
+            ? ""
+            : "Enter a valid email address"
+          : "Enter your Email"
       case "mobile":
         return value ? "" : "Enter Your Contact Number"
       case "password":
-        return value ? "" : "Enter Your Password"
+        return value ? (value.length >= 6 ? "" : "Password must be at least 6 characters") : "Enter Your Password"
       case "confirmPassword":
         return value ? (value === formData.password ? "" : "Passwords do not match") : "Confirm Password"
       case "company":
@@ -109,13 +119,36 @@ const RegisterForm = forwardRef(({ onLoginClick }, ref) => {
     if (hasError) return
 
     setLoading(true)
+    setApiError("")
+
     try {
       const response = await authApi.register(formData)
-      setToken(response.token)
-      // Instead of navigating, we'll switch to the login form
+      console.log("Registration successful:", response)
+
+      // In a real app, you might want to automatically log the user in
+      // or show a success message before redirecting
+
+      // Switch to login form with a success message
       onLoginClick()
     } catch (error) {
       console.error("Registration error:", error)
+
+      // Handle different types of errors
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        if (error.response.status === 409) {
+          setApiError("Email already exists. Please use a different email.")
+        } else {
+          setApiError("Registration failed. Please try again later.")
+        }
+      } else if (error.request) {
+        // The request was made but no response was received
+        setApiError("No response from server. Please check your connection.")
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        setApiError("An error occurred. Please try again.")
+      }
     } finally {
       setLoading(false)
     }
@@ -124,6 +157,8 @@ const RegisterForm = forwardRef(({ onLoginClick }, ref) => {
   return (
     <div className="register-form-container">
       <h2 className="register-title">Sign up into your account</h2>
+
+      {apiError && <div className="api-error-message">{apiError}</div>}
 
       <form onSubmit={onSubmit} className="register-form">
         <div className="form-row">
