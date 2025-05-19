@@ -14,12 +14,13 @@ import jakarta.persistence.Id;
 
 	    private String username;
 	    private String password;
-	    private String address;
-	    private String age;
 	    private String email;
 	    private String phoneNumber;
 	    private String fullname;
-	    private String gender;
+	    private String fName;
+	    private String lName;
+	    private String Company;
+	    
 	    
 		public Long getUser_id() {
 			return user_id;
@@ -39,18 +40,6 @@ import jakarta.persistence.Id;
 		public void setPassword(String password) {
 			this.password = password;
 		}
-		public String getAddress() {
-			return address;
-		}
-		public void setAddress(String address) {
-			this.address = address;
-		}
-		public String getAge() {
-			return age;
-		}
-		public void setAge(String age) {
-			this.age = age;
-		}
 		public String getEmail() {
 			return email;
 		}
@@ -69,14 +58,27 @@ import jakarta.persistence.Id;
 		public void setFullname(String fullname) {
 			this.fullname = fullname;
 		}
-		public String getGender() {
-			return gender;
+		public String getfName() {
+			return fName;
 		}
-		public void setGender(String gender) {
-			this.gender = gender;
+		public void setfName(String fName) {
+			this.fName = fName;
 		}
-	    
-	    
+		public String getlName() {
+			return lName;
+		}
+		public void setlName(String lName) {
+			this.lName = lName;
+		}
+		public String getCompany() {
+			return Company;
+		}
+		public void setCompany(String company) {
+			Company = company;
+		}
+	  
+		
+	
 	    
 	    
 	}

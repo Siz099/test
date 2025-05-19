@@ -1,38 +1,39 @@
 import axios from "axios"
 
-// Create an axios instance with the base URL pointing to your Spring Boot backend
-const API_BASE_URL = "http://localhost:8080"
-
 const api = axios.create({
-  baseURL: API_BASE_URL,
+  baseURL: "http://localhost:8080",
   headers: {
     "Content-Type": "application/json",
   },
 })
 
 export const authApi = {
-  // Register a new user
-  register: async (userData) => {
-    try {
-      // Transform the frontend user data to match the backend User entity
-      const backendUserData = {
-        username: userData.email, // Using email as username
-        password: userData.password,
-        email: userData.email,
-        fullname: `${userData.firstName} ${userData.lastName}`,
-        phoneNumber: userData.mobile,
-        // Map other fields as needed
-        address: userData.company || "", // Using company as address for now
-        age: "", // Not collected in your form
-        gender: "", // Not collected in your form
-      }
 
-      const response = await api.post("/register", backendUserData)
-      return response.data
-    } catch (error) {
-      console.error("Registration error:", error)
-      throw error
-    }
+  // Register a new user
+ register: async (userData) => {
+  try {
+    // Transform the frontend user data to match the backend User entity
+    const backendUserData = {
+      username: userData.username,
+      password: userData.password,
+      email: userData.email,
+      fullname: `${userData.firstName} ${userData.lastName}`,
+      phoneNumber: userData.mobile,
+      company: userData.company || ""
+    };
+
+    const response = await api.post("/register", backendUserData, {
+      headers: {
+        "Content-Type": "application/json"
+      },
+      withCredentials: true // Use only if your backend requires cookies or credentials
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error("Registration error:", error);
+    throw error;
+  }
   },
 
   // Login user

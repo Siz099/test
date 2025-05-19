@@ -2,6 +2,7 @@ import RegisterForm from "../components/auth/RegisterForm"
 import "../styles/Register.css"
 
 const Register = () => {
+
   return (
     <div className="register-page">
       <div className="register-container">
