@@ -1,4 +1,4 @@
-package event.configuration;
+package com.event.configuration;
 
 
 import java.util.List;

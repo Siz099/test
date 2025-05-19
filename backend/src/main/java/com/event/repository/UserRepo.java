@@ -1,9 +1,9 @@
-package event.repository;
+package com.event.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import event.model.User;
+import com.event.model.User;
 
 
 @Repository

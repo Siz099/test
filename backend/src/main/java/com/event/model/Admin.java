@@ -1,4 +1,4 @@
-package event.model;
+package com.event.model;
 
 public class Admin {
 
