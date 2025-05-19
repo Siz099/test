@@ -1,0 +1,31 @@
+.dashboard-layout {
+  min-height: 100vh;
+}
+
+.dashboard-content {
+  padding: 50px 20px;
+}
+
+.dashboard-container {
+  max-width: 800px;
+  margin: 0 auto;
+  background-color: white;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.dashboard-actions {
+  margin-top: 40px;
+}
+
+.logout-button {
+  background-color: #f5222d;
+  border-color: #f5222d;
+}
+
+.logout-button:hover,
+.logout-button:focus {
+  background-color: #ff4d4f;
+  border-color: #ff4d4f;
+}
