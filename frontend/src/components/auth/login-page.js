@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { Mail, AlertCircle, CheckCircle, Eye, EyeOff } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import AuthCard from "./auth-card";
+import { authService } from "../../services/api";
 
 // Animation variants
 const formControlVariants = {
@@ -42,6 +43,7 @@ export default function LoginPage() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [apiError, setApiError] = useState("");
 
   // Define validateForm as a useCallback to avoid dependency issues
   const validateForm = useCallback(() => {
@@ -90,6 +92,11 @@ export default function LoginPage() {
       ...formData,
       [name]: value,
     });
+
+    // Clear API error when user types
+    if (apiError) {
+      setApiError("");
+    }
   };
 
   const handleBlur = (e) => {
@@ -109,21 +116,41 @@ export default function LoginPage() {
 
     if (validateForm()) {
       setIsSubmitting(true);
-      try {
-        // Simulate API call
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-        console.log("Login attempt with:", formData);
+      setApiError("");
 
-        // Success animation before alert
+      try {
+        // Call the login API
+        const response = await authService.login({
+          email: formData.email,
+          password: formData.password,
+        });
+
+        console.log("Login successful:", response);
+
+        // Success animation before navigation
         await new Promise((resolve) => setTimeout(resolve, 300));
-        alert("Login successful!");
-        // Navigate to dashboard or home page
+
+        // Navigate to dashboard after successful login
+        navigate("/dashboard");
       } catch (error) {
         console.error("Login failed:", error);
-        setErrors({
-          ...errors,
-          general: "Login failed. Please check your credentials and try again.",
-        });
+
+        // Handle specific error responses
+        if (error.response) {
+          if (error.response.status === 401) {
+            setApiError("Invalid email or password. Please try again.");
+          } else if (error.response.data && error.response.data.message) {
+            setApiError(error.response.data.message);
+          } else {
+            setApiError(
+              "Login failed. Please check your credentials and try again."
+            );
+          }
+        } else {
+          setApiError(
+            "Unable to connect to the server. Please try again later."
+          );
+        }
       } finally {
         setIsSubmitting(false);
       }
@@ -142,6 +169,11 @@ export default function LoginPage() {
     navigate("/partner-signup");
   };
 
+  const handleForgotPassword = (e) => {
+    e.preventDefault();
+    navigate("/forgot-password");
+  };
+
   return (
     <AuthCard
       title="Login into your account"
@@ -150,7 +182,7 @@ export default function LoginPage() {
     >
       <form onSubmit={handleSubmit} noValidate>
         <AnimatePresence>
-          {errors.general && (
+          {apiError && (
             <motion.div
               className="error-banner"
               initial={{ opacity: 0, height: 0, marginBottom: 0 }}
@@ -159,7 +191,7 @@ export default function LoginPage() {
               transition={{ duration: 0.3 }}
             >
               <AlertCircle size={16} />
-              <span>{errors.general}</span>
+              <span>{apiError}</span>
             </motion.div>
           )}
         </AnimatePresence>
@@ -312,6 +344,7 @@ export default function LoginPage() {
           <motion.button
             className="forgot-password"
             type="button"
+            onClick={handleForgotPassword}
             whileHover={{ x: -3 }}
             whileTap={{ scale: 0.97 }}
           >

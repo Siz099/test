@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { CheckCircle, AlertCircle, Eye, EyeOff } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import AuthCard from "./auth-card";
+import { authService } from "../../services/api";
 
 // Animation variants
 const formControlVariants = {
@@ -64,6 +65,7 @@ export default function SignupPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [apiError, setApiError] = useState("");
 
   // Define validateForm as a useCallback to avoid dependency issues
   const validateForm = useCallback(() => {
@@ -205,6 +207,11 @@ export default function SignupPage() {
     if (name === "password") {
       checkPasswordStrength(value);
     }
+
+    // Clear API error when user types
+    if (apiError) {
+      setApiError("");
+    }
   };
 
   const handleBlur = (e) => {
@@ -227,21 +234,46 @@ export default function SignupPage() {
 
     if (validateForm()) {
       setIsSubmitting(true);
-      try {
-        // Simulate API call
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-        console.log("Form submitted:", formData);
+      setApiError("");
 
-        // Success animation before alert
+      try {
+        // Prepare data for API (excluding confirmPassword)
+        const userData = {
+          first_name: formData.firstName,
+          last_name: formData.lastName,
+          email: formData.email,
+          mobile: formData.mobile,
+          password: formData.password,
+        };
+
+        // Call the signup API
+        const response = await authService.signup(userData);
+
+        console.log("Signup successful:", response);
+
+        // Success animation before alert/navigation
         await new Promise((resolve) => setTimeout(resolve, 300));
-        alert("Signup successful!");
+
+        // Show success message and redirect to login
+        alert("Signup successful! Please login to continue.");
         navigate("/login");
       } catch (error) {
         console.error("Signup failed:", error);
-        setErrors({
-          ...errors,
-          general: "Signup failed. Please try again.",
-        });
+
+        // Handle specific error responses
+        if (error.response) {
+          if (error.response.status === 409) {
+            setApiError("An account with this email already exists.");
+          } else if (error.response.data && error.response.data.message) {
+            setApiError(error.response.data.message);
+          } else {
+            setApiError("Signup failed. Please try again later.");
+          }
+        } else {
+          setApiError(
+            "Unable to connect to the server. Please try again later."
+          );
+        }
       } finally {
         setIsSubmitting(false);
       }
@@ -263,7 +295,7 @@ export default function SignupPage() {
     >
       <form onSubmit={handleSubmit} noValidate>
         <AnimatePresence>
-          {errors.general && (
+          {apiError && (
             <motion.div
               className="error-banner"
               initial={{ opacity: 0, height: 0, marginBottom: 0 }}
@@ -272,7 +304,7 @@ export default function SignupPage() {
               transition={{ duration: 0.3 }}
             >
               <AlertCircle size={16} />
-              <span>{errors.general}</span>
+              <span>{apiError}</span>
             </motion.div>
           )}
         </AnimatePresence>

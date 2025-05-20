@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { CheckCircle, AlertCircle, Eye, EyeOff } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import AuthCard from "./auth-card";
+import { authService } from "../../services/api";
 
 // Animation variants
 const formControlVariants = {
@@ -73,6 +74,7 @@ export default function PartnerSignupPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [apiError, setApiError] = useState("");
 
   // Define validateForm as a useCallback to avoid dependency issues
   const validateForm = useCallback(() => {
@@ -244,6 +246,11 @@ export default function PartnerSignupPage() {
     if (name === "password") {
       checkPasswordStrength(value);
     }
+
+    // Clear API error when user types
+    if (apiError) {
+      setApiError("");
+    }
   };
 
   const handleBlur = (e) => {
@@ -266,21 +273,51 @@ export default function PartnerSignupPage() {
 
     if (validateForm()) {
       setIsSubmitting(true);
-      try {
-        // Simulate API call
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-        console.log("Partner Form submitted:", formData);
+      setApiError("");
 
-        // Success animation before alert
+      try {
+        // Prepare data for API (excluding confirmPassword)
+        const partnerData = {
+          first_name: formData.firstName,
+          last_name: formData.lastName,
+          email: formData.email,
+          mobile: formData.mobile,
+          password: formData.password,
+          company_name: formData.companyName,
+          pan_card: formData.panCard,
+          business_transcript: formData.businessTranscript,
+        };
+
+        // Call the partner signup API
+        const response = await authService.partnerSignup(partnerData);
+
+        console.log("Partner signup successful:", response);
+
+        // Success animation before alert/navigation
         await new Promise((resolve) => setTimeout(resolve, 300));
-        alert("Partner signup successful!");
+
+        // Show success message and redirect to login
+        alert(
+          "Partner signup request submitted successfully! Our team will review your application and contact you shortly."
+        );
         navigate("/login");
       } catch (error) {
-        console.error("Signup failed:", error);
-        setErrors({
-          ...errors,
-          general: "Signup failed. Please try again.",
-        });
+        console.error("Partner signup failed:", error);
+
+        // Handle specific error responses
+        if (error.response) {
+          if (error.response.status === 409) {
+            setApiError("An account with this email already exists.");
+          } else if (error.response.data && error.response.data.message) {
+            setApiError(error.response.data.message);
+          } else {
+            setApiError("Partner signup failed. Please try again later.");
+          }
+        } else {
+          setApiError(
+            "Unable to connect to the server. Please try again later."
+          );
+        }
       } finally {
         setIsSubmitting(false);
       }
@@ -303,7 +340,7 @@ export default function PartnerSignupPage() {
     >
       <form onSubmit={handleSubmit} className="partner-form">
         <AnimatePresence>
-          {errors.general && (
+          {apiError && (
             <motion.div
               className="error-banner"
               initial={{ opacity: 0, height: 0, marginBottom: 0 }}
@@ -312,7 +349,7 @@ export default function PartnerSignupPage() {
               transition={{ duration: 0.3 }}
             >
               <AlertCircle size={16} />
-              <span>{errors.general}</span>
+              <span>{apiError}</span>
             </motion.div>
           )}
         </AnimatePresence>
