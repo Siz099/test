@@ -1,12 +1,11 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter, usePathname } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import "@/styles/auth.css";
 
 export default function AuthLayout({ children }) {
-  const router = useRouter();
   const pathname = usePathname();
   const [mounted, setMounted] = useState(false);
 
