@@ -388,7 +388,6 @@ export default function PartnerSignupPage() {
                 className={
                   touched.firstName && !errors.firstName ? "input-valid" : ""
                 }
-                required
               />
               <AnimatePresence>
                 {touched.firstName && !errors.firstName && (
@@ -445,7 +444,6 @@ export default function PartnerSignupPage() {
                 className={
                   touched.lastName && !errors.lastName ? "input-valid" : ""
                 }
-                required
               />
               <AnimatePresence>
                 {touched.lastName && !errors.lastName && (
@@ -506,7 +504,6 @@ export default function PartnerSignupPage() {
                 onChange={handleChange}
                 onBlur={handleBlur}
                 className={touched.email && !errors.email ? "input-valid" : ""}
-                required
               />
               <AnimatePresence>
                 {touched.email && !errors.email && (
@@ -561,7 +558,6 @@ export default function PartnerSignupPage() {
                 className={
                   touched.mobile && !errors.mobile ? "input-valid" : ""
                 }
-                required
               />
               <AnimatePresence>
                 {touched.mobile && !errors.mobile && (
@@ -626,7 +622,6 @@ export default function PartnerSignupPage() {
                 className={
                   touched.password && !errors.password ? "input-valid" : ""
                 }
-                required
               />
               <button
                 type="button"
@@ -726,7 +721,6 @@ export default function PartnerSignupPage() {
                     ? "input-valid"
                     : ""
                 }
-                required
               />
               <button
                 type="button"
@@ -798,7 +792,6 @@ export default function PartnerSignupPage() {
               className={
                 touched.companyName && !errors.companyName ? "input-valid" : ""
               }
-              required
             />
             <AnimatePresence>
               {touched.companyName && !errors.companyName && (
@@ -859,7 +852,6 @@ export default function PartnerSignupPage() {
               className={
                 touched.panCard && !errors.panCard ? "input-valid" : ""
               }
-              required
             />
             <AnimatePresence>
               {touched.panCard && !errors.panCard && (
@@ -928,7 +920,6 @@ export default function PartnerSignupPage() {
                   ? "input-valid"
                   : ""
               }
-              required
             />
             <AnimatePresence>
               {touched.businessTranscript && !errors.businessTranscript && (
