@@ -1,0 +1,50 @@
+.reviews-section {
+  padding: 60px 40px;
+  background: #fafafa;
+  text-align: left;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.reviews-section h2 {
+  font-size: 24px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 30px;
+}
+
+.reviews-section .pagination {
+  display: flex;
+  gap: 8px;
+}
+
+.reviews-section .page-dot {
+  width: 32px;
+  height: 32px;
+  border-radius: 4px;
+  background: #f5f5f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 14px;
+  font-weight: 500;
+  color: #666;
+}
+
+.reviews-section .page-dot:hover {
+  background: #e0e0e0;
+}
+
+.reviews-section .page-dot.active {
+  background: #ffd700;
+  color: #333;
+  font-weight: 600;
+}
+
+@media (max-width: 768px) {
+  .reviews-section {
+    padding: 40px 20px;
+  }
+}
