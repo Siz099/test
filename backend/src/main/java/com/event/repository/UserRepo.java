@@ -9,6 +9,10 @@ import com.event.model.User;
 @Repository
 public interface UserRepo extends JpaRepository<User, Long> {
 
-	  User findByUsername(String username);
+	User findByEmail(String email);
+	
+	
+	
+
 }
 
