@@ -7,6 +7,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import AuthCard from "./auth-card";
 import { authService } from "../../services/api";
 
+
+
 // Animation variants
 const formControlVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -36,6 +38,7 @@ export default function SignupPage() {
     mobile: "",
     password: "",
     confirmPassword: "",
+     role: "user",
   });
 
   const [errors, setErrors] = useState({
@@ -45,6 +48,7 @@ export default function SignupPage() {
     mobile: "",
     password: "",
     confirmPassword: "",
+     role: "user",
   });
 
   const [touched, setTouched] = useState({
@@ -239,11 +243,11 @@ export default function SignupPage() {
       try {
         // Prepare data for API (excluding confirmPassword)
         const userData = {
-          first_name: formData.firstName,
-          last_name: formData.lastName,
-          email: formData.email,
-          mobile: formData.mobile,
-          password: formData.password,
+        fullname: formData.firstName + " " + formData.lastName,
+        email: formData.email,
+        phoneNumber: formData.mobile,
+        password: formData.password,
+        role: "user"
         };
 
         // Call the signup API

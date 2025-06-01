@@ -39,6 +39,7 @@ export default function PartnerSignupPage() {
     companyName: "",
     panCard: "",
     businessTranscript: "",
+    role:"client"
   });
 
   const [errors, setErrors] = useState({
@@ -51,6 +52,7 @@ export default function PartnerSignupPage() {
     companyName: "",
     panCard: "",
     businessTranscript: "",
+     role:"client"
   });
 
   const [touched, setTouched] = useState({
@@ -187,6 +189,7 @@ export default function PartnerSignupPage() {
   // Validate form on input change
   useEffect(() => {
     validateForm();
+    
   }, [validateForm]);
 
   const isValidEmail = (email) => {
@@ -241,6 +244,7 @@ export default function PartnerSignupPage() {
     setFormData({
       ...formData,
       [name]: value,
+       role:"client"
     });
 
     if (name === "password") {
@@ -278,14 +282,14 @@ export default function PartnerSignupPage() {
       try {
         // Prepare data for API (excluding confirmPassword)
         const partnerData = {
-          first_name: formData.firstName,
-          last_name: formData.lastName,
+          fullname: formData.firstName + " " + formData.lastName,
           email: formData.email,
-          mobile: formData.mobile,
+          phoneNumber: formData.mobile,
           password: formData.password,
-          company_name: formData.companyName,
-          pan_card: formData.panCard,
-          business_transcript: formData.businessTranscript,
+          company: formData.companyName,
+          panCard: formData.panCard,
+          businessTranscripts: formData.businessTranscript,
+          role: "client"
         };
 
         // Call the partner signup API
