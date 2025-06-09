@@ -118,14 +118,19 @@ body {
   padding: 10px 14px;
   border: 1px solid #e0e0e0;
   border-radius: 6px;
-  font-size: 14px;
+  font-size: 14px; 
   background-color: #f5f5f5;
   transition: all 0.3s;
 }
+.input-container2 input {
+  padding-right: 94px;
+  max-width: 260px;
+}
+
 
 .input-container input {
-  padding-right: 40px;
-  max-width: 247px;
+  padding-right: 94px;
+
 }
 
 .input-container input:focus,
@@ -488,7 +493,7 @@ body {
 }
 
 .auth-card3.full-height {
-  min-height: 700px;
+  min-height: 850px;
 }
 
 .auth-card3.image-right {
@@ -507,7 +512,7 @@ body {
 
 .auth-card3.full-height .auth-form-container3 {
   overflow-y: visible;
-  justify-content: flex-start;
+  /* justify-content: flex-start; */
   padding-top: 30px;
 }
 

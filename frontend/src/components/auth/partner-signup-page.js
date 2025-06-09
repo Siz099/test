@@ -550,6 +550,7 @@ export default function PartnerSignupPage() {
               }`}
             >
               <motion.input
+
                 whileFocus={{ scale: 1.01 }}
                 transition={{ duration: 0.2 }}
                 type="text"
@@ -779,7 +780,7 @@ export default function PartnerSignupPage() {
             Company Name <span className="required">*</span>
           </label>
           <div
-            className={`input-container ${
+            className={`input-container2 ${
               touched.companyName && errors.companyName ? "input-error" : ""
             }`}
           >
@@ -839,7 +840,7 @@ export default function PartnerSignupPage() {
             Pan Card <span className="required">*</span>
           </label>
           <div
-            className={`input-container ${
+            className={`input-container2 ${
               touched.panCard && errors.panCard ? "input-error" : ""
             }`}
           >
@@ -903,7 +904,7 @@ export default function PartnerSignupPage() {
             Your Business Transcript <span className="required">*</span>
           </label>
           <div
-            className={`input-container ${
+            className={`input-container2 ${
               touched.businessTranscript && errors.businessTranscript
                 ? "input-error"
                 : ""

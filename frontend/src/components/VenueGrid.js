@@ -6,7 +6,7 @@ import "../styles/VenueGrid.css";
 const VenueGrid = ({
   title,
   viewAllText,
-  venues = [1, 2, 3, 4],
+  venues = [],
   currentPage = 1,
   totalPages = 3,
   onPageChange,
@@ -39,13 +39,6 @@ const VenueGrid = ({
     },
   };
 
-  const getVenueImageClass = (index) => {
-    if (venueType === "popular") {
-      return `venue-image popular-venue-${index}`;
-    }
-    return `venue-image category-venue-${index}`;
-  };
-
   return (
     <motion.section
       className="venue-section"
@@ -61,22 +54,32 @@ const VenueGrid = ({
         </a>
       </div>
       <div className="venue-grid">
-        {venues.map((item, index) => (
+        {venues.map((venue, index) => (
           <motion.div
-            key={item}
+            key={venue.id || index}
             className="venue-card"
             variants={cardVariants}
             whileHover="hover"
           >
-            <div className={getVenueImageClass(index + 1)}>
-              <div className="venue-overlay">
-                <span className="venue-label">Venue</span>
-              </div>
+            <div className="venue-image" style={{ backgroundImage: `url(${venue.image})` }}>
+              {venueType === "popular" && (
+                <div className="venue-explore-overlay">
+                  <span>Explore</span>
+                </div>
+              )}
             </div>
+            <div className="venue-label-below">{venue.name}</div>
           </motion.div>
         ))}
       </div>
       <div className="pagination">
+        <button
+          className="pagination-arrow"
+          onClick={() => onPageChange && onPageChange(Math.max(1, currentPage - 1))}
+          disabled={currentPage === 1}
+        >
+          «
+        </button>
         {Array.from({ length: totalPages }, (_, index) => (
           <span
             key={index + 1}
@@ -86,6 +89,13 @@ const VenueGrid = ({
             {index + 1}
           </span>
         ))}
+        <button
+          className="pagination-arrow"
+          onClick={() => onPageChange && onPageChange(Math.min(totalPages, currentPage + 1))}
+          disabled={currentPage === totalPages}
+        >
+          »
+        </button>
       </div>
     </motion.section>
   );

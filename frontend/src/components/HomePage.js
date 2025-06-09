@@ -5,7 +5,7 @@ import HeroSection from ".//HeroSection";
 import BrowseByCategory from ".//BrowseByCategory";
 import PopularVenues from ".//PopularVenues";
 import ReviewsSection from ".//ReviewsSection";
-import Newsletter from ".//Newsletter";
+// import Newsletter from ".//Newsletter";
 import Footer from ".//Footer";
 import "../styles/HomePage.css";
 
@@ -17,7 +17,7 @@ const HomePage = () => {
       <BrowseByCategory />
       <PopularVenues />
       <ReviewsSection />
-      <Newsletter />
+      {/* <Newsletter /> */}
       <Footer />
     </div>
   );
