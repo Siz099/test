@@ -47,30 +47,9 @@ function App() {
             </div>
           }
         />
-           <Route
-          path="/Dashboard"
-          element={
-            <div className="auth-container">
-              <Dashboard />
-            </div>
-          }
-        />
-              <Route
-              path="/Sidebar"
-              element={
-                <div className="auth-container">
-                  <Sidebar />
-                </div>
-              }
-            />
-                <Route
-              path="/VenueManagement"
-              element={
-                <div className="auth-container">
-                  <VenueManagement />
-                </div>
-              }
-            />
+        
+          
+         
         <Route path="/" element={<Navigate to="/login" replace />} />
         <Route
           path="/admin/*"
