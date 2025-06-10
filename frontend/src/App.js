@@ -3,8 +3,12 @@ import LoginPage from "./components/auth/login-page";
 import SignupPage from "./components/auth/signup-page";
 import PartnerSignupPage from "./components/auth/partner-signup-page";
 import HomePage from "./components/HomePage";
+import AdminPanel from "./components/admin/Adminpanel";
+import Sidebar from "./components/Sidebar";
+import Dashboard from "./components/Dashboard";
+import VenueManagement from "./components/VenueManagement";
 import "./styles/auth.css";
-
+import "./App.css";
 function App() {
   console.log("App rendering");
   return (
@@ -35,9 +39,56 @@ function App() {
             </div>
           }
         />
+          <Route
+          path="/Adminpanel"
+          element={
+            <div className="auth-container">
+              <AdminPanel />
+            </div>
+          }
+        />
+           <Route
+          path="/Dashboard"
+          element={
+            <div className="auth-container">
+              <Dashboard />
+            </div>
+          }
+        />
+              <Route
+              path="/Sidebar"
+              element={
+                <div className="auth-container">
+                  <Sidebar />
+                </div>
+              }
+            />
+                <Route
+              path="/VenueManagement"
+              element={
+                <div className="auth-container">
+                  <VenueManagement />
+                </div>
+              }
+            />
         <Route path="/" element={<Navigate to="/login" replace />} />
+        <Route
+          path="/admin/*"
+          element={<AdminPanel />}
+        >
+          <Route path="dashboard" element={<Dashboard />} />
+          <Route path="venues" element={<VenueManagement />} />
+        </Route>
+
+    {/* <div className="app-container">
+      <Sidebar />
+      <Dashboard />
+    </div> */}
+
       </Routes>
     </BrowserRouter>
+
+    
   );
 }
 

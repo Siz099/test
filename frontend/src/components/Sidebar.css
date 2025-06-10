@@ -1,0 +1,73 @@
+/* Replacing the entire file with the new sidebar CSS */
+.sidebar {
+  width: 320px;
+  background: #f7f7f7;
+  padding: 32px 20px 24px 20px;
+  min-height: 100vh;
+  box-shadow: 1px 0 0 #ececec;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar h2 {
+  font-size: 1.6rem;
+  font-weight: bold;
+  margin-bottom: 32px;
+  letter-spacing: 1px;
+}
+
+.sidebar-section {
+  font-size: 13px;
+  color: #888;
+  margin-bottom: 18px;
+  font-weight: 500;
+}
+
+.sidebar nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar nav li {
+  padding: 12px 0 12px 8px;
+  font-size: 1rem;
+  color: #444;
+  border-radius: 6px;
+  margin-bottom: 2px;
+  cursor: pointer;
+  transition: background 0.15s;
+  display: flex;
+  align-items: center;
+}
+
+.sidebar nav li.active {
+  background: #fff;
+  font-weight: bold;
+  color: #222;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.03);
+}
+
+.sidebar nav li:hover:not(.active) {
+  background: #ececec;
+}
+
+/* Notification badge for the last item */
+.sidebar nav li:last-child {
+  position: relative;
+}
+
+.sidebar nav li:last-child::after {
+  content: "1";
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: #e74c3c;
+  color: #fff;
+  font-size: 12px;
+  border-radius: 50%;
+  padding: 2px 7px;
+  font-weight: bold;
+  display: inline-block;
+}
