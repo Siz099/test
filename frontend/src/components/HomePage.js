@@ -1,6 +1,6 @@
 "use client";
 
-import Header from ".//Header";
+import Navbar from "./Header";
 import HeroSection from ".//HeroSection";
 import BrowseByCategory from ".//BrowseByCategory";
 import PopularVenues from ".//PopularVenues";
@@ -12,7 +12,7 @@ import "../styles/HomePage.css";
 const HomePage = () => {
   return (
     <div className="homepage">
-      <Header />
+      <Navbar />
       <HeroSection />
       <BrowseByCategory />
       <PopularVenues />

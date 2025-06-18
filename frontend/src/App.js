@@ -7,6 +7,7 @@ import AdminPanel from "./components/admin/Adminpanel";
 import Sidebar from "./components/Sidebar";
 import Dashboard from "./components/Dashboard";
 import VenueManagement from "./components/VenueManagement";
+import VenuePage from "./components/VenuePage";
 import "./styles/auth.css";
 import "./App.css";
 function App() {
@@ -15,6 +16,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/home" element={<HomePage />} />
+        <Route path="/venues" element={<VenuePage />} />
         <Route
           path="/login"
           element={
