@@ -6,6 +6,7 @@ const initialVenues = [
   { id: 3, name: 'Conference Center', partner: 'City Conference Center', location: 'Lalitpur, Nepal', capacity: 200, price: 'NPR 10,000', bookings: 42, status: 'Active' },
   { id: 4, name: 'Riverside Garden', partner: 'Garden Paradise', location: 'Pokhara, Nepal', capacity: 300, price: 'NPR 12,000', bookings: 15, status: 'Active' },
   { id: 5, name: 'Heritage Hall', partner: 'Royal Events', location: 'Bhaktapur, Nepal', capacity: 250, price: 'NPR 13,000', bookings: 10, status: 'Inactive' },
+    { id: 5, name: 'Heritage Hall', partner: 'Royal Evenadadad', location: 'Bhaktapur, Nepal', capacity: 250, price: 'NPR 13,000', bookings: 10, status: 'Inactive' },
 ];
 
 const VenueManagement = () => {

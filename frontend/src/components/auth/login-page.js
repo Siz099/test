@@ -106,44 +106,47 @@ export default function LoginPage() {
   }
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    setTouched({
-      email: true,
-      password: true,
-    })
+  e.preventDefault();
+  setTouched({ email: true, password: true });
 
-    if (validateForm()) {
-      setIsSubmitting(true)
-      setApiError("")
+  if (!validateForm()) return;
 
-      try {
-        const response = await authService.login({
-          email: formData.email,
-          password: formData.password,
-        })
+  setIsSubmitting(true);
+  setApiError("");
 
-        console.log("Login successful:", response)
-        await new Promise((resolve) => setTimeout(resolve, 300))
-        navigate("/dashboard")
-      } catch (error) {
-        console.error("Login failed:", error)
+  try {
+    const data = await authService.login({
+      email: formData.email,
+      password: formData.password,
+    });
 
-        if (error.response) {
-          if (error.response.status === 401) {
-            setApiError("Invalid email or password. Please try again.")
-          } else if (error.response.data && error.response.data.message) {
-            setApiError(error.response.data.message)
-          } else {
-            setApiError("Login failed. Please check your credentials and try again.")
-          }
-        } else {
-          setApiError("Unable to connect to the server. Please try again later.")
-        }
-      } finally {
-        setIsSubmitting(false)
-      }
+    console.log("Login successful:", data);
+
+    
+    if (data.redirect) {
+      navigate(data.redirect);
+    } else {
+      navigate("/login"); 
     }
+
+  } catch (error) {
+    console.error("Login failed:", error);
+    if (error.response) {
+      if (error.response.status === 401) {
+        setApiError("Invalid email or password. Please try again.");
+      } else if (error.response.data?.message) {
+        setApiError(error.response.data.message);
+      } else {
+        setApiError("Login failed. Please try again.");
+      }
+    } else {
+      setApiError("Unable to connect to the server. Please try again later.");
+    }
+  } finally {
+    setIsSubmitting(false);
   }
+};
+
 
   const handleSignupClick = (e) => {
     e.preventDefault()

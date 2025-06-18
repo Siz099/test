@@ -14,8 +14,8 @@ public class AdminMaker {
 	@Bean
 	public CommandLineRunner createDefaultAdmin(UserRepo uRepo, PasswordEncoder passwordEncoder) {
 	    return args -> {
-	        String adminEmail = "admin@.com";
-	        String adminPassword = "Admin@123";
+	        String adminEmail = "admin@gmail.com";
+	        String adminPassword = "admin123";
 	  
 
 	        if (uRepo.findByEmail(adminEmail) == null) {

@@ -10,6 +10,7 @@ import VenueManagement from "./components/VenueManagement";
 import VenuePage from "./components/VenuePage";
 import "./styles/auth.css";
 import "./App.css";
+import VenueAddTest from "./components/VenueAddTest";
 function App() {
   console.log("App rendering");
   return (
@@ -52,7 +53,7 @@ function App() {
         
           
          
-        <Route path="/" element={<Navigate to="/login" replace />} />
+        <Route path="/" element={<Navigate to="/home" replace />} />
         <Route
           path="/admin/*"
           element={<AdminPanel />}
@@ -65,6 +66,8 @@ function App() {
       <Sidebar />
       <Dashboard />
     </div> */}
+
+      <Route path="/admin/venues/new" element={<VenueAddTest />} />
 
       </Routes>
     </BrowserRouter>

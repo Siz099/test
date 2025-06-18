@@ -1,4 +1,5 @@
 import axios from "axios";
+import VenueAddTest from "../components/VenueAddTest";
 
 // Create an axios instance with default config
 const api = axios.create({
@@ -82,6 +83,14 @@ const authService = {
   partnerSignup: async (partnerData) => {
     try {
       const response = await api.post("/auth/partner-signup", partnerData);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+addVenue: async (venueData) => {
+    try {
+      const response = await api.post("/admin/venues/new", venueData);
       return response.data;
     } catch (error) {
       throw error;

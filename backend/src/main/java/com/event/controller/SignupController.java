@@ -1,12 +1,15 @@
 package com.event.controller;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.ui.Model;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -82,7 +85,7 @@ public class SignupController {
 	            String role = existingUser.getRole();
 	            String token = jwtUtil.generateToken(existingUser.getEmail(), role);
 
-	            String redirectUrl;
+	            String redirectUrl;	
 	            switch (role.toLowerCase()) {
 	                case "admin":
 	                    redirectUrl = "/admin/dashboard";
@@ -110,6 +113,9 @@ public class SignupController {
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Login failed");
 	    }
 	}
+	
+
+	
 	
 	
 	
