@@ -1,139 +1,166 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { motion } from "framer-motion"
-import { ChevronLeft, ChevronRight } from "lucide-react"
+import { motion, AnimatePresence } from "framer-motion"
+
 import "../styles/ReviewsSection.css"
 
-const testimonials = [
-  {
-    name: "LOREM IPSUM",
-    text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi",
-  },
-  {
-    name: "Nischal Tamang",
-    text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi",
-  },
-  {
-    name: "LOREM IPSUM",
-    text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi",
-  },
-]
+export default function Reviews() {
+  const reviews = [
+    {
+      name: "Nischal Tamang",
+      text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi",
+    },
+    {
+      name: "LOREM IPSUM",
+      text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi",
+    },
+    {
+      name: "LOREM IPSUM",
+      text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi",
+    },
+  ]
 
-export default function TestimonialCarousel() {
-  const [currentIndex, setCurrentIndex] = useState(1)
-  const [isAutoPlaying, setIsAutoPlaying] = useState(true)
+  const [activeIndex, setActiveIndex] = useState(0)
+  const [direction, setDirection] = useState(0)
+  const [isHovered, setIsHovered] = useState(false)
 
-  // Auto-play functionality
+  // Add this useEffect after the state declarations
   useEffect(() => {
-    if (!isAutoPlaying) return
+    if (!isHovered) {
+      const interval = setInterval(() => {
+        setDirection(1)
+        setActiveIndex((prevIndex) => (prevIndex === reviews.length - 1 ? 0 : prevIndex + 1))
+      }, 5000) // 5 seconds delay
 
-    const interval = setInterval(() => {
-      setCurrentIndex((prev) => (prev === testimonials.length - 1 ? 0 : prev + 1))
-    }, 5000)
+      return () => clearInterval(interval)
+    }
+  }, [reviews.length, isHovered])
 
-    return () => clearInterval(interval)
-  }, [isAutoPlaying])
-
-  // Pause auto-play when user interacts
-  const handleUserInteraction = () => {
-    setIsAutoPlaying(false)
-    // Resume auto-play after 10 seconds of no interaction
-    setTimeout(() => setIsAutoPlaying(true), 10000)
+  const handlePrev = () => {
+    setDirection(-1)
+    setActiveIndex((prevIndex) => (prevIndex === 0 ? reviews.length - 1 : prevIndex - 1))
   }
 
-  const prevSlide = () => {
-    handleUserInteraction()
-    setCurrentIndex((prev) => (prev === 0 ? testimonials.length - 1 : prev - 1))
+  const handleNext = () => {
+    setDirection(1)
+    setActiveIndex((prevIndex) => (prevIndex === reviews.length - 1 ? 0 : prevIndex + 1))
   }
 
-  const nextSlide = () => {
-    handleUserInteraction()
-    setCurrentIndex((prev) => (prev === testimonials.length - 1 ? 0 : prev + 1))
+  const handleDotClick = (index) => {
+    setDirection(index > activeIndex ? 1 : -1)
+    setActiveIndex(index)
   }
 
-  const goToSlide = (index) => {
-    handleUserInteraction()
-    setCurrentIndex(index)
+  const getVisibleReviews = () => {
+    const prevIndex = activeIndex === 0 ? reviews.length - 1 : activeIndex - 1
+    const nextIndex = activeIndex === reviews.length - 1 ? 0 : activeIndex + 1
+
+    return [
+      { ...reviews[prevIndex], position: "left" },
+      { ...reviews[activeIndex], position: "center" },
+      { ...reviews[nextIndex], position: "right" },
+    ]
   }
 
-  const getPrevIndex = () => (currentIndex === 0 ? testimonials.length - 1 : currentIndex - 1)
-  const getNextIndex = () => (currentIndex === testimonials.length - 1 ? 0 : currentIndex + 1)
+  const slideVariants = {
+    enter: (direction) => ({
+      x: direction > 0 ? 300 : -300,
+      opacity: 0,
+      scale: 0.8,
+    }),
+    center: {
+      x: 0,
+      opacity: 1,
+      scale: 1,
+      zIndex: 3,
+    },
+    exit: (direction) => ({
+      x: direction < 0 ? 300 : -300,
+      opacity: 0,
+      scale: 0.8,
+    }),
+  }
+
+  const sideCardVariants = {
+    left: {
+      x: 0,
+      scale: 0.94,
+      opacity: 0.7,
+      zIndex: 1,
+    },
+    right: {
+      x: 0,
+      scale: 0.94,
+      opacity: 0.7,
+      zIndex: 1,
+    },
+  }
 
   return (
-    <section
-      className="testimonial-section"
-      onMouseEnter={() => setIsAutoPlaying(false)}
-      onMouseLeave={() => setIsAutoPlaying(true)}
-    >
-      <h2 className="testimonial-heading">Reviews</h2>
+    <section className="reviews-section">
+      <h2 className="reviews-title">Reviews</h2>
 
-      <div className="carousel-container">
-        {/* Previous Card (Left) */}
-        <motion.div
-          key={`prev-${getPrevIndex()}`}
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 0.4, scale: 0.9 }}
-          transition={{ duration: 0.4 }}
-          className="carousel-card prev-card"
-        >
-          <div className="card-content">
-            <h3 className="card-name prev">{testimonials[getPrevIndex()].name}</h3>
-            <p className="card-text prev">{testimonials[getPrevIndex()].text}</p>
-          </div>
-        </motion.div>
-
-        {/* Active Card (Center) */}
-        <div className="active-card-container">
-          {/* Left Navigation Button */}
-          <button className="nav-button prev-button" onClick={prevSlide} aria-label="Previous testimonial">
-            <ChevronLeft size={16} />
-          </button>
-
-          {/* Active Card */}
-          <motion.div
-            key={`active-${currentIndex}`}
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.4 }}
-            className="carousel-card active-card"
-          >
-            <div className="card-circle"></div>
-            <div className="card-content active">
-              <h3 className="card-name active">{testimonials[currentIndex].name}</h3>
-              <p className="card-text active">{testimonials[currentIndex].text}</p>
-            </div>
-          </motion.div>
-
-          {/* Right Navigation Button */}
-          <button className="nav-button next-button" onClick={nextSlide} aria-label="Next testimonial">
-            <ChevronRight size={16} />
-          </button>
-        </div>
-
-        {/* Next Card (Right) */}
-        <motion.div
-          key={`next-${getNextIndex()}`}
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 0.4, scale: 0.9 }}
-          transition={{ duration: 0.4 }}
-          className="carousel-card next-card"
-        >
-          <div className="card-content">
-            <h3 className="card-name next">{testimonials[getNextIndex()].name}</h3>
-            <p className="card-text next">{testimonials[getNextIndex()].text}</p>
-          </div>
-        </motion.div>
+      <div
+        className="carousel-container"
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+      >
+        <AnimatePresence mode="wait" custom={direction}>
+          {getVisibleReviews().map((review, index) => (
+            <motion.div
+              key={`${review.position}-${activeIndex}`}
+              className={`review-card ${review.position === "center" ? "active" : "side"}`}
+              custom={direction}
+              variants={review.position === "center" ? slideVariants : sideCardVariants}
+              initial={review.position === "center" ? "enter" : review.position}
+              animate={review.position === "center" ? "center" : review.position}
+              exit={review.position === "center" ? "exit" : review.position}
+              transition={{
+                x: { type: "spring", stiffness: 500, damping: 25 },
+                opacity: { duration: 0.104 }, // reduced from 0.2
+                scale: { duration: 0.104 }, // reduced from 0.2
+              }}
+            >
+              {review.position === "center" && (
+                <>
+                  <button className="carousel-arrow prev" onClick={handlePrev}>
+                    &#10094;
+                  </button>
+                  <button className="carousel-arrow next" onClick={handleNext}>
+                    &#10095;
+                  </button>
+                </>
+              )}
+              <motion.h3
+                className="reviewer-name"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.052, duration: 0.104 }} // reduced from delay: 0.1, duration: 0.2
+              >
+                {review.name}
+              </motion.h3>
+              <motion.p
+                className="review-text"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.078, duration: 0.104 }} // reduced from delay: 0.15, duration: 0.2
+              >
+                {review.text}
+              </motion.p>
+            </motion.div>
+          ))}
+        </AnimatePresence>
       </div>
 
-      {/* Pagination Dots */}
-      <div className="pagination">
-        {testimonials.map((_, index) => (
-          <button
+      <div className="carousel-dots">
+        {reviews.map((_, index) => (
+          <motion.div
             key={index}
-            onClick={() => goToSlide(index)}
-            className={`pagination-dot ${index === currentIndex ? "active" : ""}`}
-            aria-label={`Go to slide ${index + 1}`}
+            className={`carousel-dot ${index === activeIndex ? "active" : ""}`}
+            onClick={() => handleDotClick(index)}
+            whileHover={{ scale: 1.2 }}
+            whileTap={{ scale: 0.9 }}
           />
         ))}
       </div>

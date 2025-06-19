@@ -39,6 +39,13 @@ const VenueGrid = ({
     },
   };
 
+  // Calculate pagination
+  const venuesPerPage = 4;
+  const dynamicTotalPages = venues.length <= venuesPerPage ? 1 : Math.ceil(venues.length / venuesPerPage);
+  const startIdx = (currentPage - 1) * venuesPerPage;
+  const endIdx = startIdx + venuesPerPage;
+  const paginatedVenues = venues.slice(startIdx, endIdx);
+
   return (
     <motion.section
       className="venue-section"
@@ -54,10 +61,10 @@ const VenueGrid = ({
         </a>
       </div>
       <div className="venue-grid">
-        {venues.map((venue, index) => (
+        {paginatedVenues.map((venue, index) => (
           <motion.div
             key={venue.id || index}
-            className="venue-card"
+            className={`venue-card${venueType === "popular" ? " popular" : ""}`}
             variants={cardVariants}
             whileHover="hover"
           >
@@ -80,7 +87,7 @@ const VenueGrid = ({
         >
           «
         </button>
-        {Array.from({ length: totalPages }, (_, index) => (
+        {Array.from({ length: dynamicTotalPages }, (_, index) => (
           <span
             key={index + 1}
             className={`page-dot ${currentPage === index + 1 ? "active" : ""}`}
@@ -91,8 +98,8 @@ const VenueGrid = ({
         ))}
         <button
           className="pagination-arrow"
-          onClick={() => onPageChange && onPageChange(Math.min(totalPages, currentPage + 1))}
-          disabled={currentPage === totalPages}
+          onClick={() => onPageChange && onPageChange(Math.min(dynamicTotalPages, currentPage + 1))}
+          disabled={currentPage === dynamicTotalPages}
         >
           »
         </button>

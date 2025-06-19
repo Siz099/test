@@ -1,5 +1,5 @@
 .venue-section {
-  padding: 60px 40px;
+  padding: 60px 185px;
   max-width: 1920px;
   margin: 0 auto;
 }
@@ -52,6 +52,13 @@
   background-size: cover;
   background-position: center;
   transition: box-shadow 0.3s;
+}
+
+.venue-card.popular .venue-image {
+  height: 240px;
+  aspect-ratio: 1 / 1;
+  border-radius: 8px;
+  object-fit: cover;
 }
 
 /* Category venue images */

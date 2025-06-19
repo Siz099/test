@@ -27,6 +27,21 @@ const BrowseByCategory = () => {
       name: "Venue",
       image: "https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=400&q=80",
     },
+    {
+      id: 5,
+      name: "Venue",
+      image: "https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=400&q=80",
+    },
+    {
+      id: 6,
+      name: "Venue",
+      image: "https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=400&q=80",
+    },
+    {
+      id: 7,
+      name: "Venue",
+      image: "https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=400&q=80",
+    },
   ];
 
   const handlePageChange = (page) => {

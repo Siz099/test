@@ -1,253 +1,130 @@
-/* Modern Testimonial Carousel with 3D Effect */
-.testimonial-section {
-  padding: 4rem 1.5rem;
+.reviews-section {
+  padding: 60px 20px;
+  max-width: 1200px;
   margin: 0 auto;
   position: relative;
 }
 
-.testimonial-heading {
-  text-align: left;
-  padding-left: 1rem;
-  font-size: 24px;
-  font-weight: 600;
-  color: #333;
-  margin: 0;
+.reviews-title {
+  text-align: center;
+  font-size: 28px;
+  font-weight: 300;
+  color: #999;
+  margin-bottom: 50px;
 }
 
 .carousel-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
   position: relative;
-  min-height: 280px;
-  width: 100%;
-  max-width: 1000px;
-  margin: 0 auto;
-  perspective: 1000px;
-  overflow: visible;
-}
-
-/* Card Styles */
-.carousel-card {
-  border-radius: 1rem;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
-  overflow: hidden;
-  position: absolute;
-}
-
-/* Previous Card (Left) - Increased opacity and removed rotation */
-.prev-card {
-  width: 350px;
-  height: 180px;
-  background: #fff8e1;
-  transform: translateX(-200px) translateY(20px) rotate(0deg) scale(0.9);
-  z-index: 1;
-  opacity: 0.4; /* Increased from 0.3 to 0.4 (10% more) */
-  position: absolute;
-  left: 0;
-}
-
-/* Next Card (Right) - Increased opacity and removed rotation */
-.next-card {
-  width: 350px;
-  height: 180px;
-  background: #fff8e1;
-  transform: translateX(200px) translateY(20px) rotate(0deg) scale(0.9);
-  z-index: 1;
-  opacity: 0.4; /* Increased from 0.3 to 0.4 (10% more) */
-  position: absolute;
-  right: 0;
-}
-
-/* Active Card (Center) */
-.active-card-container {
-  position: relative;
-  z-index: 10;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
+  padding: 30px 0;
+  gap: -20px;
 }
 
-.active-card {
-  width: 480px;
+.review-card {
+  background-color: #fff8e1;
+  border-radius: 15px;
+  padding: 40px 30px;
+  width: 1000px;
   height: 200px;
-  background: #ffc107;
   position: relative;
-  z-index: 10;
-  transform: translateX(0) rotate(0);
-  opacity: 1;
-}
-
-/* Card Circle */
-.card-circle {
-  position: absolute;
-  top: -15px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 30px;
-  height: 30px;
-  background: #ffc107;
-  border-radius: 50%;
-  z-index: 11;
-}
-
-/* Card Content */
-.card-content {
-  padding: 2rem;
+  opacity: 0.7;
+  z-index: 1;
   display: flex;
   flex-direction: column;
-  height: 100%;
+  justify-content: center;
 }
 
-.card-content.active {
-  padding: 2rem 3rem;
+.review-card::before {
+  content: "";
+  position: absolute;
+  top: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 80px;
+  background-color: #fff8e1;
+  border-radius: 50%;
 }
 
-/* Card Name */
-.card-name {
-  font-weight: 700;
+.review-card.side {
+  transform: scale(0.94);
+  margin: 0 -180px;
+  margin-top: 100px;
+}
+
+.review-card.active {
+  background-color: #ffc107;
+  opacity: 1;
+  transform: scale(1);
+  z-index: 3;
+  margin: 0 -180px;
+}
+
+.review-card.active::before {
+  background-color: #ffc107;
+}
+
+.reviewer-name {
+  font-size: 18px;
+  font-weight: 600;
   text-align: center;
-  margin-bottom: 1rem;
+  margin-bottom: 15px;
+  color: #333;
 }
 
-.card-name.active {
-  color: #000;
-  font-size: 1.125rem;
-}
-
-.card-name.prev,
-.card-name.next {
-  color: #9ca3af;
-  font-size: 1rem;
-  text-transform: uppercase;
-}
-
-/* Card Text */
-.card-text {
-  font-size: 0.875rem;
+.review-text {
+  font-size: 14px;
   line-height: 1.5;
-}
-
-.card-text.active {
-  color: #000;
-  text-align: left;
-}
-
-.card-text.prev,
-.card-text.next {
-  color: #9ca3af;
   text-align: center;
+  color: #333;
 }
 
-/* Navigation Buttons */
-.nav-button {
-  width: 32px;
-  height: 32px;
-  background: #000;
-  border: none;
+.carousel-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 40px;
+  height: 40px;
+  background-color: rgba(0, 0, 0, 0.7);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
   color: white;
-  z-index: 20;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  font-size: 16px;
+  cursor: pointer;
+  z-index: 10;
+  border: none;
 }
 
-.prev-button {
-  margin-right: -16px;
+.carousel-arrow.prev {
+  left: 0;
+  transform: translate(-50%, -50%);
 }
 
-.next-button {
-  margin-left: -16px;
+.carousel-arrow.next {
+  right: 0;
+  transform: translate(50%, -50%);
 }
 
-.nav-button:hover {
-  background: #333;
-}
-
-/* Pagination */
-.pagination {
+.carousel-dots {
   display: flex;
   justify-content: center;
-  gap: 0.75rem;
-  margin-top: 2rem;
+  margin-top: 30px;
+  gap: 10px;
 }
 
-.pagination-dot {
+.carousel-dot {
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  background: #e0e0e0;
-  border: none;
+  background-color: #ccc;
   cursor: pointer;
-  transition: all 0.2s ease;
-  padding: 0;
+  transition: background-color 0.3s ease;
 }
 
-.pagination-dot.active {
-  background: #4b5563;
-}
-
-/* Responsive Design */
-@media (max-width: 1024px) {
-  .carousel-container {
-    max-width: 900px;
-  }
-
-  .active-card {
-    width: 420px;
-  }
-
-  .prev-card,
-  .next-card {
-    width: 300px;
-    height: 160px;
-    transform: translateX(-180px) translateY(20px) rotate(0deg) scale(0.9);
-  }
-
-  .next-card {
-    transform: translateX(180px) translateY(20px) rotate(0deg) scale(0.9);
-  }
-}
-
-@media (max-width: 768px) {
-  .prev-card,
-  .next-card {
-    display: none;
-  }
-
-  .active-card {
-    width: 100%;
-    max-width: 500px;
-  }
-
-  .card-content.active {
-    padding: 1.5rem 2rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .testimonial-section {
-    padding: 3rem 1rem;
-  }
-
-  .card-content.active {
-    padding: 1.5rem;
-  }
-
-  .nav-button {
-    width: 28px;
-    height: 28px;
-  }
-
-  .prev-button {
-    margin-right: -14px;
-  }
-
-  .next-button {
-    margin-left: -14px;
-  }
+.carousel-dot.active {
+  background-color: #999;
 }
