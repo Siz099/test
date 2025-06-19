@@ -1,13 +1,15 @@
 import axios from "axios";
-import VenueAddTest from "../components/VenueAddTest";
 
 // Create an axios instance with default config
 const api = axios.create({
   baseURL: process.env.REACT_APP_API_URL || "http://localhost:8080", 
+  
   headers: {
     "Content-Type": "application/json",
   },
 });
+
+
 
 // Add request interceptor to handle auth tokens if needed
 api.interceptors.request.use(
@@ -51,6 +53,7 @@ api.interceptors.response.use(
   }
 );
 
+
 // Auth API services
 const authService = {
   // Login user
@@ -88,24 +91,6 @@ const authService = {
       throw error;
     }
   },
-addVenue: async (venueData) => {
-    try {
-      const response = await api.post("/admin/venues/new", venueData);
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
-  },
-
-  listVenue: async (venueData) => {
-    try {
-      const response = await api.get("/admin/venues", venueData);
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
-  },
-  
 
   // Reset password
   requestPasswordReset: async (email) => {
@@ -130,4 +115,41 @@ addVenue: async (venueData) => {
   },
 };
 
-export { api, authService };
+
+//Venue API services
+const venueService={
+addVenue: async (venueData) => {
+    try {
+      const response = await api.post("/admin/venues/new", venueData);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  listVenue: async (venueData) => {
+    try {
+      const response = await api.get("/admin/venues", venueData);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  deleteVenue: async (id) => {
+  try {
+    const token = localStorage.getItem('jwtToken');
+    const response = await api.delete(`/admin/venues/delete/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+}
+
+};
+
+export { api, authService, venueService };
