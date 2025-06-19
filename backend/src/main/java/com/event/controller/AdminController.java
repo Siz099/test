@@ -1,5 +1,7 @@
 package com.event.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,10 +29,8 @@ public class AdminController {
 	
 	    // List all venues
 	    @GetMapping
-	    public String listVenues(Model m, HttpSession s) {
-	        if (s.getAttribute("activeUser") == null) return "redirect:/login";
-	        m.addAttribute("vList", venueRepo.findAll());
-	        return "admin/venueList";
+	    public List<Venue> listVenues() {
+	        return venueRepo.findAll();
 	    }
 
 	    @PostMapping("/new")  // FIX: add this method to handle POST

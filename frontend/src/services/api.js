@@ -97,6 +97,16 @@ addVenue: async (venueData) => {
     }
   },
 
+  listVenue: async (venueData) => {
+    try {
+      const response = await api.get("/admin/venues", venueData);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  
+
   // Reset password
   requestPasswordReset: async (email) => {
     try {

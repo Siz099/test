@@ -1,18 +1,13 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
+import { redirect, useNavigate, Navigate } from 'react-router-dom';
+import { authService } from '../services/api';
 
-const initialVenues = [
-  { id: 1, name: 'Grand Ballroom', partner: 'Royal Events', location: 'Kathmandu, Nepal', capacity: 500, price: 'NPR 15,000', bookings: 25, status: 'Active' },
-  { id: 2, name: 'Mountain View Resort', partner: 'Mountain View Resorts', location: 'Nagarkot, Nepal', capacity: 350, price: 'NPR 18,000', bookings: 18, status: 'Active' },
-  { id: 3, name: 'Conference Center', partner: 'City Conference Center', location: 'Lalitpur, Nepal', capacity: 200, price: 'NPR 10,000', bookings: 42, status: 'Active' },
-  { id: 4, name: 'Riverside Garden', partner: 'Garden Paradise', location: 'Pokhara, Nepal', capacity: 300, price: 'NPR 12,000', bookings: 15, status: 'Active' },
-  { id: 5, name: 'Heritage Hall', partner: 'Royal Events', location: 'Bhaktapur, Nepal', capacity: 250, price: 'NPR 13,000', bookings: 10, status: 'Inactive' },
-    { id: 5, name: 'Heritage Hall', partner: 'Royal Evenadadad', location: 'Bhaktapur, Nepal', capacity: 250, price: 'NPR 13,000', bookings: 10, status: 'Inactive' },
-];
 
 const VenueManagement = () => {
-  const [venues, setVenues] = useState(initialVenues);
+    const [venues, setVenues] = useState([]);
   const [menuOpenId, setMenuOpenId] = useState(null);
   const menuRef = useRef();
+  const navigate = useNavigate();
 
   // Close menu on click outside
   React.useEffect(() => {
@@ -41,13 +36,33 @@ const VenueManagement = () => {
     setMenuOpenId(null);
   };
 
+const handleAdd = (id) => {
+     navigate('/admin/venues/new');
+    setMenuOpenId(null); 
+  };
+
+useEffect(() => {
+  const fetchVenues = async () => {
+    try {
+    
+      const data = await authService.listVenue();
+
+      setVenues(data);
+    } catch (error) {
+      console.error("Failed to fetch venues", error);
+    }
+  };
+  fetchVenues();
+}, []);
+  
+
   return (
     <div style={{ background: '#fff', borderRadius: 12, padding: 32, boxShadow: '0 2px 8px #eee' }}>
       <h1 style={{ fontSize: 28, fontWeight: 700, marginBottom: 8 }}>Venue Management</h1>
       <p style={{ color: '#888', marginBottom: 24 }}>Manage all venues on the platform</p>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
         <h2 style={{ fontSize: 22, fontWeight: 600 }}>All Venues</h2>
-        <button style={{ background: '#111', color: '#fff', border: 'none', borderRadius: 6, padding: '10px 22px', fontWeight: 600, fontSize: 16, cursor: 'pointer' }}>+ Add New Venue</button>
+        <button onClick={handleAdd} style={{ background: '#111', color: '#fff', border: 'none', borderRadius: 6, padding: '10px 22px', fontWeight: 600, fontSize: 16, cursor: 'pointer' }}>+ Add New Venue</button>
       </div>
       <input type="text" placeholder="Search venues by name, partner, or location..." style={{ width: 320, padding: 8, borderRadius: 6, border: '1px solid #ddd', marginBottom: 16 }} />
       <table style={{ width: '100%', borderCollapse: 'collapse', marginTop: 8 }}>
@@ -67,8 +82,8 @@ const VenueManagement = () => {
         <tbody>
           {venues.map((venue) => (
             <tr key={venue.id} style={{ borderBottom: '1px solid #eee' }}>
-              <td style={{ padding: 10 }}>{venue.id}</td>
-              <td style={{ padding: 10 }}>{venue.name}</td>
+              <td style={{ padding: 10 }}>{venue.venue_id}</td>
+              <td style={{ padding: 10 }}>{venue.venueName}</td>
               <td style={{ padding: 10 }}>{venue.partner}</td>
               <td style={{ padding: 10 }}>{venue.location}</td>
               <td style={{ padding: 10 }}>{venue.capacity}</td>
