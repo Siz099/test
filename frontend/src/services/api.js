@@ -152,4 +152,99 @@ addVenue: async (venueData) => {
 
 };
 
-export { api, authService, venueService };
+// export { api, authService, venueService };
+
+// User API services
+const userService = {
+  // Get all users
+  listUsers: async () => {
+    try {
+      const token = localStorage.getItem('jwtToken');
+      const response = await api.get("/admin/users", {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  // Add new user
+  addUser: async (userData) => {
+    try {
+      const token = localStorage.getItem('jwtToken');
+      const response = await api.post("/admin/users/new", userData, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  // Get user details
+  getUser: async (id) => {
+    try {
+      const token = localStorage.getItem('jwtToken');
+      const response = await api.get(`/admin/users/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  // Update user
+  updateUser: async (id, userData) => {
+    try {
+      const token = localStorage.getItem('jwtToken');
+      const response = await api.put(`/admin/users/update/${id}`, userData, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  // Delete user
+  deleteUser: async (id) => {
+    try {
+      const token = localStorage.getItem('jwtToken');
+      const response = await api.delete(`/admin/users/delete/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  // Change user status (activate/deactivate)
+  changeUserStatus: async (id, status) => {
+    try {
+      const token = localStorage.getItem('jwtToken');
+      const response = await api.patch(`/admin/users/status/${id}`, { status }, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  }
+};
+
+export { api, authService, venueService, userService };

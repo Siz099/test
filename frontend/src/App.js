@@ -11,6 +11,7 @@ import VenuePage from "./components/VenuePage";
 import "./styles/auth.css";
 import "./App.css";
 import VenueAddTest from "./components/VenueAddTest";
+import UserManagement from "./components/UserManagement";
 function App() {
   console.log("App rendering");
   return (
@@ -60,6 +61,7 @@ function App() {
         >
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="venues" element={<VenueManagement />} />
+          <Route path="users" element={<UserManagement />} />
         </Route>
 
     {/* <div className="app-container">
