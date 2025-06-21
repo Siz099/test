@@ -248,3 +248,27 @@ const userService = {
 };
 
 export { api, authService, venueService, userService };
+
+// In your services/api.js file
+const adduserService = {
+  // ... other user service methods
+  
+  createUser: async (userData) => {
+    try {
+      const token = localStorage.getItem('jwtToken');
+      const response = await api.post('/admin/users', userData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  
+  // ... other methods
+};
+
+export { adduserService };

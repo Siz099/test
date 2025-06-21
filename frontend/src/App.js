@@ -12,6 +12,8 @@ import "./styles/auth.css";
 import "./App.css";
 import VenueAddTest from "./components/VenueAddTest";
 import UserManagement from "./components/UserManagement";
+import AddUsers from "./components/AddUsers";
+
 function App() {
   console.log("App rendering");
   return (
@@ -62,6 +64,7 @@ function App() {
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="venues" element={<VenueManagement />} />
           <Route path="users" element={<UserManagement />} />
+          <Route path="users/new" element={<AddUsers />} />
         </Route>
 
     {/* <div className="app-container">
