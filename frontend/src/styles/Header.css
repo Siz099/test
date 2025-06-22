@@ -41,7 +41,6 @@
   align-items: center;
 }
 
-/* Navigation links - now using span elements */
 .nav-link {
   color: #666;
   text-decoration: none;
@@ -49,7 +48,6 @@
   font-weight: 500;
   transition: color 0.2s ease;
   cursor: pointer;
-  user-select: none;
 }
 
 .nav-link:hover {
@@ -62,7 +60,7 @@
   gap: 35px;
 }
 
-.search-icon {
+.search-trigger-btn {
   width: 36px;
   height: 36px;
   border-radius: 50%;
@@ -77,11 +75,11 @@
   transition: background-color 0.2s ease;
 }
 
-.search-icon:hover {
+.search-trigger-btn:hover {
   background-color: #e9e9e9;
 }
 
-.search-icon svg {
+.search-trigger-btn svg {
   width: 16px;
   height: 16px;
 }
@@ -209,15 +207,6 @@
   margin-bottom: 20px;
 }
 
-/* Mobile nav links */
-.mobile-nav-links .nav-link {
-  display: block;
-  padding: 12px 0;
-  width: 100%;
-  text-align: left;
-  font-size: 16px;
-}
-
 .mobile-nav-actions {
   display: flex;
   align-items: center;
@@ -233,7 +222,7 @@
     display: none;
   }
 
-  .navbar-right .search-icon,
+  .navbar-right .search-trigger-btn,
   .navbar-right .sign-in-button,
   .navbar-right .user-actions {
     display: none;
@@ -362,6 +351,8 @@
   font-weight: 500;
   cursor: pointer;
   transition: color 0.2s ease;
+  background: none;
+  border: none;
 }
 
 .mark-all-read:hover {
@@ -457,13 +448,12 @@
   font-size: 14px;
 }
 
-/* Search Functionality */
-.search-container {
+/* Updated Search Functionality Classes */
+.global-search-wrapper {
   position: relative;
 }
 
-/* Enhanced Global Search Dropdown */
-.search-dropdown {
+.search-results-panel {
   position: absolute;
   top: 100%;
   right: 0;
@@ -482,18 +472,18 @@
   overflow: hidden;
 }
 
-.search-dropdown.active {
+.search-results-panel.active {
   opacity: 1;
   visibility: visible;
   transform: translateY(0);
 }
 
-.search-dropdown-header {
+.search-input-section {
   padding: 16px 20px 12px 20px;
   border-bottom: 1px solid #f0f0f0;
 }
 
-.search-dropdown-input {
+.search-field {
   width: 100%;
   padding: 12px 16px;
   border: 2px solid #e0e0e0;
@@ -503,24 +493,24 @@
   transition: border-color 0.2s ease;
 }
 
-.search-dropdown-input:focus {
+.search-field:focus {
   border-color: #ffc107;
 }
 
-.search-dropdown-content {
+.search-results-content {
   max-height: 400px;
   overflow-y: auto;
 }
 
-.search-section {
+.search-category {
   padding: 12px 0;
 }
 
-.search-section:not(:last-child) {
+.search-category:not(:last-child) {
   border-bottom: 1px solid #f5f5f5;
 }
 
-.search-section-title {
+.search-category-header {
   font-size: 12px;
   font-weight: 600;
   color: #888;
@@ -530,7 +520,7 @@
   margin: 0;
 }
 
-.search-result-item {
+.search-option {
   display: flex;
   align-items: center;
   gap: 12px;
@@ -543,23 +533,23 @@
   text-align: left;
 }
 
-.search-result-item:hover {
+.search-option:hover {
   background-color: #f8f9fa;
 }
 
-.search-result-icon {
+.search-option-icon {
   width: 20px;
   height: 20px;
   color: #666;
   flex-shrink: 0;
 }
 
-.search-result-content {
+.search-option-details {
   flex: 1;
   min-width: 0;
 }
 
-.search-result-title {
+.search-option-title {
   font-size: 14px;
   font-weight: 500;
   color: #333;
@@ -569,7 +559,7 @@
   text-overflow: ellipsis;
 }
 
-.search-result-description {
+.search-option-desc {
   font-size: 12px;
   color: #666;
   margin: 0;
@@ -578,26 +568,26 @@
   text-overflow: ellipsis;
 }
 
-.search-result-meta {
+.search-option-meta {
   font-size: 11px;
   color: #888;
   margin-top: 2px;
 }
 
-.search-no-results {
+.search-empty-state {
   padding: 40px 20px;
   text-align: center;
   color: #888;
   font-size: 14px;
 }
 
-.search-footer {
+.search-actions-bar {
   padding: 12px 20px;
   border-top: 1px solid #f0f0f0;
   background-color: #f8f9fa;
 }
 
-.search-footer-button {
+.search-view-all-btn {
   width: 100%;
   padding: 8px 12px;
   background: none;
@@ -609,20 +599,20 @@
   transition: all 0.2s ease;
 }
 
-.search-footer-button:hover {
+.search-view-all-btn:hover {
   background-color: white;
   border-color: #b0b0b0;
   color: #333;
 }
 
-.search-recent-item {
+.recent-search-entry {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
 }
 
-.search-recent-remove {
+.recent-search-delete {
   width: 16px;
   height: 16px;
   border-radius: 50%;
@@ -637,13 +627,13 @@
   flex-shrink: 0;
 }
 
-.search-recent-remove:hover {
+.recent-search-delete:hover {
   color: #999;
 }
 
 /* Mobile adjustments */
 @media (max-width: 768px) {
-  .search-dropdown {
+  .search-results-panel {
     width: 350px;
     right: -20px;
   }

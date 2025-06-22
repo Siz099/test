@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import "../styles/Header.css"
 
-// All your existing SVG icons here...
+// SVG Icons
 const SearchIcon = () => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
     <circle cx="11" cy="11" r="8"></circle>
@@ -83,6 +83,7 @@ const XIcon = () => (
   </svg>
 )
 
+// Sample data
 const sampleNotifications = [
   {
     id: 1,
@@ -98,7 +99,6 @@ const sampleNotifications = [
   },
 ]
 
-// Sample search data
 const globalSearchData = {
   venues: [
     {
@@ -137,7 +137,7 @@ const globalSearchData = {
 export default function Header({ hasNotifications = true, isLoggedIn = false, user = null, onLogout }) {
   const navigate = useNavigate()
 
-  // UI state
+  // State management
   const [recentSearches, setRecentSearches] = useState(["Grand Ballroom", "Wedding Planning", "Conference Room"])
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false)
@@ -145,6 +145,7 @@ export default function Header({ hasNotifications = true, isLoggedIn = false, us
   const [searchDropdownOpen, setSearchDropdownOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState("")
 
+  // Close dropdowns when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (profileDropdownOpen && !event.target.closest(".profile-container")) {
@@ -153,7 +154,7 @@ export default function Header({ hasNotifications = true, isLoggedIn = false, us
       if (notificationDropdownOpen && !event.target.closest(".notification-container")) {
         setNotificationDropdownOpen(false)
       }
-      if (searchDropdownOpen && !event.target.closest(".search-container")) {
+      if (searchDropdownOpen && !event.target.closest(".global-search-wrapper")) {
         setSearchDropdownOpen(false)
       }
     }
@@ -164,17 +165,16 @@ export default function Header({ hasNotifications = true, isLoggedIn = false, us
     }
   }, [profileDropdownOpen, notificationDropdownOpen, searchDropdownOpen])
 
+  // Event handlers
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen)
   }
 
   const handleLogout = async () => {
     try {
-      // Call your existing logout function
       if (onLogout) {
         onLogout()
       } else {
-        // Default logout behavior - clear localStorage and redirect
         localStorage.removeItem("auth_token")
         localStorage.removeItem("user")
         navigate("/home")
@@ -206,11 +206,9 @@ export default function Header({ hasNotifications = true, isLoggedIn = false, us
     setSearchDropdownOpen(false)
     setSearchQuery("")
 
-    // Navigate based on search type
     if (type === "venues") {
       navigate("/venues")
     } else {
-      // Default search page or stay on current page
       navigate(`/search?q=${encodeURIComponent(query)}`)
     }
   }
@@ -225,7 +223,6 @@ export default function Header({ hasNotifications = true, isLoggedIn = false, us
     const results = {}
     const searchLower = query.toLowerCase()
 
-    // Search venues
     const venueResults = globalSearchData.venues.filter(
       (item) =>
         item.title.toLowerCase().includes(searchLower) ||
@@ -234,7 +231,6 @@ export default function Header({ hasNotifications = true, isLoggedIn = false, us
     )
     if (venueResults.length > 0) results.venues = venueResults.slice(0, 3)
 
-    // Search services
     const serviceResults = globalSearchData.services.filter(
       (item) =>
         item.title.toLowerCase().includes(searchLower) ||
@@ -250,16 +246,16 @@ export default function Header({ hasNotifications = true, isLoggedIn = false, us
     const searchResults = filterGlobalResults(searchQuery)
 
     return (
-      <div className="search-container">
-        <button className="search-icon" onClick={() => setSearchDropdownOpen(!searchDropdownOpen)}>
+      <div className="global-search-wrapper">
+        <button className="search-trigger-btn" onClick={() => setSearchDropdownOpen(!searchDropdownOpen)}>
           <SearchIcon />
         </button>
-        <div className={`search-dropdown ${searchDropdownOpen ? "active" : ""}`}>
-          <div className="search-dropdown-header">
+        <div className={`search-results-panel ${searchDropdownOpen ? "active" : ""}`}>
+          <div className="search-input-section">
             <input
               type="text"
               placeholder="Search venues, services..."
-              className="search-dropdown-input"
+              className="search-field"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               onKeyPress={(e) => e.key === "Enter" && handleGlobalSearch(searchQuery)}
@@ -267,24 +263,24 @@ export default function Header({ hasNotifications = true, isLoggedIn = false, us
             />
           </div>
 
-          <div className="search-dropdown-content">
+          <div className="search-results-content">
             {searchQuery ? (
               searchResults ? (
                 <>
                   {searchResults.venues && (
-                    <div className="search-section">
-                      <h4 className="search-section-title">Venues</h4>
+                    <div className="search-category">
+                      <h4 className="search-category-header">Venues</h4>
                       {searchResults.venues.map((venue) => (
                         <button
                           key={venue.id}
-                          className="search-result-item"
+                          className="search-option"
                           onClick={() => handleGlobalSearch(venue.title, "venues")}
                         >
-                          <MapPinIcon className="search-result-icon" />
-                          <div className="search-result-content">
-                            <p className="search-result-title">{venue.title}</p>
-                            <p className="search-result-description">{venue.description}</p>
-                            <p className="search-result-meta">
+                          <MapPinIcon className="search-option-icon" />
+                          <div className="search-option-details">
+                            <p className="search-option-title">{venue.title}</p>
+                            <p className="search-option-desc">{venue.description}</p>
+                            <p className="search-option-meta">
                               {venue.location} • {venue.price}
                             </p>
                           </div>
@@ -294,19 +290,19 @@ export default function Header({ hasNotifications = true, isLoggedIn = false, us
                   )}
 
                   {searchResults.services && (
-                    <div className="search-section">
-                      <h4 className="search-section-title">Services</h4>
+                    <div className="search-category">
+                      <h4 className="search-category-header">Services</h4>
                       {searchResults.services.map((service) => (
                         <button
                           key={service.id}
-                          className="search-result-item"
+                          className="search-option"
                           onClick={() => handleGlobalSearch(service.title, "services")}
                         >
-                          <ServiceIcon className="search-result-icon" />
-                          <div className="search-result-content">
-                            <p className="search-result-title">{service.title}</p>
-                            <p className="search-result-description">{service.description}</p>
-                            <p className="search-result-meta">
+                          <ServiceIcon className="search-option-icon" />
+                          <div className="search-option-details">
+                            <p className="search-option-title">{service.title}</p>
+                            <p className="search-option-desc">{service.description}</p>
+                            <p className="search-option-meta">
                               {service.category} • {service.price}
                             </p>
                           </div>
@@ -316,22 +312,22 @@ export default function Header({ hasNotifications = true, isLoggedIn = false, us
                   )}
                 </>
               ) : (
-                <div className="search-no-results">No results found for "{searchQuery}"</div>
+                <div className="search-empty-state">No results found for "{searchQuery}"</div>
               )
             ) : (
               <>
                 {recentSearches.length > 0 && (
-                  <div className="search-section">
-                    <h4 className="search-section-title">Recent Searches</h4>
+                  <div className="search-category">
+                    <h4 className="search-category-header">Recent Searches</h4>
                     {recentSearches.map((search, index) => (
-                      <button key={index} className="search-result-item" onClick={() => handleGlobalSearch(search)}>
-                        <div className="search-recent-item">
+                      <div key={index} className="search-option" onClick={() => handleGlobalSearch(search)}>
+                        <div className="recent-search-entry">
                           <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-                            <ClockIcon className="search-result-icon" />
-                            <span className="search-result-title">{search}</span>
+                            <ClockIcon className="search-option-icon" />
+                            <span className="search-option-title">{search}</span>
                           </div>
                           <button
-                            className="search-recent-remove"
+                            className="recent-search-delete"
                             onClick={(e) => {
                               e.stopPropagation()
                               removeRecentSearch(search)
@@ -340,23 +336,23 @@ export default function Header({ hasNotifications = true, isLoggedIn = false, us
                             <XIcon style={{ width: "12px", height: "12px" }} />
                           </button>
                         </div>
-                      </button>
+                      </div>
                     ))}
                   </div>
                 )}
 
-                <div className="search-section">
-                  <h4 className="search-section-title">Popular Venues</h4>
+                <div className="search-category">
+                  <h4 className="search-category-header">Popular Venues</h4>
                   {globalSearchData.venues.map((venue) => (
                     <button
                       key={venue.id}
-                      className="search-result-item"
+                      className="search-option"
                       onClick={() => handleGlobalSearch(venue.title, "venues")}
                     >
-                      <MapPinIcon className="search-result-icon" />
-                      <div className="search-result-content">
-                        <p className="search-result-title">{venue.title}</p>
-                        <p className="search-result-description">{venue.description}</p>
+                      <MapPinIcon className="search-option-icon" />
+                      <div className="search-option-details">
+                        <p className="search-option-title">{venue.title}</p>
+                        <p className="search-option-desc">{venue.description}</p>
                       </div>
                     </button>
                   ))}
@@ -365,8 +361,8 @@ export default function Header({ hasNotifications = true, isLoggedIn = false, us
             )}
           </div>
 
-          <div className="search-footer">
-            <button className="search-footer-button" onClick={() => handleGlobalSearch(searchQuery || "all results")}>
+          <div className="search-actions-bar">
+            <button className="search-view-all-btn" onClick={() => handleGlobalSearch(searchQuery || "all results")}>
               {searchQuery ? `See all results for "${searchQuery}"` : "View all categories"}
             </button>
           </div>
@@ -376,19 +372,108 @@ export default function Header({ hasNotifications = true, isLoggedIn = false, us
   }
 
   return (
-    <>
-      <nav className="navbar">
-        <div className="navbar-left">
-          <img
-            src="/placeholder.svg?height=45&width=45"
-            alt="Coordina Logo"
-            className="logo-icon"
-            onClick={() => handleNavigation("/home")}
-            style={{ cursor: "pointer" }}
-          />
-        </div>
+    <nav className="navbar">
+      <div className="navbar-left">
+        <img
+          src="/placeholder.svg?height=45&width=45"
+          alt="Coordina Logo"
+          className="logo-icon"
+          onClick={() => handleNavigation("/home")}
+          style={{ cursor: "pointer" }}
+        />
+      </div>
 
-        <div className="navbar-center">
+      <div className="navbar-center">
+        <span className="nav-link" onClick={() => handleNavigation("/home")}>
+          Home
+        </span>
+        <span className="nav-link" onClick={() => handleNavigation("/venues")}>
+          Venue
+        </span>
+        <span className="nav-link" onClick={() => handleNavigation("/about")}>
+          About
+        </span>
+        <span className="nav-link" onClick={() => handleNavigation("/media")}>
+          Media
+        </span>
+        <span className="nav-link" onClick={() => handleNavigation("/contact")}>
+          Contact Us
+        </span>
+      </div>
+
+      <div className="navbar-right">
+        {renderSearchComponent()}
+
+        {isLoggedIn ? (
+          <div className="user-actions">
+            <div className="notification-container">
+              <button
+                className="notification-icon"
+                onClick={() => setNotificationDropdownOpen(!notificationDropdownOpen)}
+              >
+                <BellIcon />
+                {hasNotifications && <div className="notification-badge"></div>}
+              </button>
+              <div className={`notification-dropdown ${notificationDropdownOpen ? "active" : ""}`}>
+                <div className="notification-header">
+                  <h3 className="notification-title">Notifications</h3>
+                  <button className="mark-all-read" onClick={() => console.log("Mark all as read")}>
+                    Mark all as read
+                  </button>
+                </div>
+                <div className="notification-list">
+                  {sampleNotifications.length > 0 ? (
+                    sampleNotifications.map((notification) => (
+                      <div key={notification.id} className="notification-item">
+                        <div className={`notification-dot ${notification.color}`}></div>
+                        <div className="notification-content">
+                          <p className="notification-text">{notification.text}</p>
+                          <p className="notification-time">{notification.time}</p>
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="no-notifications">No new notifications</div>
+                  )}
+                </div>
+                <div className="notification-footer">
+                  <button className="view-all-button" onClick={() => console.log("View all notifications")}>
+                    View all notifications
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div className="profile-container">
+              <button className="profile-icon" onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}>
+                <UserIcon />
+              </button>
+              <div className={`profile-dropdown ${profileDropdownOpen ? "active" : ""}`}>
+                <button className="dropdown-item" onClick={() => handleNavigation("/profile")}>
+                  <ProfileMenuIcon />
+                  Profile
+                </button>
+                <div className="dropdown-divider"></div>
+                <button className="dropdown-item" onClick={handleLogout}>
+                  <LogoutMenuIcon />
+                  Logout
+                </button>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <button className="sign-in-button" onClick={handleSignInClick}>
+            Sign In
+          </button>
+        )}
+
+        <button className="mobile-menu-button" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+          {isMobileMenuOpen ? <CloseIcon /> : <MenuIcon />}
+        </button>
+      </div>
+
+      {/* Mobile Menu */}
+      <div className={`mobile-menu ${isMobileMenuOpen ? "active" : ""}`}>
+        <div className="mobile-nav-links">
           <span className="nav-link" onClick={() => handleNavigation("/home")}>
             Home
           </span>
@@ -405,10 +490,8 @@ export default function Header({ hasNotifications = true, isLoggedIn = false, us
             Contact Us
           </span>
         </div>
-
-        <div className="navbar-right">
+        <div className="mobile-nav-actions">
           {renderSearchComponent()}
-
           {isLoggedIn ? (
             <div className="user-actions">
               <div className="notification-container">
@@ -419,50 +502,11 @@ export default function Header({ hasNotifications = true, isLoggedIn = false, us
                   <BellIcon />
                   {hasNotifications && <div className="notification-badge"></div>}
                 </button>
-                <div className={`notification-dropdown ${notificationDropdownOpen ? "active" : ""}`}>
-                  <div className="notification-header">
-                    <h3 className="notification-title">Notifications</h3>
-                    <button className="mark-all-read" onClick={() => console.log("Mark all as read")}>
-                      Mark all as read
-                    </button>
-                  </div>
-                  <div className="notification-list">
-                    {sampleNotifications.length > 0 ? (
-                      sampleNotifications.map((notification) => (
-                        <div key={notification.id} className="notification-item">
-                          <div className={`notification-dot ${notification.color}`}></div>
-                          <div className="notification-content">
-                            <p className="notification-text">{notification.text}</p>
-                            <p className="notification-time">{notification.time}</p>
-                          </div>
-                        </div>
-                      ))
-                    ) : (
-                      <div className="no-notifications">No new notifications</div>
-                    )}
-                  </div>
-                  <div className="notification-footer">
-                    <button className="view-all-button" onClick={() => console.log("View all notifications")}>
-                      View all notifications
-                    </button>
-                  </div>
-                </div>
               </div>
               <div className="profile-container">
                 <button className="profile-icon" onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}>
                   <UserIcon />
                 </button>
-                <div className={`profile-dropdown ${profileDropdownOpen ? "active" : ""}`}>
-                  <button className="dropdown-item" onClick={() => handleNavigation("/profile")}>
-                    <ProfileMenuIcon />
-                    Profile
-                  </button>
-                  <div className="dropdown-divider"></div>
-                  <button className="dropdown-item" onClick={handleLogout}>
-                    <LogoutMenuIcon />
-                    Logout
-                  </button>
-                </div>
               </div>
             </div>
           ) : (
@@ -470,58 +514,8 @@ export default function Header({ hasNotifications = true, isLoggedIn = false, us
               Sign In
             </button>
           )}
-
-          <button className="mobile-menu-button" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
-            {isMobileMenuOpen ? <CloseIcon /> : <MenuIcon />}
-          </button>
         </div>
-
-        {/* Mobile Menu */}
-        <div className={`mobile-menu ${isMobileMenuOpen ? "active" : ""}`}>
-          <div className="mobile-nav-links">
-            <span className="nav-link" onClick={() => handleNavigation("/home")}>
-              Home
-            </span>
-            <span className="nav-link" onClick={() => handleNavigation("/venues")}>
-              Venue
-            </span>
-            <span className="nav-link" onClick={() => handleNavigation("/about")}>
-              About
-            </span>
-            <span className="nav-link" onClick={() => handleNavigation("/media")}>
-              Media
-            </span>
-            <span className="nav-link" onClick={() => handleNavigation("/contact")}>
-              Contact Us
-            </span>
-          </div>
-          <div className="mobile-nav-actions">
-            {renderSearchComponent()}
-            {isLoggedIn ? (
-              <div className="user-actions">
-                <div className="notification-container">
-                  <button
-                    className="notification-icon"
-                    onClick={() => setNotificationDropdownOpen(!notificationDropdownOpen)}
-                  >
-                    <BellIcon />
-                    {hasNotifications && <div className="notification-badge"></div>}
-                  </button>
-                </div>
-                <div className="profile-container">
-                  <button className="profile-icon" onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}>
-                    <UserIcon />
-                  </button>
-                </div>
-              </div>
-            ) : (
-              <button className="sign-in-button" onClick={handleSignInClick}>
-                Sign In
-              </button>
-            )}
-          </div>
-        </div>
-      </nav>
-    </>
+      </div>
+    </nav>
   )
 }
