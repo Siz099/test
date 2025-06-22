@@ -206,23 +206,34 @@ const adduserService = {
     } catch (error) {
       throw error;
     }
+  },
 
-    const response = await api.patch(`/admin/users/status/${id}`, { status });
-    return response.data;
-
+  updateUserStatus: async (id, status) => {
+    try {
+      const token = localStorage.getItem('jwtToken');
+      const response = await api.patch(`/admin/users/status/${id}`, { status }, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
   },
 };
+export { adduserService }
 
 // Additional user creation service (if needed separately)
-const adduserService = {
-  createUser: async (userData) => {
-    const response = await api.post("/admin/users", userData, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    return response.data;
-  },
-};
+// const adduserService = {
+//   createUser: async (userData) => {
+//     const response = await api.post("/admin/users", userData, {
+//       headers: {
+//         "Content-Type": "application/json",
+//       },
+//     });
+//     return response.data;
+//   },
+// };
 
-export { api, authService, venueService, userService, adduserService };
+// export { api, authService, venueService, userService, adduserService };

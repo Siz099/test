@@ -88,7 +88,7 @@ function App() {
           <Route path="users/new" element={<AddUsers />} />
           <Route path="partners" element={<PartnerManagement />} />
         </Route>
-
+<Route
             path="/home"
             element={
               <>
