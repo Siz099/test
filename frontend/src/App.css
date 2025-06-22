@@ -77,18 +77,27 @@
 }
 
 .tabs button {
-  padding: 8px 20px;
-  margin-right: 8px;
+  padding: 10px 25px;
+  margin-right: 10px;
   border: none;
-  background: #f1f1f1;
-  border-radius: 4px 4px 0 0;
+  background: transparent;
+  border-radius: 25px;
   cursor: pointer;
+  font-weight: 600;
+  color: #333;
+  transition: all 0.3s ease;
+}
+
+.tabs button:hover,
+.tabs button.active {
+  background-color: #ffc107;
+  color: #000;
 }
 
 .tabs button.active {
-  background: #fff;
-  border-bottom: 2px solid #333;
-  font-weight: bold;
+  background-color: #ffc107;
+  color: #000;
+  border-bottom: 2px solid #ffc107;
 }
 
 .partner-requests {

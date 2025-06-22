@@ -13,6 +13,7 @@ import "./App.css";
 import VenueAddTest from "./components/VenueAddTest";
 import UserManagement from "./components/UserManagement";
 import AddUsers from "./components/AddUsers";
+import PartnerManagement from "./components/PartnerManagement";
 
 function App() {
   console.log("App rendering");
@@ -65,6 +66,7 @@ function App() {
           <Route path="venues" element={<VenueManagement />} />
           <Route path="users" element={<UserManagement />} />
           <Route path="users/new" element={<AddUsers />} />
+          <Route path="partners" element={<PartnerManagement />} />
         </Route>
 
     {/* <div className="app-container">

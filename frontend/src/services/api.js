@@ -247,7 +247,63 @@ const userService = {
   }
 };
 
-export { api, authService, venueService, userService };
+const partnerService = {
+  listPartners: async () => {
+    try {
+      const response = await api.get("/admin/partners");
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  getPartner: async (id) => {
+    try {
+      const response = await api.get(`/admin/partners/${id}`);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  addPartner: async (partnerData) => {
+    try {
+      const response = await api.post("/admin/partners/new", partnerData);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  updatePartner: async (id, partnerData) => {
+    try {
+      const response = await api.put(`/admin/partners/update/${id}`, partnerData);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  deletePartner: async (id) => {
+    try {
+      const response = await api.delete(`/admin/partners/delete/${id}`);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  
+  updatePartnerStatus: async (id, status) => {
+    try {
+      const response = await api.patch(`/admin/partners/status/${id}`, { status });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+};
+
+export { api, authService, venueService, userService, partnerService };
 
 // In your services/api.js file
 const adduserService = {
