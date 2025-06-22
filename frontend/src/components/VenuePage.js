@@ -31,7 +31,7 @@ export default function VenuePage() {
         {/* Venues Section */}
         <div className="section-header">
           <h2 className="section-title">Venues</h2>
-          <a href="#" className="view-all-link">
+          <a href="/" className="view-all-link">
             View All (22)
           </a>
         </div>

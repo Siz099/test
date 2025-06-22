@@ -11,6 +11,7 @@ import AdminPanel from "./components/admin/Adminpanel";
 import Dashboard from "./components/Dashboard";
 import VenueManagement from "./components/VenueManagement";
 import VenuePage from "./components/VenuePage";
+import VenueBooking from "./components/VenueBooking";
 import VenueAddTest from "./components/VenueAddTest";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
@@ -106,6 +107,17 @@ function App() {
                 <Header isLoggedIn={isLoggedIn} user={user} onLogout={handleLogout} hasNotifications={true} />
                 <div className="page-content">
                   <VenuePage />
+                </div>
+              </>
+            }
+          />
+          <Route
+            path="/venue-booking"
+            element={
+              <>
+                <Header isLoggedIn={isLoggedIn} user={user} onLogout={handleLogout} hasNotifications={true} />
+                <div className="page-content">
+                  <VenueBooking />
                 </div>
               </>
             }
