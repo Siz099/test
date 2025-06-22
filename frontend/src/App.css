@@ -127,3 +127,30 @@
   background: #222;
   color: #fff;
 }
+
+/* Add this to your App.css or create a separate file */
+
+.notifications-page-wrapper {
+  padding-top: 100px !important; /* Account for fixed header */
+  background-color: #f8f9fa;
+  min-height: calc(100vh - 100px);
+}
+
+/* Ensure the notifications component fits well */
+.notifications-page-wrapper .notifications-container {
+  background-color: #f8f9fa;
+  padding: 40px 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .notifications-page-wrapper {
+    padding-top: 100px !important;
+  }
+
+  .notifications-page-wrapper .notifications-container {
+    padding: 20px 16px;
+  }
+}
