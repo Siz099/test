@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { redirect, useNavigate, Navigate } from 'react-router-dom';
-import { authService } from '../services/api';
+import { venueService } from '../services/api';
+import axios from 'axios';
 
 
 const VenueManagement = () => {
@@ -8,6 +9,32 @@ const VenueManagement = () => {
   const [menuOpenId, setMenuOpenId] = useState(null);
   const menuRef = useRef();
   const navigate = useNavigate();
+
+   const [errors, setErrors] = useState({});
+    const [touched, setTouched] = useState({});
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [apiError, setApiError] = useState("");
+  
+   const [formData, setFormData] = useState({
+      venueName: '',
+      partner: '',
+      location: '',
+      capacity: '',
+      price: '',
+      bookings: '',
+      status: '',
+    });
+
+    const validate = () => {
+    const newErrors = {};
+    Object.keys(formData).forEach((key) => {
+      if (!formData[key]) {
+        newErrors[key] = `${key} is required`;
+      }
+    });
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   // Close menu on click outside
   React.useEffect(() => {
@@ -24,10 +51,20 @@ const VenueManagement = () => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [menuOpenId]);
 
-  const handleDelete = (id) => {
-    setVenues((prev) => prev.filter((venue) => venue.id !== id));
-    setMenuOpenId(null);
-  };
+
+  const handleDelete = async (id) => {
+  console.log("Deleting venue id:", id);
+  try {
+    const response = await venueService.deleteVenue(id);
+    console.log("Delete response:", response);
+    setVenues(prev => prev.filter(v => v.venue_id !== id));
+    alert("Venue deleted successfully!");
+  } catch (err) {
+    console.error("Failed to delete:", err);
+    alert("Failed to delete venue. Please try again.");
+  }
+};
+
 
   const handleDeactivate = (id) => {
     setVenues((prev) => prev.map((venue) =>
@@ -44,8 +81,7 @@ const handleAdd = (id) => {
 useEffect(() => {
   const fetchVenues = async () => {
     try {
-    
-      const data = await authService.listVenue();
+      const data = await venueService.listVenue();
 
       setVenues(data);
     } catch (error) {
@@ -79,55 +115,84 @@ useEffect(() => {
             <th style={{ padding: 10 }}>Actions</th>
           </tr>
         </thead>
-        <tbody>
-          {venues.map((venue) => (
-            <tr key={venue.id} style={{ borderBottom: '1px solid #eee' }}>
-              <td style={{ padding: 10 }}>{venue.venue_id}</td>
-              <td style={{ padding: 10 }}>{venue.venueName}</td>
-              <td style={{ padding: 10 }}>{venue.partner}</td>
-              <td style={{ padding: 10 }}>{venue.location}</td>
-              <td style={{ padding: 10 }}>{venue.capacity}</td>
-              <td style={{ padding: 10 }}>{venue.price}</td>
-              <td style={{ padding: 10 }}>{venue.bookings}</td>
-              <td style={{ padding: 10 }}>
-                <span style={{ background: venue.status === 'Active' ? '#e6ffe6' : '#ffe6e6', color: venue.status === 'Active' ? '#22bb33' : '#d9534f', borderRadius: 12, padding: '4px 14px', fontWeight: 500, fontSize: 14 }}>{venue.status}</span>
-              </td>
-              <td style={{ padding: 10, position: 'relative' }}>
-                <button
-                  style={{ background: 'none', border: 'none', fontSize: 20, cursor: 'pointer' }}
-                  onClick={() => setMenuOpenId(menuOpenId === venue.id ? null : venue.id)}
-                  aria-label="Actions"
-                >
-                  ⋮
-                </button>
-                {menuOpenId === venue.id && (
-                  <div
-                    ref={menuRef}
-                    style={{
-                      position: 'absolute',
-                      top: 30,
-                      right: 0,
-                      background: '#fff',
-                      border: '1px solid #eee',
-                      borderRadius: 8,
-                      boxShadow: '0 2px 8px #eee',
-                      zIndex: 10,
-                      minWidth: 180,
-                      padding: 0,
-                    }}
-                  >
-                    <div style={{ padding: '10px 16px', fontWeight: 600, color: '#888', borderBottom: '1px solid #f0f0f0' }}>Actions</div>
-                    <button style={menuBtnStyle} onClick={() => { setMenuOpenId(null); alert('View details'); }}>View details</button>
-                    <button style={menuBtnStyle} onClick={() => { setMenuOpenId(null); alert('Edit venue'); }}>Edit venue</button>
-                    <button style={menuBtnStyle} onClick={() => { setMenuOpenId(null); alert('View bookings'); }}>View bookings</button>
-                    <button style={menuBtnStyle} onClick={() => handleDeactivate(venue.id)}>Deactivate venue</button>
-                    <button style={{ ...menuBtnStyle, color: '#d9534f' }} onClick={() => handleDelete(venue.id)}>Delete venue</button>
-                  </div>
-                )}
-              </td>
-            </tr>
-          ))}
-        </tbody>
+    <tbody>
+  {venues.map((venue) => (
+    <tr key={venue.venue_id} style={{ borderBottom: '1px solid #eee' }}>
+      <td style={{ padding: 10 }}>{venue.venue_id}</td>
+      <td style={{ padding: 10 }}>{venue.venueName}</td>
+      <td style={{ padding: 10 }}>{venue.partner}</td>
+      <td style={{ padding: 10 }}>{venue.location}</td>
+      <td style={{ padding: 10 }}>{venue.capacity}</td>
+      <td style={{ padding: 10 }}>{venue.price}</td>
+      <td style={{ padding: 10 }}>{venue.bookings}</td>
+      <td style={{ padding: 10 }}>
+        <span style={{
+          background: venue.status === 'Active' ? '#e6ffe6' : '#ffe6e6',
+          color: venue.status === 'Active' ? '#22bb33' : '#d9534f',
+          borderRadius: 12,
+          padding: '4px 14px',
+          fontWeight: 500,
+          fontSize: 14
+        }}>
+          {venue.status}
+        </span>
+      </td>
+      <td style={{ padding: 10, position: 'relative' }}>
+        {/* The toggle button */}
+        <button
+          style={{ background: 'none', border: 'none', fontSize: 20, cursor: 'pointer' }}
+          onClick={() => setMenuOpenId(menuOpenId === venue.venue_id ? null : venue.venue_id)}
+          aria-label="Actions"
+        >
+          ⋮
+        </button>
+
+        {/* The dropdown menu */}
+        {menuOpenId === venue.venue_id && (
+          <div
+            ref={menuRef}
+            style={{
+              position: 'absolute',
+              top: 30,
+              right: 0,
+              background: '#fff',
+              border: '1px solid #eee',
+              borderRadius: 8,
+              boxShadow: '0 2px 8px #eee',
+              zIndex: 10,
+              minWidth: 180
+            }}
+          >
+            <div style={{ padding: '10px 16px', fontWeight: 600, color: '#888', borderBottom: '1px solid #f0f0f0' }}>
+              Actions
+            </div>
+            <button style={menuBtnStyle} onClick={() => { setMenuOpenId(null); alert('View details'); }}>
+              View details
+            </button>
+            <button style={menuBtnStyle} onClick={() => { setMenuOpenId(null); alert('Edit venue'); }}>
+              Edit venue
+            </button>
+            <button style={menuBtnStyle} onClick={() => { setMenuOpenId(null); alert('View bookings'); }}>
+              View bookings
+            </button>
+            <button style={menuBtnStyle} onClick={() => { setMenuOpenId(null); handleDeactivate(venue.venue_id); }}>
+              Deactivate venue
+            </button>
+            <button
+              style={{ ...menuBtnStyle, color: '#d9534f' }}
+              onClick={() => {
+                setMenuOpenId(null);
+                handleDelete(venue.venue_id);
+              }}
+            >
+              Delete venue
+            </button>
+          </div>
+        )}
+      </td>
+    </tr>
+  ))}
+</tbody>
       </table>
     </div>
   );

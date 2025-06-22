@@ -1,13 +1,19 @@
 import axios from "axios";
+<<<<<<< HEAD
 // import VenueAddTest from "../components/VenueAddTest";
+=======
+>>>>>>> 02e2c0a8488bf62a4e1d392ef2c01fb77a1b2575
 
 // Create an axios instance with default config
 const api = axios.create({
   baseURL: process.env.REACT_APP_API_URL || "http://localhost:8080", 
+  
   headers: {
     "Content-Type": "application/json",
   },
 });
+
+
 
 // Add request interceptor to handle auth tokens if needed
 api.interceptors.request.use(
@@ -51,6 +57,7 @@ api.interceptors.response.use(
   }
 );
 
+
 // Auth API services
 const authService = {
   // Login user
@@ -88,24 +95,6 @@ const authService = {
       throw error;
     }
   },
-addVenue: async (venueData) => {
-    try {
-      const response = await api.post("/admin/venues/new", venueData);
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
-  },
-
-  listVenue: async (venueData) => {
-    try {
-      const response = await api.get("/admin/venues", venueData);
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
-  },
-  
 
   // Reset password
   requestPasswordReset: async (email) => {
@@ -130,4 +119,160 @@ addVenue: async (venueData) => {
   },
 };
 
-export { api, authService };
+
+//Venue API services
+const venueService={
+addVenue: async (venueData) => {
+    try {
+      const response = await api.post("/admin/venues/new", venueData);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  listVenue: async (venueData) => {
+    try {
+      const response = await api.get("/admin/venues", venueData);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  deleteVenue: async (id) => {
+  try {
+    const token = localStorage.getItem('jwtToken');
+    const response = await api.delete(`/admin/venues/delete/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+}
+
+};
+
+// export { api, authService, venueService };
+
+// User API services
+const userService = {
+  // Get all users
+  listUsers: async () => {
+    try {
+      const token = localStorage.getItem('jwtToken');
+      const response = await api.get("/admin/users", {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  // Add new user
+  addUser: async (userData) => {
+    try {
+      const token = localStorage.getItem('jwtToken');
+      const response = await api.post("/admin/users/new", userData, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  // Get user details
+  getUser: async (id) => {
+    try {
+      const token = localStorage.getItem('jwtToken');
+      const response = await api.get(`/admin/users/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  // Update user
+  updateUser: async (id, userData) => {
+    try {
+      const token = localStorage.getItem('jwtToken');
+      const response = await api.put(`/admin/users/update/${id}`, userData, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  // Delete user
+  deleteUser: async (id) => {
+    try {
+      const token = localStorage.getItem('jwtToken');
+      const response = await api.delete(`/admin/users/delete/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  // Change user status (activate/deactivate)
+  changeUserStatus: async (id, status) => {
+    try {
+      const token = localStorage.getItem('jwtToken');
+      const response = await api.patch(`/admin/users/status/${id}`, { status }, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  }
+};
+
+export { api, authService, venueService, userService };
+
+// In your services/api.js file
+const adduserService = {
+  // ... other user service methods
+  
+  createUser: async (userData) => {
+    try {
+      const token = localStorage.getItem('jwtToken');
+      const response = await api.post('/admin/users', userData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  
+  // ... other methods
+};
+
+export { adduserService };

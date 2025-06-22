@@ -23,15 +23,25 @@ public class JwtUtil {
                 .signWith(SECRET_KEY)  // Use Key, not String
                 .compact();
     }
-
     public boolean validateToken(String token) {
         try {
-            Jwts.parserBuilder().setSigningKey(SECRET_KEY).build().parseClaimsJws(token);
+            Claims claims = Jwts.parserBuilder()
+                                .setSigningKey(SECRET_KEY)
+                                .build()
+                                .parseClaimsJws(token)
+                                .getBody();
+
+            // Validate the token's expiration
+            if (claims.getExpiration().before(new Date())) {
+                return false;
+            }
+
             return true;
         } catch (JwtException | IllegalArgumentException e) {
             return false;
         }
     }
+
 
     public String getEmailFromToken(String token) {
         return Jwts.parserBuilder().setSigningKey(SECRET_KEY).build()

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { redirect, useNavigate } from 'react-router-dom';
-import { authService } from '../services/api';
+import { venueService } from '../services/api';
 
 const VenueAddTest = () => {
 
@@ -55,7 +55,7 @@ const VenueAddTest = () => {
 
     try {
       // Call your addVenue API method with formData
-      const response = await authService.addVenue(formData);
+      const response = await venueService.addVenue(formData);
 
       console.log("Venue added successfully:", response);
 

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, Outlet } from 'react-router-dom';
+import { Link, Outlet, useLocation } from 'react-router-dom';
 import { 
   FiHome, 
   FiUsers, 
@@ -15,6 +15,7 @@ import './AdminPanel.css';
 
 const AdminPanel = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const location = useLocation();
 
   const navItems = [
     { path: '/admin/dashboard', icon: <FiHome />, label: 'Dashboard' },
@@ -46,7 +47,8 @@ const AdminPanel = () => {
             <Link 
               to={item.path} 
               key={item.path}
-              className="sidebar-item"
+              className={`sidebar-item ${location.pathname === item.path ? 'active' : ''}`}
+              onClick={() => setMobileMenuOpen(false)}
             >
               <span className="sidebar-icon">{item.icon}</span>
               <span className="sidebar-label">{item.label}</span>

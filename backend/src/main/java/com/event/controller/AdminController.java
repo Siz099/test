@@ -3,11 +3,15 @@ package com.event.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.event.model.Venue;
@@ -33,19 +37,12 @@ public class AdminController {
 	        return venueRepo.findAll();
 	    }
 
-	    @PostMapping("/new")  // FIX: add this method to handle POST
+	    @PostMapping("/new")  
 	    public Venue saveVenue(@RequestBody Venue venue) {
 	      return venueRepo.save(venue);
 	    }
 
-	    // Optional: GET mapping remains if you use server-rendered views
-	    @GetMapping("/new")
-	    public String newVenue(Model m) {
-	      m.addAttribute("venue", new Venue());
-	      return "admin/venueAddTest";  // view name
-	    }
-	  
-	    // Edit form
+	    // edit the data in venue
 	    @GetMapping("/edit/{id}")
 	    public String editVenue(@PathVariable Long id, Model m) {
 	        venueRepo.findById(id)
@@ -53,12 +50,13 @@ public class AdminController {
 	        return "admin/venueForm";
 	    }
 
-	    // Delete venue
-	    @GetMapping("/delete/{id}")
-	    public String deleteVenue(@PathVariable Long id) {
-	        venueRepo.deleteById(id);
-	        return "redirect:/admin/venues";
+	    @DeleteMapping("/delete/{id}")
+	    public ResponseEntity<Void> deleteVenue(@PathVariable Long id) {
+	      venueRepo.deleteById(id);
+	      return ResponseEntity.noContent().build();
 	    }
+	    
+	    
 	}
 	
 

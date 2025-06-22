@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 "use client"
 
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom"
@@ -17,6 +18,23 @@ import Footer from "./components/Footer"
 import NotificationsPage from "./components/notification-page"
 import "./styles/auth.css"
 import "./App.css"
+=======
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import LoginPage from "./components/auth/login-page";
+import SignupPage from "./components/auth/signup-page";
+import PartnerSignupPage from "./components/auth/partner-signup-page";
+import HomePage from "./components/HomePage";
+import AdminPanel from "./components/admin/Adminpanel";
+import Sidebar from "./components/Sidebar";
+import Dashboard from "./components/Dashboard";
+import VenueManagement from "./components/VenueManagement";
+import VenuePage from "./components/VenuePage";
+import "./styles/auth.css";
+import "./App.css";
+import VenueAddTest from "./components/VenueAddTest";
+import UserManagement from "./components/UserManagement";
+import AddUsers from "./components/AddUsers";
+>>>>>>> 02e2c0a8488bf62a4e1d392ef2c01fb77a1b2575
 
 function App() {
   console.log("App rendering")
@@ -68,6 +86,7 @@ function App() {
         <Routes>
           {/* Routes with Header */}
           <Route
+<<<<<<< HEAD
             path="/home"
             element={
               <>
@@ -102,6 +121,28 @@ function App() {
             }
           />
           <Route path="/" element={<Navigate to="/home" replace />} />
+=======
+          path="/Adminpanel"
+          element={
+            <div className="auth-container">
+              <AdminPanel />
+            </div>
+          }
+        />
+        
+          
+         
+        <Route path="/" element={<Navigate to="/home" replace />} />
+        <Route
+          path="/admin/*"
+          element={<AdminPanel />}
+        >
+          <Route path="dashboard" element={<Dashboard />} />
+          <Route path="venues" element={<VenueManagement />} />
+          <Route path="users" element={<UserManagement />} />
+          <Route path="users/new" element={<AddUsers />} />
+        </Route>
+>>>>>>> 02e2c0a8488bf62a4e1d392ef2c01fb77a1b2575
 
           {/* Auth routes without Header */}
           <Route
@@ -129,6 +170,7 @@ function App() {
             }
           />
 
+<<<<<<< HEAD
           {/* Admin routes without Header (has its own navigation) */}
           <Route path="/Adminpanel" element={<AdminPanel />} />
           <Route path="/admin/*" element={<AdminPanel />}>
@@ -138,6 +180,13 @@ function App() {
           <Route path="/admin/venues/new" element={<VenueAddTest />} />
         </Routes>
       </div>
+=======
+      <Route path="/admin/venues/new" element={<VenueAddTest />} />
+
+      
+
+      </Routes>
+>>>>>>> 02e2c0a8488bf62a4e1d392ef2c01fb77a1b2575
     </BrowserRouter>
   )
 }

@@ -11,6 +11,7 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -23,19 +24,30 @@ import org.springframework.web.filter.CorsFilter;
 @EnableWebSecurity
 
 public class SecurityConfig {
+	
+	private final JwtRequestFilter jwtRequestFilter;
+
+    public SecurityConfig(JwtRequestFilter jwtRequestFilter) {
+        this.jwtRequestFilter = jwtRequestFilter;
+    }
 	  @Bean
 	    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-	        http
-	            .cors(Customizer.withDefaults())
-	            .csrf(csrf -> csrf.disable())
-	            .authorizeHttpRequests(auth -> auth
-	                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-	                .requestMatchers("/auth/**", "/admin/**").permitAll()
-	                .anyRequest().authenticated()
-	            )
-	            .httpBasic(Customizer.withDefaults());
+		  http
+		  .csrf(csrf -> csrf.disable())
+		  .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+		  .authorizeHttpRequests(auth -> auth
+		    .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+		    
+		    .requestMatchers("/auth/**", "/admin/**", "/venues/**", "/venues/new").permitAll()
+		    .anyRequest().authenticated()
+		  )
+		  .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+
+		
 
 	        return http.build();
+	        
+	        
 	    }
 
 	    @Bean
