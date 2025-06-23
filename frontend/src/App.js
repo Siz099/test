@@ -78,9 +78,9 @@ function App() {
         
           
          
-        <Route path="/" element={<Navigate to="/home" replace />} />
+        {/* <Route path="/" element={<Navigate to="/home" replace />} />
         <Route
-          path="/admin/*"
+          path="/admin/*"cd
           element={<AdminPanel />}
         >
           <Route path="dashboard" element={<Dashboard />} />
@@ -133,7 +133,7 @@ function App() {
                 <Footer />
               </>
             }
-          />
+          /> */}
           <Route
             path="/Adminpanel"
             element={<AdminPanel />}
@@ -143,6 +143,8 @@ function App() {
             <Route path="venues" element={<VenueManagement />} />
             <Route path="users" element={<UserManagement />} />
             <Route path="users/new" element={<AddUsers />} />
+              <Route path="partners" element={<PartnerManagement />} />
+            
           </Route>
           <Route path="/admin/venues/new" element={<VenueAddTest />} />
 
