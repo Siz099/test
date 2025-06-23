@@ -20,8 +20,8 @@ const UserManagement = () => {
       try {
         setLoading(true);
         const response = await userService.listUsers();
-        setUsers(response.data);
-        setFilteredUsers(response.data);
+        setUsers(response);
+        setFilteredUsers(response);
         setError(null);
       } catch (err) {
         console.error('Error fetching users:', err);
@@ -42,7 +42,7 @@ const UserManagement = () => {
       setFilteredUsers(users);
     } else {
       const filtered = users.filter(user =>
-        (user.name && user.name.toLowerCase().includes(searchTerm.toLowerCase())) ||
+        (user.fullname && user.fullname.toLowerCase().includes(searchTerm.toLowerCase())) ||
         (user.email && user.email.toLowerCase().includes(searchTerm.toLowerCase()))
       );
       setFilteredUsers(filtered);
@@ -77,7 +77,7 @@ const UserManagement = () => {
       await userService.changeUserStatus(userId, 'Inactive');
       setUsers(prevUsers => 
         prevUsers.map(user => 
-          user.id === userId ? { ...user, status: 'Inactive' } : user
+          user.user_id === userId ? { ...user, status: 'Inactive' } : user
         )
       );
       setActiveActionMenu(null);
@@ -92,7 +92,7 @@ const UserManagement = () => {
       await userService.changeUserStatus(userId, 'Active');
       setUsers(prevUsers =>
         prevUsers.map(user =>
-          user.id === userId ? { ...user, status: 'Active' } : user
+          user.user_id === userId ? { ...user, status: 'Active' } : user
         )
       );
       setActiveActionMenu(null);
@@ -102,18 +102,20 @@ const UserManagement = () => {
     }
   };
 
-  const handleDelete = async (userId) => {
-    if (!window.confirm('Are you sure you want to delete this user?')) return;
-    
-    try {
-      await userService.deleteUser(userId);
-      setUsers(prevUsers => prevUsers.filter(user => user.id !== userId));
-      setActiveActionMenu(null);
-    } catch (error) {
-      console.error('Error deleting user:', error);
-      setError('Failed to delete user');
-    }
-  };
+ const handleDelete = async (userId) => {
+  console.log('Deleting userId:', userId);
+  if (!window.confirm('Are you sure you want to delete this user?')) return;
+  try {
+    await userService.deleteUser(userId);
+    setUsers((prevUsers) => prevUsers.filter((user) => user.user_id !== userId));
+    setActiveActionMenu(null);
+  } catch (error) {
+    console.error('Error deleting user:', error);
+    setError('Failed to delete user');
+  }
+};
+
+
 
   const handleViewDetails = (userId) => {
     navigate(`/admin/users/${userId}`);
@@ -132,7 +134,7 @@ const UserManagement = () => {
     return <div className="loading-message">Loading users...</div>;
   }
 
-  return (
+    return (
     <div className="user-management-container">
       <h1 className="title">User Management</h1>
       <p className="subtitle">Manage all registered users</p>
@@ -174,6 +176,7 @@ const UserManagement = () => {
                 <th>ID</th>
                 <th>Name</th>
                 <th>Email</th>
+                <th>Role</th>
                 <th>Join Date</th>
                 <th>Bookings</th>
                 <th>Status</th>
@@ -182,10 +185,11 @@ const UserManagement = () => {
             </thead>
             <tbody>
               {filteredUsers.map((user) => (
-                <tr key={user.id}>
-                  <td>{user.id}</td>
-                  <td>{user.name}</td>
+                <tr key={user.user_id}>
+                  <td>{user.user_id}</td>
+                  <td>{user.fullname}</td>
                   <td>{user.email}</td>
+                   <td>{user.role}</td>
                   <td>{new Date(user.joinDate).toLocaleDateString()}</td>
                   <td>{user.bookings || 0}</td>
                   <td>
@@ -239,7 +243,7 @@ const UserManagement = () => {
                             </button>
                           )}
                           <button 
-                            onClick={() => handleDelete(user.id)} 
+                            onClick={() => handleDelete(user.user_id)} 
                             className="actions-menu-item actions-menu-item-delete"
                           >
                             Delete User

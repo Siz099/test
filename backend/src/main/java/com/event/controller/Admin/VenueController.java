@@ -1,35 +1,32 @@
-package com.event.controller;
+package com.event.controller.Admin;
 
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.event.model.Venue;
 import com.event.repository.VenueRepo;
-import org.springframework.ui.Model;
 
-import jakarta.servlet.http.HttpSession;
+import org.springframework.ui.Model;
 
 @RequestMapping("/admin/venues")
 @RestController
-public class AdminController {
+public class VenueController {
 	
 	
 	@Autowired
 	private VenueRepo venueRepo;
 
 	
-	//Venue Controller
+	//Venue Controller for Admin
 	
 	    // List all venues
 	    @GetMapping
@@ -56,7 +53,7 @@ public class AdminController {
 	      return ResponseEntity.noContent().build();
 	    }
 	    
-	    
+	 
 	}
 	
 

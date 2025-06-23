@@ -121,7 +121,7 @@ export default function LoginPage() {
     });
 
     console.log("Login successful:", data);
-
+      console.log('Saved JWT token:', localStorage.getItem('jwtToken'));
     
     if (data.redirect) {
       navigate(data.redirect);

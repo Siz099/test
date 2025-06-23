@@ -9,6 +9,7 @@ import com.event.model.Venue;
 
 @Repository
 public interface VenueRepo extends JpaRepository<Venue, Long> {
+	
 	Venue findByVenueName(String venueName);
 	
 	

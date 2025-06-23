@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { adduserService } from '../services/api'; // Import your API service
+import { userService } from '../services/api'; // Import your API service
 import './AddUsers.css';
 
 const AddUsers = () => {
   const [userType, setUserType] = useState('Regular User');
-  const [fullName, setFullName] = useState('');
+  const [fullname, setFullName] = useState('');
   const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
+  const [phoneNumber, setPhone] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [sendEmail, setSendEmail] = useState(false);
@@ -17,7 +17,7 @@ const AddUsers = () => {
   const [successMessage, setSuccessMessage] = useState('');
   
   // Partner-specific state
-  const [businessName, setBusinessName] = useState('');
+  const [company, setBusinessName] = useState('');
   const [businessRegistrationNumber, setBusinessRegistrationNumber] = useState('');
   const [businessAddress, setBusinessAddress] = useState('');
   const [panCardImage, setPanCardImage] = useState(null);
@@ -26,19 +26,19 @@ const AddUsers = () => {
   const validateForm = () => {
     const newErrors = {};
     
-    if (!fullName.trim()) newErrors.fullName = 'Full name is required';
+    if (!fullname.trim()) newErrors.fullname = 'Full name is required';
     if (!email.trim()) {
       newErrors.email = 'Email is required';
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       newErrors.email = 'Please enter a valid email';
     }
-    if (!phone.trim()) newErrors.phone = 'Phone number is required';
+    if (!phoneNumber.trim()) newErrors.phoneNumber = 'Phone number is required';
     if (!password) newErrors.password = 'Password is required';
     else if (password.length < 8) newErrors.password = 'Password must be at least 8 characters';
     if (password !== confirmPassword) newErrors.confirmPassword = 'Passwords do not match';
     
     if (userType === 'Partner') {
-      if (!businessName.trim()) newErrors.businessName = 'Business name is required';
+      if (!company.trim()) newErrors.company = 'Business name is required';
       if (!businessRegistrationNumber.trim()) newErrors.businessRegistrationNumber = 'Business registration number is required';
       if (!businessAddress.trim()) newErrors.businessAddress = 'Business address is required';
       if (!panCardImage) newErrors.panCardImage = 'PAN card image is required';
@@ -59,16 +59,16 @@ const AddUsers = () => {
     setSuccessMessage('');
     
     const formData = new FormData();
-    formData.append('name', fullName);
+    formData.append('fullname', fullname);
     formData.append('email', email);
-    formData.append('phone', phone);
+    formData.append('phoneNumber', phoneNumber);
     formData.append('password', password);
     formData.append('role', userType === 'Admin' ? 'admin' : userType === 'Partner' ? 'partner' : 'user');
     formData.append('status', accountActive ? 'Active' : 'Inactive');
     formData.append('sendWelcomeEmail', sendEmail);
 
     if (userType === 'Partner') {
-      formData.append('businessName', businessName);
+      formData.append('company', company);
       formData.append('businessRegistrationNumber', businessRegistrationNumber);
       formData.append('businessAddress', businessAddress);
       formData.append('panCardImage', panCardImage);
@@ -76,7 +76,7 @@ const AddUsers = () => {
     }
     
     try {
-      const response = await adduserService.createUser(formData);
+      const response = await userService.addUser(formData);
       
       setSuccessMessage('User created successfully!');
       // Reset form
@@ -91,11 +91,13 @@ const AddUsers = () => {
       setBusinessAddress('');
       setPanCardImage(null);
       setBusinessDocument(null);
-      document.getElementById('panCardImage').value = null;
-      document.getElementById('businessDocument').value = null;
+      const panCardInput = document.getElementById('panCardImage');
+const businessDocInput = document.getElementById('businessDocument');
+if (panCardInput) panCardInput.value = null;
+if (businessDocInput) businessDocInput.value = null;
 
       
-      console.log('User created:', response.data);
+      console.log('User created:', response);
     } catch (error) {
       console.error('Error creating user:', error);
       setApiError(error.response?.data?.message || 'Failed to create user. Please try again.');
@@ -140,7 +142,7 @@ const AddUsers = () => {
               type="text"
               id="fullName"
               placeholder="Enter full name"
-              value={fullName}
+              value={fullname}
               onChange={(e) => setFullName(e.target.value)}
               className={errors.fullName ? 'error' : ''}
             />
@@ -166,7 +168,7 @@ const AddUsers = () => {
               type="text"
               id="phone"
               placeholder="Enter phone number"
-              value={phone}
+              value={phoneNumber}
               onChange={(e) => setPhone(e.target.value)}
               className={errors.phone ? 'error' : ''}
             />
@@ -185,7 +187,7 @@ const AddUsers = () => {
                         type="text"
                         id="businessName"
                         placeholder="Enter business name"
-                        value={businessName}
+                        value={company}
                         onChange={(e) => setBusinessName(e.target.value)}
                         className={errors.businessName ? 'error' : ''}
                     />

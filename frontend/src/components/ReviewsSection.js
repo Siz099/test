@@ -106,7 +106,7 @@ export default function Reviews() {
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
-        <AnimatePresence mode="wait" custom={direction}>
+        <AnimatePresence custom={direction}>
           {getVisibleReviews().map((review, index) => (
             <motion.div
               key={`${review.position}-${activeIndex}`}
@@ -118,8 +118,8 @@ export default function Reviews() {
               exit={review.position === "center" ? "exit" : review.position}
               transition={{
                 x: { type: "spring", stiffness: 500, damping: 25 },
-                opacity: { duration: 0.104 }, // reduced from 0.2
-                scale: { duration: 0.104 }, // reduced from 0.2
+                opacity: { duration: 0.104 },
+                scale: { duration: 0.104 },
               }}
             >
               {review.position === "center" && (
@@ -136,7 +136,7 @@ export default function Reviews() {
                 className="reviewer-name"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.052, duration: 0.104 }} // reduced from delay: 0.1, duration: 0.2
+                transition={{ delay: 0.052, duration: 0.104 }}
               >
                 {review.name}
               </motion.h3>
@@ -144,7 +144,7 @@ export default function Reviews() {
                 className="review-text"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.078, duration: 0.104 }} // reduced from delay: 0.15, duration: 0.2
+                transition={{ delay: 0.078, duration: 0.104 }}
               >
                 {review.text}
               </motion.p>

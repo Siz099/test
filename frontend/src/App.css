@@ -77,18 +77,27 @@
 }
 
 .tabs button {
-  padding: 8px 20px;
-  margin-right: 8px;
+  padding: 10px 25px;
+  margin-right: 10px;
   border: none;
-  background: #f1f1f1;
-  border-radius: 4px 4px 0 0;
+  background: transparent;
+  border-radius: 25px;
   cursor: pointer;
+  font-weight: 600;
+  color: #333;
+  transition: all 0.3s ease;
+}
+
+.tabs button:hover,
+.tabs button.active {
+  background-color: #ffc107;
+  color: #000;
 }
 
 .tabs button.active {
-  background: #fff;
-  border-bottom: 2px solid #333;
-  font-weight: bold;
+  background-color: #ffc107;
+  color: #000;
+  border-bottom: 2px solid #ffc107;
 }
 
 .partner-requests {
@@ -126,4 +135,32 @@
 .request-actions .approve {
   background: #222;
   color: #fff;
+}
+
+/* Add this to your App.css or create a separate file */
+
+
+.notifications-page-wrapper {
+  padding-top: 100px !important; /* Account for fixed header */
+  background-color: #f8f9fa;
+  min-height: calc(100vh - 100px);
+}
+
+/* Ensure the notifications component fits well */
+.notifications-page-wrapper .notifications-container {
+  background-color: #f8f9fa;
+  padding: 40px 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .notifications-page-wrapper {
+    padding-top: 100px !important;
+  }
+
+  .notifications-page-wrapper .notifications-container {
+    padding: 20px 16px;
+  }
 }

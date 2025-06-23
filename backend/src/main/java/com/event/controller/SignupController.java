@@ -102,7 +102,7 @@ public class SignupController {
 
 	            return ResponseEntity.ok(Map.of(
 	                "message", "Login successful",
-	                //"token", token,
+	                "token", token,
 	                "role", role,
 	                "redirect", redirectUrl
 	            ));
