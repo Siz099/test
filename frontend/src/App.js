@@ -76,7 +76,6 @@ function App() {
           }
         />
         
-          
          
         {/* <Route path="/" element={<Navigate to="/home" replace />} />
         <Route
@@ -149,13 +148,6 @@ function App() {
           <Route path="/admin/venues/new" element={<VenueAddTest />} />
 
 
-<<<<<<< HEAD
-      <Route path="/admin/venues/new" element={<VenueAddTest />} />
-  <Route path="/admin/users" element={<UserManagement />} />
-      
-
-      </Routes>
-=======
           <Route
             path="/login"
             element={
@@ -183,7 +175,6 @@ function App() {
           <Route path="/" element={<Navigate to="/home" replace />} />
         </Routes>
       </div>
->>>>>>> 27c3a04c7782abff53e2981bd6e815a5b184c77d
     </BrowserRouter>
   );
 }

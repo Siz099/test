@@ -8,19 +8,13 @@ const api = axios.create({
   },
 });
 
-<<<<<<< HEAD
 const getCookie = (name) => {
   const value = `; ${document.cookie}`;
   const parts = value.split(`; ${name}=`);
   if (parts.length === 2) return parts.pop().split(';').shift();
 };
 
-
-
-// Add request interceptor to handle auth tokens if needed
-=======
 // Add request interceptor to automatically attach jwtToken
->>>>>>> 27c3a04c7782abff53e2981bd6e815a5b184c77d
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("jwtToken");
@@ -39,10 +33,6 @@ api.interceptors.response.use(
     if (error.response) {
       console.error("API Response Error:", error.response.data);
       if (error.response.status === 401) {
-<<<<<<< HEAD
-        // Clear token and redirect to login if needed
-=======
->>>>>>> 27c3a04c7782abff53e2981bd6e815a5b184c77d
         localStorage.removeItem("jwtToken");
       }
     } else if (error.request) {
@@ -56,27 +46,6 @@ api.interceptors.response.use(
 
 // Auth API services
 const authService = {
-<<<<<<< HEAD
-  // Login user
- login: async (credentials) => {
-  try {
-    const response = await api.post("/auth/login", credentials);
-
-    if (response.data.token) {
-      localStorage.setItem("jwtToken", response.data.token);
-      console.log('After setItem, jwtToken=', localStorage.getItem("jwtToken"));
-    } else {
-      console.warn("Login succeeded but no token returned");
-    }
-
-    return response.data;
-  } catch (error) {
-    console.error("Login failed:", error);
-    throw error;
-  }
-},
-
-=======
   login: async (credentials) => {
     const response = await api.post("/auth/login", credentials);
     if (response.data.token) {
@@ -89,7 +58,6 @@ const authService = {
     const response = await api.post("/auth/signup", userData);
     return response.data;
   },
->>>>>>> 27c3a04c7782abff53e2981bd6e815a5b184c77d
 
   partnerSignup: async (partnerData) => {
     const response = await api.post("/auth/partner-signup", partnerData);
@@ -103,20 +71,9 @@ const authService = {
 
   logout: () => {
     localStorage.removeItem("jwtToken");
-<<<<<<< HEAD
-    // You could also call an API endpoint to invalidate the token on the server
-    // return api.post("/auth/logout")
-  },
-
-  // Check if user is authenticated
-  isAuthenticated: () => {
-    return !!localStorage.getItem("jwtToken");
-  },
-=======
   },
 
   isAuthenticated: () => !!localStorage.getItem("jwtToken"),
->>>>>>> 27c3a04c7782abff53e2981bd6e815a5b184c77d
 };
 
 // Venue API services
@@ -139,28 +96,68 @@ const venueService = {
 
 // User API services
 const userService = {
-  listUsers: async () => {
-    const response = await api.get("/admin/users");
-    return response.data;
+ listUsers: async () => {
+    try {
+      const token = localStorage.getItem('jwtToken');
+      const response = await api.get("/admin/users", {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
   },
 
+
+  // Add new user
   addUser: async (userData) => {
-    const response = await api.post("/admin/users/new", userData);
-    return response.data;
+    try {
+      const token = localStorage.getItem('jwtToken');
+      const response = await api.post("/admin/users/new", userData, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
   },
 
+// Get user details
   getUser: async (id) => {
-    const response = await api.get(`/admin/users/${id}`);
-    return response.data;
+    try {
+      const token = localStorage.getItem('jwtToken');
+      const response = await api.get(`/admin/users/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
   },
 
+
+  // Update user
   updateUser: async (id, userData) => {
-    const response = await api.put(`/admin/users/update/${id}`, userData);
-    return response.data;
+    try {
+      const token = localStorage.getItem('jwtToken');
+      const response = await api.put(`/admin/users/update/${id}`, userData, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
   },
 
-<<<<<<< HEAD
-  // Delete user
+   // Delete user
   deleteUser: async (userId) => {
   try {
     const token = localStorage.getItem('jwtToken');
@@ -180,12 +177,7 @@ console.log('JWT Token:', token);
     throw error;
   }
 },
-=======
-  deleteUser: async (id) => {
-    const response = await api.delete(`/admin/users/delete/${id}`);
-    return response.data;
-  },
->>>>>>> 27c3a04c7782abff53e2981bd6e815a5b184c77d
+
 
   changeUserStatus: async (id, status) => {
 
@@ -203,10 +195,6 @@ console.log('JWT Token:', token);
   }
 };
 
-<<<<<<< HEAD
-
-export { api, authService, venueService, userService };
-=======
 const partnerService = {
   listPartners: async () => {
     try {
@@ -264,42 +252,41 @@ const partnerService = {
 };
 
 export { api, authService, venueService, userService, partnerService };
->>>>>>> 27c3a04c7782abff53e2981bd6e815a5b184c77d
 
-// In your services/api.js file
-const adduserService = {
-  // ... other user service methods
+// // In your services/api.js file
+// const adduserService = {
+//   // ... other user service methods
   
-  createUser: async (userData) => {
-    try {
-      const token = localStorage.getItem('jwtToken');
-      const response = await api.post('/admin/users', userData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      });
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
-  },
+//   createUser: async (userData) => {
+//     try {
+//       const token = localStorage.getItem('jwtToken');
+//       const response = await api.post('/admin/users', userData, {
+//         headers: {
+//           Authorization: `Bearer ${token}`,
+//           'Content-Type': 'application/json'
+//         }
+//       });
+//       return response.data;
+//     } catch (error) {
+//       throw error;
+//     }
+//   },
 
-  updateUserStatus: async (id, status) => {
-    try {
-      const token = localStorage.getItem('jwtToken');
-      const response = await api.patch(`/admin/users/status/${id}`, { status }, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
-  },
-};
-export { adduserService }
+//   updateUserStatus: async (id, status) => {
+//     try {
+//       const token = localStorage.getItem('jwtToken');
+//       const response = await api.patch(`/admin/users/status/${id}`, { status }, {
+//         headers: {
+//           Authorization: `Bearer ${token}`
+//         }
+//       });
+//       return response.data;
+//     } catch (error) {
+//       throw error;
+//     }
+//   },
+// };
+// export { adduserService }
 
 // Additional user creation service (if needed separately)
 // const adduserService = {
