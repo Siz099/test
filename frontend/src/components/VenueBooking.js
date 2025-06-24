@@ -2,6 +2,8 @@
 
 import { useState } from "react"
 import "../styles/venue-booking.css"
+import PaymentPage from "./PaymentPage"
+import "../styles/modern-components.css"
 import Header from "./Header"
 import Footer from "./Footer"
 
@@ -22,6 +24,10 @@ const VenueBooking = () => {
 
   // Add these new state variables after the existing useState declarations
   const [dateError, setDateError] = useState("")
+  const [showPayment, setShowPayment] = useState(false)
+  const [showToast, setShowToast] = useState(false)
+  const [toastMessage, setToastMessage] = useState("")
+  const [toastType, setToastType] = useState("error") // "error" or "success"
 
   // Mock data for time slot availability (in real app, this would come from API)
   const timeSlotAvailability = {
@@ -75,20 +81,27 @@ const VenueBooking = () => {
     }
   }
 
+  const showToastMessage = (message, type = "error") => {
+    setToastMessage(message)
+    setToastType(type)
+    setShowToast(true)
+    setTimeout(() => setShowToast(false), 4000)
+  }
+
   const handleContinueToReview = () => {
     // Validate all required fields
     const isDateValid = validateDate(bookingData.date)
 
     if (!isDateValid || !bookingData.startTime || !bookingData.guests) {
-      if (!bookingData.startTime) alert("Please select a start time")
-      if (!bookingData.guests) alert("Please enter number of guests")
+      if (!bookingData.startTime) showToastMessage("Please select a start time")
+      if (!bookingData.guests) showToastMessage("Please enter number of guests")
       return
     }
 
     // Additional validation for guest capacity
     const guestWarning = getGuestCapacityWarning(bookingData.guests)
     if (guestWarning && guestWarning.type === "error") {
-      alert(guestWarning.message)
+      showToastMessage(guestWarning.message)
       return
     }
 
@@ -290,6 +303,14 @@ const VenueBooking = () => {
     return "available"
   }
 
+  const handleProceedToPayment = () => {
+    setShowPayment(true)
+  }
+
+  const handleBackFromPayment = () => {
+    setShowPayment(false)
+  }
+
   const StarIcon = () => (
     <svg className="venue-star-icon" viewBox="0 0 20 20" fill="currentColor">
       <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-.181h3.461a1 1 0 00.951-.69l1.07-3.292z" />
@@ -345,11 +366,14 @@ const VenueBooking = () => {
     </svg>
   )
 
+  if (showPayment) {
+    return <PaymentPage bookingData={bookingData} onBack={handleBackFromPayment} />
+  }
+
   return (
     <div className="venue-booking-page">
       {/* ADD HEADER HERE - At the very top */}
       <Header />
-
       {/* Hero Section */}
       <section className="venue-hero-section">
         <img
@@ -749,7 +773,9 @@ const VenueBooking = () => {
                   <p className="venue-review-terms">By proceeding to payment, you agree to our terms and conditions.</p>
 
                   <div className="venue-review-actions">
-                    <button className="venue-proceed-btn">Proceed to Payment</button>
+                    <button className="venue-proceed-btn" onClick={handleProceedToPayment}>
+                      Proceed to Payment
+                    </button>
                     <button className="venue-back-btn" onClick={handleBackToBooking}>
                       Back to booking details
                     </button>
@@ -763,7 +789,6 @@ const VenueBooking = () => {
 
       {/* ADD FOOTER HERE - At the very bottom */}
       <Footer />
-
       {/* Image Lightbox */}
       {lightboxOpen && (
         <div className="venue-lightbox-overlay" onClick={closeLightbox}>
@@ -785,6 +810,18 @@ const VenueBooking = () => {
             <div className="venue-lightbox-counter">
               {lightboxImageIndex + 1} / {venueImages.length}
             </div>
+          </div>
+        </div>
+      )}
+      {/* Toast Notification */}
+      {showToast && (
+        <div className={`venue-toast venue-toast-${toastType}`}>
+          <div className="venue-toast-content">
+            <div className="venue-toast-icon">{toastType === "error" ? "⚠" : "✓"}</div>
+            <span className="venue-toast-message">{toastMessage}</span>
+            <button className="venue-toast-close" onClick={() => setShowToast(false)}>
+              ×
+            </button>
           </div>
         </div>
       )}

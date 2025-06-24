@@ -19,6 +19,7 @@ import NotificationsPage from "./components/notification-page";
 import UserManagement from "./components/UserManagement";
 import AddUsers from "./components/AddUsers";
 import PartnerManagement from "./components/PartnerManagement";
+import ProfilePage from "./components/ProfilePage";
 
 import "./styles/auth.css";
 import "./App.css";
@@ -77,7 +78,7 @@ function App() {
         />
         
          
-        {/* <Route path="/" element={<Navigate to="/home" replace />} />
+        <Route path="/" element={<Navigate to="/home" replace />} />
         <Route
           path="/admin/*"cd
           element={<AdminPanel />}
@@ -122,6 +123,17 @@ function App() {
             }
           />
           <Route
+            path="/user-profile"
+            element={
+              <>
+                <Header isLoggedIn={isLoggedIn} user={user} onLogout={handleLogout} hasNotifications={true} />
+                <div className="page-content">
+                  <ProfilePage />
+                </div>
+              </>
+            }
+          />
+          <Route
             path="/notifications"
             element={
               <>
@@ -132,7 +144,7 @@ function App() {
                 <Footer />
               </>
             }
-          /> */}
+          />
           <Route
             path="/Adminpanel"
             element={<AdminPanel />}
