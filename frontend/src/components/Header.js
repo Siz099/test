@@ -1,10 +1,9 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { useNavigate } from "react-router-dom"
 import "../styles/Header.css"
 
-// SVG Icons
+// SVG Icons (keeping all existing icons)
 const SearchIcon = () => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
     <circle cx="11" cy="11" r="8"></circle>
@@ -135,8 +134,6 @@ const globalSearchData = {
 }
 
 export default function Header({ hasNotifications = true, isLoggedIn = false, user = null, onLogout }) {
-  const navigate = useNavigate()
-
   // State management
   const [recentSearches, setRecentSearches] = useState(["Grand Ballroom", "Wedding Planning", "Conference Room"])
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
@@ -165,6 +162,18 @@ export default function Header({ hasNotifications = true, isLoggedIn = false, us
     }
   }, [profileDropdownOpen, notificationDropdownOpen, searchDropdownOpen])
 
+  // Close mobile menu on window resize
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth > 768 && isMobileMenuOpen) {
+        setIsMobileMenuOpen(false)
+      }
+    }
+
+    window.addEventListener("resize", handleResize)
+    return () => window.removeEventListener("resize", handleResize)
+  }, [isMobileMenuOpen])
+
   // Event handlers
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen)
@@ -177,7 +186,8 @@ export default function Header({ hasNotifications = true, isLoggedIn = false, us
       } else {
         localStorage.removeItem("auth_token")
         localStorage.removeItem("user")
-        navigate("/home")
+        // Replace with your navigation method
+        window.location.href = "/home"
       }
       setProfileDropdownOpen(false)
       console.log("Logged out successfully")
@@ -187,11 +197,13 @@ export default function Header({ hasNotifications = true, isLoggedIn = false, us
   }
 
   const handleSignInClick = () => {
-    navigate("/login")
+    // Replace with your navigation method
+    window.location.href = "/login"
   }
 
   const handleNavigation = (path) => {
-    navigate(path)
+    // Replace with your navigation method
+    window.location.href = path
     setIsMobileMenuOpen(false)
   }
 
@@ -207,9 +219,9 @@ export default function Header({ hasNotifications = true, isLoggedIn = false, us
     setSearchQuery("")
 
     if (type === "venues") {
-      navigate("/venues")
+      handleNavigation("/venues")
     } else {
-      navigate(`/search?q=${encodeURIComponent(query)}`)
+      handleNavigation(`/search?q=${encodeURIComponent(query)}`)
     }
   }
 
@@ -466,56 +478,67 @@ export default function Header({ hasNotifications = true, isLoggedIn = false, us
           </button>
         )}
 
-        <button className="mobile-menu-button" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+        <button className="mobile-menu-button" onClick={toggleMobileMenu}>
           {isMobileMenuOpen ? <CloseIcon /> : <MenuIcon />}
         </button>
       </div>
 
-      {/* Mobile Menu */}
+      {/* Enhanced Mobile Menu */}
       <div className={`mobile-menu ${isMobileMenuOpen ? "active" : ""}`}>
-        <div className="mobile-nav-links">
-          <span className="nav-link" onClick={() => handleNavigation("/home")}>
-            Home
-          </span>
-          <span className="nav-link" onClick={() => handleNavigation("/venues")}>
-            Venue
-          </span>
-          <span className="nav-link" onClick={() => handleNavigation("/about")}>
-            About
-          </span>
-          <span className="nav-link" onClick={() => handleNavigation("/media")}>
-            Media
-          </span>
-          <span className="nav-link" onClick={() => handleNavigation("/contact")}>
-            Contact Us
-          </span>
-        </div>
-        <div className="mobile-nav-actions">
-          {renderSearchComponent()}
-          {isLoggedIn ? (
-            <div className="user-actions">
-              <div className="notification-container">
-                <button
-                  className="notification-icon"
-                  onClick={() => setNotificationDropdownOpen(!notificationDropdownOpen)}
-                >
-                  <BellIcon />
-                  {hasNotifications && <div className="notification-badge"></div>}
+        <div className="mobile-menu-content">
+          <div className="mobile-nav-links">
+            <span className="mobile-nav-link" onClick={() => handleNavigation("/home")}>
+              Home
+            </span>
+            <span className="mobile-nav-link" onClick={() => handleNavigation("/venues")}>
+              Venue
+            </span>
+            <span className="mobile-nav-link" onClick={() => handleNavigation("/about")}>
+              About
+            </span>
+            <span className="mobile-nav-link" onClick={() => handleNavigation("/media")}>
+              Media
+            </span>
+            <span className="mobile-nav-link" onClick={() => handleNavigation("/contact")}>
+              Contact Us
+            </span>
+          </div>
+
+          <div className="mobile-nav-divider"></div>
+
+          <div className="mobile-nav-actions">
+            {isLoggedIn ? (
+              <div className="mobile-user-actions">
+                <div className="mobile-action-row">
+                  <button
+                    className="mobile-action-btn"
+                    onClick={() => setNotificationDropdownOpen(!notificationDropdownOpen)}
+                  >
+                    <BellIcon />
+                    <span>Notifications</span>
+                    {hasNotifications && <div className="notification-badge"></div>}
+                  </button>
+                  <button className="mobile-action-btn" onClick={() => handleNavigation("/profile")}>
+                    <UserIcon />
+                    <span>Profile</span>
+                  </button>
+                </div>
+                <button className="mobile-logout-btn" onClick={handleLogout}>
+                  <LogoutMenuIcon />
+                  <span>Logout</span>
                 </button>
               </div>
-              <div className="profile-container">
-                <button className="profile-icon" onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}>
-                  <UserIcon />
-                </button>
-              </div>
-            </div>
-          ) : (
-            <button className="sign-in-button" onClick={handleSignInClick}>
-              Sign In
-            </button>
-          )}
+            ) : (
+              <button className="mobile-sign-in-button" onClick={handleSignInClick}>
+                Sign In
+              </button>
+            )}
+          </div>
         </div>
       </div>
+
+      {/* Mobile Menu Overlay */}
+      {isMobileMenuOpen && <div className="mobile-menu-overlay" onClick={() => setIsMobileMenuOpen(false)}></div>}
     </nav>
   )
 }
