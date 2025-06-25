@@ -3,12 +3,13 @@ body {
     background-color: #f8f9fa;
     color: #333;
     margin: 0;
-    padding: 20px;
+    /* padding: 20px; */
 }
 
 .add-user-container {
     max-width: 800px;
     margin: 0 auto;
+    padding: 20px;
 }
 
 .add-user-header {
