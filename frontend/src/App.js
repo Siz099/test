@@ -20,6 +20,8 @@ import UserManagement from "./components/UserManagement";
 import AddUsers from "./components/AddUsers";
 import PartnerManagement from "./components/PartnerManagement";
 import ProfilePage from "./components/ProfilePage";
+import ContactPage from "./components/ContactPage";
+import AboutUs from "./components/about-us";
 
 import "./styles/auth.css";
 import "./App.css";
@@ -129,6 +131,28 @@ function App() {
                 <Header isLoggedIn={isLoggedIn} user={user} onLogout={handleLogout} hasNotifications={true} />
                 <div className="page-content">
                   <ProfilePage />
+                </div>
+              </>
+            }
+          />
+          <Route
+            path="/contact"
+            element={
+              <>
+                <Header isLoggedIn={isLoggedIn} user={user} onLogout={handleLogout} hasNotifications={true} />
+                <div className="page-content">
+                  <ContactPage />
+                </div>
+              </>
+            }
+          />
+          <Route
+            path="/about"
+            element={
+              <>
+                <Header isLoggedIn={isLoggedIn} user={user} onLogout={handleLogout} hasNotifications={true} />
+                <div className="page-content">
+                  <AboutUs />
                 </div>
               </>
             }
