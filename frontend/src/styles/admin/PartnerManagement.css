@@ -70,7 +70,6 @@
     color: #9ca3af;
 }
 
-
 .partner-management .tabs {
     margin-top: 1.5rem;
     display: flex;
@@ -302,4 +301,4 @@
 .partner-actions button svg {
     width: 16px;
     height: 16px;
-} 
+}

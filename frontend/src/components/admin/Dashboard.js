@@ -15,7 +15,7 @@ const Dashboard = () => {
 
   return (
     <main className="dashboard" style={{ flex: 1 }}>
-      <div className="breadcrumb">Admin &gt; Dashboard</div>
+      <div className="breadcrumb">Admin > Dashboard</div>
       <h1>Admin Dashboard</h1>
       <p>Manage the entire platform</p>
       <div className="stats-row">

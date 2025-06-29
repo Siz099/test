@@ -11,7 +11,7 @@ import {
   FiUser,
   FiLogOut
 } from 'react-icons/fi';
-import './AdminPanel.css';
+import '../../styles/admin/AdminPanel.css';
 
 const AdminPanel = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);

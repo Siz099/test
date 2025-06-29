@@ -1,40 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { redirect, useNavigate, Navigate } from 'react-router-dom';
-import { venueService } from '../services/api';
-import axios from 'axios';
-
+import { useNavigate } from 'react-router-dom';
+import { venueService } from '../../services/api';
 
 const VenueManagement = () => {
-    const [venues, setVenues] = useState([]);
+  const [venues, setVenues] = useState([]);
   const [menuOpenId, setMenuOpenId] = useState(null);
   const menuRef = useRef();
   const navigate = useNavigate();
-
-   const [errors, setErrors] = useState({});
-    const [touched, setTouched] = useState({});
-    const [isSubmitting, setIsSubmitting] = useState(false);
-    const [apiError, setApiError] = useState("");
-  
-   const [formData, setFormData] = useState({
-      venueName: '',
-      partner: '',
-      location: '',
-      capacity: '',
-      price: '',
-      bookings: '',
-      status: '',
-    });
-
-    const validate = () => {
-    const newErrors = {};
-    Object.keys(formData).forEach((key) => {
-      if (!formData[key]) {
-        newErrors[key] = `${key} is required`;
-      }
-    });
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
 
   // Close menu on click outside
   React.useEffect(() => {
@@ -51,7 +23,6 @@ const VenueManagement = () => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, [menuOpenId]);
 
-
   const handleDelete = async (id) => {
   console.log("Deleting venue id:", id);
   try {
@@ -64,7 +35,6 @@ const VenueManagement = () => {
     alert("Failed to delete venue. Please try again.");
   }
 };
-
 
   const handleDeactivate = (id) => {
     setVenues((prev) => prev.map((venue) =>

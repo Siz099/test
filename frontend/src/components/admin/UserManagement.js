@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { userService } from '../services/api';
-import './UserManagement.css';
+import { userService } from '../../services/api';
+import '../../styles/admin/UserManagement.css';
 
 const UserManagement = () => {
   // State declarations
@@ -114,8 +114,6 @@ const UserManagement = () => {
     setError('Failed to delete user');
   }
 };
-
-
 
   const handleViewDetails = (userId) => {
     navigate(`/admin/users/${userId}`);

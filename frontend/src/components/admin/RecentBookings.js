@@ -1,5 +1,5 @@
 import React from 'react';
-import './RecentBookings.css';
+import '../../styles/admin/RecentBookings.css';
 
 const bookings = [
   {
@@ -50,4 +50,4 @@ const RecentBookings = () => {
   );
 };
 
-export default RecentBookings; 
+export default RecentBookings;

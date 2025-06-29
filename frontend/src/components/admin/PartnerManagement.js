@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import './PartnerManagement.css';
-import { partnerService } from '../services/api';
+import '../../styles/admin/PartnerManagement.css';
+import { partnerService } from '../../services/api';
 
 const PartnerManagement = () => {
     const [partnersData, setPartnersData] = useState([]);
@@ -142,6 +142,7 @@ const PartnerManagement = () => {
                     <button className={activeTab === 'Pending' ? 'active' : ''} onClick={() => setActiveTab('Pending')}>
                         Pending 
                         {pendingCount > 0 && <span className="pending-count">{pendingCount}</span>}
+                        }
                     </button>
                 </div>
                 {activeTab === 'Pending' ? (
