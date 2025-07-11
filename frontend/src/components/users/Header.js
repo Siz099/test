@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import "../styles/Header.css"
+import "../../styles/Header.css"
 
 // SVG Icons (keeping all existing icons)
 const SearchIcon = () => (

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import "../styles/PopularVenues.css";
+import "../../styles/PopularVenues.css";
 import VenueGrid from "./VenueGrid";
 
 const popularVenues = [

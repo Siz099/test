@@ -3,7 +3,7 @@ import Header from "./Header";
 import Footer from "./Footer";
 import PopularVenues from "./PopularVenues";
 import HeroSection from "./HeroSection";
-import "../styles/VenuePage.css";
+import "../../styles/VenuePage.css";
 
 export default function VenuePage() {
   return (

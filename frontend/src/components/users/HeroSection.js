@@ -1,5 +1,5 @@
 
-import "../styles/HeroSection.css";
+import "../../styles/HeroSection.css";
 
 const HeroSection = () => {
     return (

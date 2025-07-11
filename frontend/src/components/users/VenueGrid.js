@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import "../styles/VenueGrid.css";
+import "../../styles/VenueGrid.css";
 
 const VenueGrid = ({
   title,

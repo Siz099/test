@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import "../styles/ContactPage.css"
+import "../../styles/ContactPage.css"
 import Header from "./Header"
 import Footer from "./Footer"
 

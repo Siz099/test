@@ -1,7 +1,7 @@
 "use client"
 
-import "../styles/venue-booking.css"
-import "../styles/modern-components.css"
+import "../../styles/venue-booking.css"
+import "../../styles/modern-components.css"
 import Header from "./Header"
 
 const VenueBooking = () => {

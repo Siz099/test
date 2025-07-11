@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 
-import "../styles/ReviewsSection.css"
+import "../../styles/ReviewsSection.css"
 
 export default function Reviews() {
   const reviews = [

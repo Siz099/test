@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import Header from "./Header"
 import Footer from "./Footer"
-import "../styles/about-us.css"
+import "../../styles/about-us.css"
 
 const AboutUs = () => {
   const [activeProcessTab, setActiveProcessTab] = useState("story")

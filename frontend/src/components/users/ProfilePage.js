@@ -1,9 +1,9 @@
 "use client"
 
 import { useState } from "react"
-import "../styles/venue-booking.css"
-import "../styles/profile-page.css"
-import "../styles/modern-components.css"
+import "../../styles/venue-booking.css"
+import "../../styles/profile-page.css"
+import "../../styles/modern-components.css"
 
 const ProfilePage = () => {
   const [showImageUpload, setShowImageUpload] = useState(false)
