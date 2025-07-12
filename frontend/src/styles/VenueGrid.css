@@ -213,6 +213,18 @@
   .venue-image {
     height: 180px;
   }
+
+  .venue-section {
+    padding: 40px 2rem;
+  }
+
+  .section-header h2 {
+    font-size: 20px;
+  }
+
+  .view-all {
+    font-size: 13px;
+  }
 }
 
 @media (max-width: 768px) {
@@ -233,5 +245,72 @@
 
   .venue-image {
     height: 140px;
+  }
+
+  .section-header h2 {
+    font-size: 18px;
+  }
+
+  .venue-label-below {
+    font-size: 14px;
+  }
+
+  .pagination {
+    gap: 6px;
+  }
+
+  .page-dot {
+    width: 32px;
+    height: 32px;
+    font-size: 16px;
+  }
+
+  .pagination-arrow {
+    width: 32px;
+    height: 32px;
+    font-size: 24px;
+  }
+}
+
+@media (max-width: 480px) {
+  .venue-section {
+    padding: 30px 1rem;
+  }
+
+  .section-header h2 {
+    font-size: 16px;
+  }
+
+  .view-all {
+    font-size: 12px;
+  }
+
+  .venue-grid {
+    gap: 12px;
+  }
+
+  .venue-image {
+    height: 120px;
+  }
+
+  .venue-label-below {
+    font-size: 13px;
+    margin-top: 6px;
+  }
+
+  .page-dot {
+    width: 28px;
+    height: 28px;
+    font-size: 14px;
+  }
+
+  .pagination-arrow {
+    width: 28px;
+    height: 28px;
+    font-size: 20px;
+  }
+
+  .pagination {
+    gap: 4px;
   }
 }

@@ -1096,6 +1096,64 @@
     .about-cta-btn {
       width: 250px;
     }
+
+    /* Additional mobile improvements */
+    .about-breadcrumb-nav {
+      padding: 0.75rem 0;
+    }
+
+    .about-breadcrumb-nav button {
+      padding: 0.375rem 0.75rem;
+      font-size: 0.8rem;
+    }
+
+    .about-section-header h2 {
+      font-size: 2.2rem;
+    }
+
+    .about-section-subtitle {
+      font-size: 1.1rem;
+    }
+
+    /* Statistics section mobile */
+    .statistics-item {
+      padding: 2rem;
+    }
+
+    .statistics-number {
+      font-size: 3rem;
+    }
+
+    .statistics-highlight {
+      padding: 2rem;
+    }
+
+    /* Values section mobile */
+    .company-value-item {
+      padding: 2rem;
+    }
+
+    .company-value-icon {
+      font-size: 2.5rem;
+    }
+
+    /* Team section mobile */
+    .team-member-info {
+      padding: 1.5rem;
+    }
+
+    .team-member-image img {
+      height: 250px;
+    }
+
+    /* Process section mobile */
+    .planning-process-step h3 {
+      font-size: 1.75rem;
+    }
+
+    .planning-process-step p {
+      font-size: 1rem;
+    }
   }
   
   @media (max-width: 480px) {
@@ -1137,5 +1195,114 @@
     .team-member-info {
       padding: 1.5rem;
     }
+
+    /* Very small screen optimizations */
+    .about-hero-content {
+      padding: 0 0.75rem;
+    }
+
+    .about-hero-content h1 {
+      font-size: 1.6rem;
+      line-height: 1.2;
+    }
+
+    .about-hero-content p {
+      font-size: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .about-hero-btn {
+      width: 100%;
+      max-width: 280px;
+      padding: 0.875rem 1.5rem;
+      font-size: 0.95rem;
+    }
+
+    .about-section-content {
+      padding: 1.5rem 0.75rem;
+    }
+
+    .about-section-header h2 {
+      font-size: 1.6rem;
+    }
+
+    .about-section-subtitle {
+      font-size: 1rem;
+    }
+
+    .company-story-text p {
+      font-size: 1rem;
+    }
+
+    .statistics-item {
+      padding: 1.5rem;
+    }
+
+    .statistics-number {
+      font-size: 2.2rem;
+    }
+
+    .statistics-label {
+      font-size: 1rem;
+    }
+
+    .statistics-highlight {
+      padding: 1.5rem;
+    }
+
+    .statistics-highlight-content h3 {
+      font-size: 1.5rem;
+    }
+
+    .company-value-item {
+      padding: 1.5rem;
+    }
+
+    .company-value-icon {
+      font-size: 2.2rem;
+    }
+
+    .company-value-item h3 {
+      font-size: 1.3rem;
+    }
+
+    .team-member-info {
+      padding: 1.25rem;
+    }
+
+    .team-member-image img {
+      height: 200px;
+    }
+
+    .planning-process-tab-btn {
+      width: 100%;
+      max-width: 250px;
+      padding: 0.875rem 1.5rem;
+      font-size: 0.9rem;
+    }
+
+    .planning-process-step h3 {
+      font-size: 1.5rem;
+    }
+
+    .planning-process-step p {
+      font-size: 0.95rem;
+    }
+
+    .planning-process-feature {
+      padding: 1.25rem;
+    }
+
+    .about-cta-content h2 {
+      font-size: 2rem;
+    }
+
+    .about-cta-content p {
+      font-size: 1.1rem;
+    }
+
+    .about-cta-btn {
+      width: 100%;
+      max-width: 300px;
+    }
   }
-  
