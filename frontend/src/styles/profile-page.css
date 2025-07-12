@@ -456,6 +456,34 @@
     width: 16px;
     height: 16px;
   }
+
+  /* Header responsive improvements */
+  .profile-header {
+    padding: 2rem 0;
+  }
+
+  .profile-detail-item {
+    text-align: center;
+  }
+
+  /* Stats grid improvements */
+  .profile-stats-grid {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  }
+
+  /* Booking details mobile optimization */
+  .profile-booking-details {
+    gap: 0.5rem;
+  }
+
+  .profile-booking-detail {
+    font-size: 0.8rem;
+  }
+
+  .profile-icon {
+    width: 14px;
+    height: 14px;
+  }
 }
 
 @media (max-width: 480px) {
@@ -473,6 +501,62 @@
 
   .profile-booking-title {
     font-size: 1.125rem;
+  }
+
+  .profile-header {
+    padding: 1.5rem 0;
+  }
+
+  .profile-header-content {
+    padding: 0 0.75rem;
+  }
+
+  .profile-main {
+    padding: 0.75rem;
+  }
+
+  .profile-image {
+    width: 80px;
+    height: 80px;
+  }
+
+  .profile-image-overlay {
+    width: 30px;
+    height: 30px;
+  }
+
+  .profile-camera-icon {
+    width: 14px;
+    height: 14px;
+  }
+
+  .profile-stat-card {
+    padding: 1rem;
+  }
+
+  .profile-booking-card {
+    padding: 0.75rem;
+  }
+
+  .profile-booking-title {
+    font-size: 1rem;
+  }
+
+  .profile-booking-amount {
+    font-size: 1rem;
+  }
+
+  /* Very small screen optimizations */
+  .profile-stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .profile-detail-label {
+    font-size: 0.8rem;
+  }
+
+  .profile-detail-value {
+    font-size: 0.9rem;
   }
 }
 

@@ -93,3 +93,65 @@
 .hero-search-button:hover {
   background-color: #e6ac00;
 }
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .hero-title {
+    font-size: 40px;
+  }
+
+  .hero-search {
+    gap: 12px;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero-section {
+    height: 350px;
+    padding-bottom: 40px;
+  }
+
+  .hero-title {
+    font-size: 32px;
+    margin-bottom: 30px;
+  }
+
+  .hero-search {
+    flex-direction: column;
+    gap: 12px;
+    max-width: 100%;
+  }
+
+  .hero-dropdown,
+  .hero-search-button {
+    width: 100%;
+    min-width: auto;
+  }
+
+  .hero-content {
+    padding: 0 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-section {
+    height: 300px;
+    margin-top: 50px;
+    padding-bottom: 30px;
+  }
+
+  .hero-title {
+    font-size: 28px;
+    margin-bottom: 25px;
+  }
+
+  .hero-dropdown,
+  .hero-search-button {
+    padding: 14px 18px;
+    font-size: 15px;
+  }
+
+  .hero-content {
+    padding: 0 0.75rem;
+  }
+}

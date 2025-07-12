@@ -168,14 +168,86 @@
   .venue-grid {
     grid-template-columns: repeat(2, 1fr);
   }
+
+  .container {
+    padding: 20px 2rem;
+  }
+
+  .filter-section {
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .search-button {
+    grid-column: span 2;
+  }
 }
+
 @media (max-width: 600px) {
+  .container {
+    padding: 15px 1rem;
+  }
+
   .venue-grid {
     grid-template-columns: 1fr;
   }
+
   .filter-section {
     grid-template-columns: 1fr;
     gap: 10px;
-    padding: 12px 8px;
   }
-} 
+
+  .search-button {
+    grid-column: span 1;
+  }
+
+  .section-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .section-title {
+    font-size: 24px;
+  }
+
+  .venue-title {
+    font-size: 18px;
+  }
+
+  .venue-content {
+    padding: 0;
+  }
+
+  .image-container {
+    margin-bottom: 15px;
+  }
+
+  .venue-image {
+    height: 200px;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 10px 0.75rem;
+  }
+
+  .section-title {
+    font-size: 20px;
+  }
+
+  .venue-title {
+    font-size: 16px;
+  }
+
+  .venue-image {
+    height: 180px;
+  }
+
+  .dropdown,
+  .search-button {
+    padding: 10px 14px;
+    font-size: 13px;
+  }
+}

@@ -557,6 +557,14 @@
     .layout-columns {
       gap: 3rem;
     }
+
+    .banner-area {
+      height: 350px;
+    }
+
+    .banner-text h1 {
+      font-size: 2.5rem;
+    }
   }
   
   @media (max-width: 768px) {
@@ -619,6 +627,30 @@
     .contact-card.featured {
       grid-column: 1;
     }
+
+    /* Form improvements for tablets */
+    .form-header h2 {
+      font-size: 1.75rem;
+    }
+
+    .input-wrapper input,
+    .input-wrapper textarea {
+      padding: 0.875rem;
+    }
+
+    .send-button {
+      padding: 1rem 2rem;
+      font-size: 1rem;
+    }
+
+    /* Contact grid improvements */
+    .contact-card {
+      padding: 1.5rem;
+    }
+
+    .quick-contact {
+      padding: 1.25rem;
+    }
   }
   
   @media (max-width: 480px) {
@@ -662,6 +694,60 @@
     .success-modal {
       margin: 1rem;
       padding: 2rem;
+    }
+
+    /* Very small screen optimizations */
+    .banner-text h1 {
+      font-size: 1.6rem;
+      line-height: 1.2;
+    }
+
+    .form-header {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-header h2 {
+      font-size: 1.5rem;
+    }
+
+    .input-wrapper {
+      margin-bottom: 1.25rem;
+    }
+
+    .input-wrapper input,
+    .input-wrapper textarea {
+      padding: 0.75rem;
+      font-size: 0.9rem;
+    }
+
+    .contact-card {
+      padding: 1.25rem;
+    }
+
+    .contact-card h3 {
+      font-size: 0.95rem;
+    }
+
+    .contact-card p {
+      font-size: 0.8rem;
+    }
+
+    .email-link {
+      font-size: 0.8rem;
+    }
+
+    .copy-btn {
+      padding: 0.25rem 0.5rem;
+      font-size: 0.7rem;
+    }
+
+    .quick-contact-item strong {
+      font-size: 0.85rem;
+    }
+
+    .quick-contact-item span,
+    .quick-contact-item a {
+      font-size: 0.8rem;
     }
   }
   
@@ -739,4 +825,3 @@
       align-self: flex-start;
     }
   }
-  
