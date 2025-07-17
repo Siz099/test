@@ -1,0 +1,166 @@
+.app-container {
+  display: flex;
+  font-family: Arial, sans-serif;
+}
+
+.sidebar {
+  width: 220px;
+  background: #f7f7f7;
+  padding: 24px 16px;
+  min-height: 100vh;
+}
+
+.sidebar h2 {
+  margin-bottom: 24px;
+}
+
+.sidebar-section {
+  font-size: 14px;
+  color: #888;
+  margin-bottom: 12px;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+
+.sidebar li {
+  padding: 10px 0;
+  cursor: pointer;
+}
+
+.sidebar li.active {
+  font-weight: bold;
+  color: #333;
+}
+
+.dashboard {
+  flex: 1;
+  padding: 32px;
+}
+
+.breadcrumb {
+  color: #888;
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+.stats-row {
+  display: flex;
+  gap: 24px;
+  margin: 24px 0;
+}
+
+.stat-card {
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  padding: 24px;
+  min-width: 120px;
+  text-align: center;
+}
+
+.stat-label {
+  color: #888;
+  font-size: 16px;
+}
+
+.stat-value {
+  font-size: 28px;
+  font-weight: bold;
+  margin-top: 8px;
+}
+
+.tabs {
+  margin-bottom: 16px;
+}
+
+.tabs button {
+  padding: 10px 25px;
+  margin-right: 10px;
+  border: none;
+  background: transparent;
+  border-radius: 25px;
+  cursor: pointer;
+  font-weight: 600;
+  color: #333;
+  transition: all 0.3s ease;
+}
+
+.tabs button:hover,
+.tabs button.active {
+  background-color: #ffc107;
+  color: #000;
+}
+
+.tabs button.active {
+  background-color: #ffc107;
+  color: #000;
+  border-bottom: 2px solid #ffc107;
+}
+
+.partner-requests {
+  background: #fff;
+  border-radius: 8px;
+  padding: 24px;
+  margin-top: 16px;
+  border: 1px solid #eee;
+}
+
+.request-card {
+  margin-top: 16px;
+  padding: 16px;
+  border: 1px solid #eee;
+  border-radius: 6px;
+}
+
+.request-actions {
+  margin-top: 12px;
+}
+
+.request-actions button {
+  padding: 6px 16px;
+  margin-right: 8px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.request-actions .reject {
+  background: #eee;
+  color: #333;
+}
+
+.request-actions .approve {
+  background: #222;
+  color: #fff;
+}
+
+/* Add this to your App.css or create a separate file */
+
+
+.notifications-page-wrapper {
+  padding-top: 100px !important; /* Account for fixed header */
+  background-color: #f8f9fa;
+  min-height: calc(100vh - 100px);
+}
+
+/* Ensure the notifications component fits well */
+.notifications-page-wrapper .notifications-container {
+  background-color: #f8f9fa;
+  padding: 40px 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+  .notifications-page-wrapper {
+    padding-top: 100px !important;
+  }
+
+  .notifications-page-wrapper .notifications-container {
+    padding: 20px 16px;
+  }
+}
