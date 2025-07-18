@@ -162,3 +162,9 @@
 +  partnerBookingService,
 +  partnerStatsService
 +};
+
+export { partnerStatsService }
+
+export { partnerVenueService }
+
+export { partnerBookingService }

@@ -161,6 +161,7 @@ const EditVenue = () => {
             }}
           />
           {errors.venueName && <span style={{ color: 'red', fontSize: 14 }}>{errors.venueName}</span>}
+          }
         </div>
 
         <div style={{ marginBottom: 20 }}>
@@ -181,6 +182,7 @@ const EditVenue = () => {
             }}
           />
           {errors.location && <span style={{ color: 'red', fontSize: 14 }}>{errors.location}</span>}
+          }
         </div>
 
         <div style={{ display: 'flex', gap: 20, marginBottom: 20 }}>
@@ -203,6 +205,7 @@ const EditVenue = () => {
               }}
             />
             {errors.capacity && <span style={{ color: 'red', fontSize: 14 }}>{errors.capacity}</span>}
+            }
           </div>
 
           <div style={{ flex: 1 }}>
@@ -225,6 +228,7 @@ const EditVenue = () => {
               }}
             />
             {errors.price && <span style={{ color: 'red', fontSize: 14 }}>{errors.price}</span>}
+            }
           </div>
         </div>
 
@@ -247,6 +251,7 @@ const EditVenue = () => {
             }}
           />
           {errors.description && <span style={{ color: 'red', fontSize: 14 }}>{errors.description}</span>}
+          }
         </div>
 
         <div style={{ marginBottom: 20 }}>
