@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { userService, partnerService, venueService,profileService } from '../../services/api';
-
+import { useNavigate, useParams } from 'react-router-dom';
 
 const Profile = () => {
+    const { userId } = useParams();
   const [profile, setProfile] = useState({ name: '' });
   const [editMode, setEditMode] = useState(false);
   const [form, setForm] = useState(profile);
@@ -10,24 +11,25 @@ const [stats, setStats] = useState([]);
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState(null);
     const [token, setToken] = useState(null);
+     const [apiError, setApiError] = useState('');
   
 
   useEffect(() => {
-    async function fetchProfile() {
-    try {
-      console.log("user is:",user);
-       console.log("token is:",token);
-      const response = await profileService.getProfile();
-      if (response.ok) {
-        const data = await response.json();
+      const savedToken = localStorage.getItem('jwtToken');
+  setToken(savedToken);
+
+
+  async function fetchProfile() {
+      try {
+        const data = await profileService.getProfile(userId);
         setUser(data);
-      } else {
-        console.error('Failed to fetch user data:', response.status);
+      } catch (err) {
+        console.error("Profile fetch error:", err);
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      console.error('Error fetching user data:', error);
     }
-  }
+  
 
 async function fetchStats() {
   try {
@@ -46,7 +48,7 @@ async function fetchStats() {
 
     fetchProfile();
     fetchStats();
-  }, []);
+  }, [userId]);
 
   const handleEdit = () => {
     setEditMode(true);
@@ -92,19 +94,19 @@ async function fetchStats() {
           <div style={{ width: 110, height: 110, borderRadius: '50%', background: '#f3f3f3', marginBottom: 18, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 48, color: '#bbb' }}>
             <span role="img" aria-label="avatar">👤</span>
           </div>
-          <div style={{ fontWeight: 700, fontSize: 24, marginBottom: 6 }}>{user?.fullname}</div>
+          <div style={{ fontWeight: 700, fontSize: 24, marginBottom: 6 }}>{user.fullname}</div>
           <div style={{ background: '#f5f5f5', color: '#222', fontWeight: 600, fontSize: 13, borderRadius: 16, padding: '4px 16px', marginBottom: 18, display: 'inline-block' }}>{profile.role}</div>
           <div style={{ color: '#555', fontSize: 16, marginBottom: 10, display: 'flex', alignItems: 'center', gap: 8 }}>
-            <span style={{ fontSize: 18 }}>✉️</span> {user?.email}
+            <span style={{ fontSize: 18 }}>✉️</span> {user.email}
           </div>
           <div style={{ color: '#555', fontSize: 16, marginBottom: 10, display: 'flex', alignItems: 'center', gap: 8 }}>
-            <span style={{ fontSize: 18 }}>📞</span> {user?.phoneNumber}
+            <span style={{ fontSize: 18 }}>📞</span> {user.phoneNumber}
           </div>
           <div style={{ color: '#555', fontSize: 16, marginBottom: 10, display: 'flex', alignItems: 'center', gap: 8 }}>
-            <span style={{ fontSize: 18 }}>📍</span> {user?.location}
+            <span style={{ fontSize: 18 }}>📍</span> {user.location}
           </div>
           <div style={{ color: '#555', fontSize: 16, marginBottom: 0, display: 'flex', alignItems: 'center', gap: 8 }}>
-            <span style={{ fontSize: 18 }}>📅</span> Joined {user?.joinDate}
+            <span style={{ fontSize: 18 }}>📅</span> Joined {user.joinDate}
           </div>
         </div>
         {/* Right Card */}

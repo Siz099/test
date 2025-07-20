@@ -14,19 +14,21 @@ const PartnerManagement = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-    const fetchPartners = async () => {
+   const fetchPartners = async () => {
+  try {
     setLoading(true);
-    try {
-      const response = await partnerService.listPartners();
-      setPartnersData(response);
-    } catch (err) {
-      console.error(err);
-      setError("Failed to fetch partners.");
-      setPartnersData([]);
-    } finally {
-      setLoading(false);
-    }
-  };
+    const response = await partnerService.listPartners();
+    // If the API returns the array directly, set it directly:
+    setPartnersData(response || []);
+    setError(null);
+  } catch (err) {
+    console.error('Error fetching PARTNERS:', err);
+    setError('Failed to load PARTNERS. Please try again.');
+    setPartnersData([]);
+  } finally {
+    setLoading(false);
+  }
+};
   fetchPartners();
 }, []);
 

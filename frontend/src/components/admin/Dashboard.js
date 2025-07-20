@@ -8,19 +8,33 @@ const Dashboard = () => {
   const [activeTab, setActiveTab] = useState("bookings");
    const [stats, setStats] = useState([]);
 
-    useEffect(() => {
-    fetch("http://localhost:8080/api/stats")
-      .then(res => res.json())
-      .then(data => {
-        setStats([
-          { label: "Users", value: data.users },
-          { label: "Partners", value: data.partners },
-          { label: "Venues", value: data.venues },
-          { label: "Bookings", value: data.bookings },
-        ]);
-      })
-      .catch(console.error);
-  }, []);
+  useEffect(() => {
+  const token = localStorage.getItem("jwtToken");  // Ensure the key matches how you saved it at login
+
+  if (!token) {
+    console.error("No JWT token found, user might not be logged in");
+    return;
+  }
+
+  fetch("http://localhost:8080/api/stats", {
+    headers: {
+      "Authorization": `Bearer ${token}`
+    }
+  })
+    .then(res => {
+      if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+      return res.json();
+    })
+    .then(data => {
+      setStats([
+        { label: "Users", value: data.users },
+        { label: "Partners", value: data.partners },
+        { label: "Venues", value: data.venues },
+        { label: "Bookings", value: data.bookings },
+      ]);
+    })
+    .catch(console.error);
+}, []);
 
   return (
     <main className="dashboard" style={{ flex: 1 }}>

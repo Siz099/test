@@ -112,7 +112,7 @@ useEffect(() => {
     <tr key={venue.venue_id} style={{ borderBottom: '1px solid #eee' }}>
       <td style={{ padding: 10 }}>{venue.venue_id}</td>
       <td style={{ padding: 10 }}>{venue.venueName}</td>
-      <td style={{ padding: 10 }}>{venue.partner}</td>
+      <td style={{ padding: 10 }}>{venue.partnerName}</td>
       <td style={{ padding: 10 }}>{venue.location}</td>
       <td style={{ padding: 10 }}>{venue.capacity}</td>
       <td style={{ padding: 10 }}>{venue.price}</td>

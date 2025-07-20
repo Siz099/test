@@ -48,6 +48,8 @@ api.interceptors.response.use(
 const authService = {
   login: async (credentials) => {
     const response = await api.post("/auth/login", credentials);
+    
+    localStorage.setItem("jwtToken", Response.token);
     if (response.data.token) {
       localStorage.setItem("jwtToken", response.data.token);
     }
@@ -59,10 +61,10 @@ const authService = {
     return response.data;
   },
 
-  partnerSignup: async (partnerData) => {
-    const response = await api.post("/auth/partner-signup", partnerData);
-    return response.data;
-  },
+  // partnerSignup: async (partnerData) => {
+  //   const response = await api.post("/auth/partner-signup", partnerData);
+  //   return response.data;
+  // },
 
   requestPasswordReset: async (email) => {
     const response = await api.post("/auth/forgot-password", { email });
@@ -79,10 +81,31 @@ const authService = {
 
 // Venue API services
 const venueService = {
-  addVenue: async (venueData) => {
-    const response = await api.post("/admin/venues/new", venueData);
-    return response.data;
+ addVenue: async (venueData) => {
+  const token = localStorage.getItem("jwtToken");
+  console.log("Sending token:", token);
+  const response = await api.post("/venues/new", venueData, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  });
+  return response.data;
+},
+
+  getVenue: async (id) => {
+    try {
+      const token = localStorage.getItem('jwtToken');
+      const response = await api.get(`/venues/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
   },
+
 
   listVenue: async () => {
     const response = await api.get("/venues");
@@ -90,9 +113,24 @@ const venueService = {
   },
 
   deleteVenue: async (id) => {
-    const response = await api.delete(`/admin/venues/delete/${id}`);
+    const response = await api.delete(`/venues/delete/${id}`);
     return response.data;
   },
+
+  editVenue: async (id, venueData) => {
+    try {
+      const token = localStorage.getItem('jwtToken');
+      const response = await api.put(`/venues/edit/${id}`, venueData, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+
 };
 
 // User API services
@@ -144,10 +182,10 @@ const userService = {
 
 
   // Update user
-  updateUser: async (id, userData) => {
+  editUser: async (id, userData) => {
     try {
       const token = localStorage.getItem('jwtToken');
-      const response = await api.put(`/admin/users/update/${id}`, userData, {
+      const response = await api.put(`/admin/users/edit/${id}`, userData, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -197,15 +235,16 @@ console.log('JWT Token:', token);
 };
 
 const partnerService = {
-  listPartners: async () => {
-    try {
-      const response = await api.get("/admin/partners");
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
-  },
-
+listPartners: async () => {
+  try {
+    const response = await api.get("/admin/partners");
+    console.log("API response data:", response.data);
+   
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+},
   getPartner: async (id) => {
     try {
       const response = await api.get(`/admin/partners/${id}`);
@@ -224,9 +263,9 @@ const partnerService = {
     }
   },
 
-  updatePartner: async (id, partnerData) => {
+  editPartner: async (id, partnerData) => {
     try {
-      const response = await api.put(`/admin/partners/update/${id}`, partnerData);
+      const response = await api.put(`/admin/partners/edit/${id}`, partnerData);
       return response.data;
     } catch (error) {
       throw error;
@@ -371,21 +410,16 @@ const bookingService = {
 };
 
 const profileService = {
-  getProfile: async () => {
- try {
-      const token = localStorage.getItem('jwtToken');
-      const response = await api.get(`/api/me`, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
-  },
-
+  getProfile: async (userId) => {
+    const token = localStorage.getItem('jwtToken');
+    const response = await api.get(`/profile/${userId}`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    return response.data;
+  }
 };
+
+
 
 
 

@@ -1,7 +1,8 @@
 "use client";
 
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useUserSession } from "./context/UserSessionContext";
+
 import LoginPage from "./components/auth/login-page";
 import SignupPage from "./components/auth/signup-page";
 import PartnerSignupPage from "./components/auth/partner-signup-page";
@@ -28,59 +29,36 @@ import PartnerAddTest from "./components/admin/PartnerAddTest";
 import EditPartner from "./components/admin/EditPartner";
 import EditVenue from "./components/admin/EditVenue";
 
-
 import "./styles/auth.css";
 import "./App.css";
+
 import EditUsers from "./components/admin/EditUsers";
 import ViewUser from "./components/admin/ViewUsers";
 import ViewPartner from "./components/admin/ViewPartners";
 import ViewVenue from "./components/admin/ViewVenue";
 import AddBook from "./components/admin/AddBooking";
 
+import PartnerPanel from "./components/partner/PartnerPanel";
+import PartnerDashboard from "./components/partner/Dashboard";
+import PartnerBooking from "./components/partner/Booking";
+import PartnerAddBooking from "./components/partner/AddBooking";
+import PartnerVenueManagement from "./components/partner/VenueManagement";
+import PartnerVenueAdd from "./components/partner/VenueAdd";
+import PartnerEditVenue from "./components/partner/EditVenue";
+import PartnerViewVenue from "./components/partner/ViewVenue";
+import PartnerNotification from "./components/partner/Notification";
+import PartnerProfile from "./components/partner/Profile";
+import { UserSessionProvider } from "./context/UserSessionContext";
 
 function App() {
-  console.log("App rendering");
-
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [user, setUser] = useState(null);
-
-  useEffect(() => {
-    const token = localStorage.getItem("auth_token");
-    const userData = localStorage.getItem("user");
-
-    if (token) {
-      setIsLoggedIn(true);
-      if (userData) {
-        try {
-          setUser(JSON.parse(userData));
-        } catch (error) {
-          console.error("Error parsing user data:", error);
-          localStorage.removeItem("user");
-        }
-      }
-    }
-  }, []);
-
-  const handleLogout = () => {
-    localStorage.removeItem("auth_token");
-    localStorage.removeItem("user");
-    setIsLoggedIn(false);
-    setUser(null);
-    console.log("User logged out");
-  };
-
-  const handleLogin = (userData, token) => {
-    localStorage.setItem("auth_token", token);
-    localStorage.setItem("user", JSON.stringify(userData));
-    setIsLoggedIn(true);
-    setUser(userData);
-    console.log("User logged in:", userData);
-  };
+  const { user, isUserLoggedIn, login, logout } = useUserSession();
 
   return (
+     <UserSessionProvider>
     <BrowserRouter>
       <div className="app">
         <Routes>
+          {/* Admin Panel Routes (Unchanged) */}
           <Route
             path="/Adminpanel"
             element={
@@ -89,9 +67,7 @@ function App() {
               </div>
             }
           />
-
           <Route path="/" element={<Navigate to="/home" replace />} />
-
           <Route path="/admin/*" element={<AdminPanel />}>
             <Route path="dashboard" element={<Dashboard />} />
             <Route path="venues" element={<VenueManagement />} />
@@ -100,80 +76,99 @@ function App() {
             <Route path="partners" element={<PartnerManagement />} />
             <Route path="bookings" element={<Booking />} />
             <Route path="notifications" element={<Notification />} />
-            <Route path="profile" element={<Profile />} />
+             <Route path="profile/:userId" element={<Profile />} />
           </Route>
 
+          <Route path="/partner/*" element={<PartnerPanel />}>
+            <Route path="dashboard" element={<PartnerDashboard />} />
+            <Route path="bookings" element={<PartnerBooking />} />
+            <Route path="bookings/new" element={<PartnerAddBooking />} />
+            <Route path="venues" element={<PartnerVenueManagement />} />
+            <Route path="venues/new" element={<PartnerVenueAdd />} />
+            <Route path="venues/edit/:id" element={<PartnerEditVenue />} />
+            <Route path="venues/:id" element={<PartnerViewVenue />} />
+            <Route path="notifications" element={<PartnerNotification />} />
+            <Route path="profile" element={<PartnerProfile />} />
+          </Route>
+
+          {/* User Routes with Session Header/Footer */}
           <Route
             path="/home"
             element={
               <>
-                <Header isLoggedIn={isLoggedIn} user={user} onLogout={handleLogout} hasNotifications={true} />
+                <Header isLoggedIn={isUserLoggedIn} user={user} onLogout={logout} hasNotifications={true} />
                 <div className="page-content">
                   <HomePage />
                 </div>
               </>
             }
           />
+
           <Route
             path="/venues"
             element={
               <>
-                <Header isLoggedIn={isLoggedIn} user={user} onLogout={handleLogout} hasNotifications={true} />
+                <Header isLoggedIn={isUserLoggedIn} user={user} onLogout={logout} hasNotifications={true} />
                 <div className="page-content">
                   <VenuePage />
                 </div>
               </>
             }
           />
+
           <Route
             path="/venue-booking"
             element={
               <>
-                <Header isLoggedIn={isLoggedIn} user={user} onLogout={handleLogout} hasNotifications={true} />
+                <Header isLoggedIn={isUserLoggedIn} user={user} onLogout={logout} hasNotifications={true} />
                 <div className="page-content">
                   <VenueBooking />
                 </div>
               </>
             }
           />
+
           <Route
             path="/user-profile"
             element={
               <>
-                <Header isLoggedIn={isLoggedIn} user={user} onLogout={handleLogout} hasNotifications={true} />
+                <Header isLoggedIn={isUserLoggedIn} user={user} onLogout={logout} hasNotifications={true} />
                 <div className="page-content">
                   <ProfilePage />
                 </div>
               </>
             }
           />
+
           <Route
             path="/contact"
             element={
               <>
-                <Header isLoggedIn={isLoggedIn} user={user} onLogout={handleLogout} hasNotifications={true} />
+                <Header isLoggedIn={isUserLoggedIn} user={user} onLogout={logout} hasNotifications={true} />
                 <div className="page-content">
                   <ContactPage />
                 </div>
               </>
             }
           />
+
           <Route
             path="/about"
             element={
               <>
-                <Header isLoggedIn={isLoggedIn} user={user} onLogout={handleLogout} hasNotifications={true} />
+                <Header isLoggedIn={isUserLoggedIn} user={user} onLogout={logout} hasNotifications={true} />
                 <div className="page-content">
                   <AboutUs />
                 </div>
               </>
             }
           />
+
           <Route
             path="/notifications"
             element={
               <>
-                <Header isLoggedIn={isLoggedIn} user={user} onLogout={handleLogout} hasNotifications={true} />
+                <Header isLoggedIn={isUserLoggedIn} user={user} onLogout={logout} hasNotifications={true} />
                 <div className="page-content notifications-page-wrapper">
                   <NotificationsPage />
                 </div>
@@ -181,29 +176,32 @@ function App() {
               </>
             }
           />
+
+          {/* Admin Management Pages (Unchanged) */}
           <Route path="/admin/venues/new" element={<VenueAddTest />} />
           <Route path="/admin/partners/new" element={<PartnerAddTest />} />
-       <Route path="/admin/users/edit/:userId" element={<EditUsers />} />
-    <Route path="/admin/partners/edit/:partnerId" element={<EditPartner />} />
-      <Route path="/admin/venues/edit/:id" element={<EditVenue />} />
-      <Route path="/admin/users/:userId" element={<ViewUser />} />
-      <Route path="/admin/partners/:partnerId" element={<ViewPartner/>} />
-      <Route path="/admin/venues/:id" element={<ViewVenue/>} />
-      <Route path="/admin/bookings/new" element={<AddBook/>} />
+          <Route path="/admin/users/edit/:userId" element={<EditUsers />} />
+          <Route path="/admin/partners/edit/:partnerId" element={<EditPartner />} />
+          <Route path="/admin/venues/edit/:id" element={<EditVenue />} />
+          <Route path="/admin/users/:userId" element={<ViewUser />} />
+          <Route path="/admin/partners/:partnerId" element={<ViewPartner />} />
+          <Route path="/admin/venues/:id" element={<ViewVenue />} />
+          <Route path="/admin/bookings/new" element={<AddBook />} />
+         
 
-{/*User routing */}
-      <Route path="/user/home" element={<HomePage/>} />
+          {/* Redundant user route if needed */}
+          <Route path="/user/home" element={<HomePage />} />
 
-
-
+          {/* Authentication Routes */}
           <Route
             path="/login"
             element={
               <div className="auth-container">
-                <LoginPage onLogin={handleLogin} />
+                <LoginPage onLogin={login} />
               </div>
             }
           />
+
           <Route
             path="/signup"
             element={
@@ -212,6 +210,7 @@ function App() {
               </div>
             }
           />
+
           <Route
             path="/partner-signup"
             element={
@@ -223,6 +222,7 @@ function App() {
         </Routes>
       </div>
     </BrowserRouter>
+    </UserSessionProvider>
   );
 }
 

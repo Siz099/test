@@ -5,6 +5,8 @@ import { useNavigate } from "react-router-dom"
 import { Mail, AlertCircle, CheckCircle, Eye, EyeOff } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 import { authService } from "../../services/api"
+import { useUserSession } from "../../context/UserSessionContext";
+
 
 // Animation variants
 const formControlVariants = {
@@ -27,6 +29,7 @@ const buttonVariants = {
 }
 
 export default function LoginPage() {
+  const { login } = useUserSession();
   const navigate = useNavigate()
   const [formData, setFormData] = useState({
     email: "",
@@ -121,14 +124,31 @@ export default function LoginPage() {
     });
 
     console.log("Login successful:", data);
-      console.log('Saved JWT token:', localStorage.getItem('jwtToken'));
-    
-    if (data.redirect) {
-      navigate(data.redirect);
-    } else {
-      navigate("/login"); 
-    }
+    console.log("Saved JWT token:", data.token);
 
+    if (data.token && data.redirect) {
+      const payload = JSON.parse(atob(data.token.split('.')[1]));
+      const userData = {
+        email: payload.sub,
+        role: payload.role,
+      };
+
+      localStorage.setItem("jwtToken", data.token);
+      localStorage.setItem("userRole", payload.role);
+
+      login(userData, data.token);
+
+      // Navigate based on the backend's redirect or fallback to role-based paths
+      const path = data.redirect || (payload.role === "admin"
+        ? "/admin/dashboard"
+        : payload.role === "partner"
+        ? "/partner/dashboard"
+        : "/home"
+      );
+      navigate(path, { replace: true });
+    } else {
+      setApiError("Login failed: missing token or redirect.");
+    }
   } catch (error) {
     console.error("Login failed:", error);
     if (error.response) {
@@ -146,6 +166,7 @@ export default function LoginPage() {
     setIsSubmitting(false);
   }
 };
+
 
 
   const handleSignupClick = (e) => {

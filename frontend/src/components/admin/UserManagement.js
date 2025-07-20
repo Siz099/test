@@ -16,23 +16,24 @@ const UserManagement = () => {
 
   // Fetch users from API
   useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        setLoading(true);
-        const response = await userService.listUsers();
-        setUsers(response);
-        setFilteredUsers(response);
-        setError(null);
-      } catch (err) {
-        console.error('Error fetching users:', err);
-        setError('Failed to load users. Please try again.');
-        setUsers([]);
-        setFilteredUsers([]);
-      } finally {
-        setLoading(false);
-      }
-    };
-    
+   const fetchUsers = async () => {
+  try {
+    setLoading(true);
+    const response = await userService.listUsers();
+    console.log('Fetched users:', response);
+    setUsers(Array.isArray(response) ? response : []);
+    setFilteredUsers(Array.isArray(response) ? response : []);
+    setError(null);
+  } catch (err) {
+    console.error('Error fetching users:', err);
+    setError('Failed to load users. Please try again.');
+    setUsers([]);
+    setFilteredUsers([]);
+  } finally {
+    setLoading(false);
+  }
+};
+
     fetchUsers();
   }, []);
 
@@ -199,7 +200,9 @@ const UserManagement = () => {
                   <td>{user.fullname}</td>
                   <td>{user.email}</td>
                    <td>{user.role}</td>
-                  <td>{new Date(user.joinDate).toLocaleDateString()}</td>
+                <td>{user.joinDate ? new Date(user.joinDate).toLocaleDateString() : 'N/A'}</td>
+
+                
                   <td>{user.bookings || 0}</td>
                   <td>
                     <StatusBadge status={user.status} />

@@ -12,10 +12,16 @@ import {
   FiLogOut
 } from 'react-icons/fi';
 import '../../styles/admin/AdminPanel.css';
+import { authService } from '../../services/api';
+import { useNavigate } from 'react-router-dom';
+import { useUserSession } from '../../context/UserSessionContext';
+
 
 const AdminPanel = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+   const { user: currentUser, isUserLoggedIn } = useUserSession();
   const location = useLocation();
+ const navigate = useNavigate();
 
   const navItems = [
     { path: '/admin/dashboard', icon: <FiHome />, label: 'Dashboard' },
@@ -25,8 +31,28 @@ const AdminPanel = () => {
     { path: '/admin/bookings', icon: <FiCalendar />, label: 'Bookings' },
     { path: '/admin/notifications', icon: <FiBell />, label: 'Notifications' },
     { path: '/admin/settings', icon: <FiSettings />, label: 'Settings' },
-    { path: '/admin/profile', icon: <FiUser />, label: 'Profile' },
-  ];
+   currentUser && {
+  path: `/admin/profile/${currentUser.user_id}`,
+  icon: <FiUser />,
+
+  label: 'Profile',
+}
+  ].filter(Boolean);
+  
+
+  const handleLogout = () => {
+    authService.logout(); 
+    navigate("/login");  
+  };
+
+ const handleViewDetails = (user) => {
+    if (!user?.user_id) {
+      console.error('Invalid user ID:', user?.user_id);
+      return;
+    }
+    console.log('Navigating to view user with ID:', user.user_id);
+    navigate(`/admin/profile/${user.user_id}`);
+  };
 
   return (
     <div className="admin-container">
@@ -59,7 +85,7 @@ const AdminPanel = () => {
         <div className="sidebar-footer">
           <button className="sidebar-item logout-button">
             <span className="sidebar-icon"><FiLogOut /></span>
-            <span className="sidebar-label">Logout</span>
+            <span onClick={handleLogout} className="sidebar-label">Logout</span>
           </button>
         </div>
       </div>

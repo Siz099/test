@@ -293,7 +293,7 @@ export default function PartnerSignupPage() {
         };
 
         // Call the partner signup API
-        const response = await authService.partnerSignup(partnerData);
+        const response = await authService.signup(partnerData);
 
         console.log("Partner signup successful:", response);
 

@@ -2,6 +2,9 @@
 
 import { useState, useEffect } from "react"
 import "../../styles/Header.css"
+import { useUserSession } from "../../context/UserSessionContext";
+
+
 
 // SVG Icons (keeping all existing icons)
 const SearchIcon = () => (
@@ -134,6 +137,9 @@ const globalSearchData = {
 }
 
 export default function Header({ hasNotifications = true, isLoggedIn = false, user = null, onLogout }) {
+  // Always call hooks at the top
+  const { user: sessionUser, isUserLoggedIn, logout, loading } = useUserSession();
+
   // State management
   const [recentSearches, setRecentSearches] = useState(["Grand Ballroom", "Wedding Planning", "Conference Room"])
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
@@ -141,6 +147,8 @@ export default function Header({ hasNotifications = true, isLoggedIn = false, us
   const [notificationDropdownOpen, setNotificationDropdownOpen] = useState(false)
   const [searchDropdownOpen, setSearchDropdownOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState("")
+  
+ 
 
   // Close dropdowns when clicking outside
   useEffect(() => {
@@ -174,6 +182,9 @@ export default function Header({ hasNotifications = true, isLoggedIn = false, us
     return () => window.removeEventListener("resize", handleResize)
   }, [isMobileMenuOpen])
 
+  if (loading) return null; // Or a skeleton header if you want
+
+  console.log("Header isLoggedIn:", isUserLoggedIn);
   // Event handlers
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen)
@@ -387,11 +398,11 @@ export default function Header({ hasNotifications = true, isLoggedIn = false, us
     <nav className="navbar">
       <div className="navbar-left">
         <img
-          src="/placeholder.svg?height=45&width=45"
+          src={require("../../images/logo.png")}
           alt="Coordina Logo"
           className="logo-icon"
           onClick={() => handleNavigation("/home")}
-          style={{ cursor: "pointer" }}
+          style={{ cursor: "pointer", width: 100, height: 100 }}
         />
       </div>
 
@@ -416,7 +427,7 @@ export default function Header({ hasNotifications = true, isLoggedIn = false, us
       <div className="navbar-right">
         {renderSearchComponent()}
 
-        {isLoggedIn ? (
+        {isUserLoggedIn ? (
           <div className="user-actions">
             <div className="notification-container">
               <button
@@ -507,7 +518,7 @@ export default function Header({ hasNotifications = true, isLoggedIn = false, us
           <div className="mobile-nav-divider"></div>
 
           <div className="mobile-nav-actions">
-            {isLoggedIn ? (
+            {isUserLoggedIn ? (
               <div className="mobile-user-actions">
                 <div className="mobile-action-row">
                   <button

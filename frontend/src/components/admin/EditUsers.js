@@ -111,7 +111,7 @@ const EditUser = () => {
         </div>
       ))}
 
-      <div>
+      {/* <div>
         <label>Role</label>
         <select name="role" value={formData.role} onChange={handleChange}>
           <option value="">Select role</option>
@@ -120,7 +120,7 @@ const EditUser = () => {
           <option value="PARTNER">Partner</option>
         </select>
         {errors.role && <span style={{ color: 'red' }}>{errors.role}</span>}
-      </div>
+      </div> */}
 
       {/* Show partner-specific fields */}
       {formData.role === 'PARTNER' && (
