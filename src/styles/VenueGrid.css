@@ -1,0 +1,23 @@
+@@ .. @@
+.venue-card {
+  cursor: pointer;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
++.venue-link {
++  text-decoration: none;
++  color: inherit;
++  display: block;
++}
++
+.venue-image {
+  width: 100%;
+  height: 240px;
+  border-radius: 8px;
+  position: relative;
+  overflow: hidden;
+  background-size: cover;
+  background-position: center;
+  transition: box-shadow 0.3s;
+}

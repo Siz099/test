@@ -1,0 +1,21 @@
+@@ .. @@
+.view-details-button {
+  width: 100%;
+  background-color: #ffc107;
+  color: black;
+  border: none;
+  padding: 12px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 15px;
++  text-decoration: none;
++  display: inline-block;
++  text-align: center;
++  transition: background-color 0.2s;
++}
++
++.view-details-button:hover {
++  background-color: #e6ac00;
+}
