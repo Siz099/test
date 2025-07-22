@@ -7,6 +7,7 @@ import Profile from "./components/admin/Profile";
 import PartnerAddTest from "./components/admin/PartnerAddTest";
 import EditPartner from "./components/admin/EditPartner";
 import EditVenue from "./components/admin/EditVenue";
+import UserViewVenue from "./components/users/UserViewVenue";
 +import UserViewVenue from "./components/venues/UserViewVenue";
 
 import "./styles/auth.css";
