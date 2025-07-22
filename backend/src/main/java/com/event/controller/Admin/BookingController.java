@@ -13,38 +13,38 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.*;
 
-//@RequestMapping("/admin/bookings")
-//@RestController
-//public class BookingController {
-//	
-//	
-//	@Autowired
-//	private BookingRepo bookingRepo;
-//	    
-//
-//	@Autowired
-//	private VenueRepo venueRepo;
-//	  
-//	    @GetMapping
-//	    public List<Booking> listBooking() {
-//	        return  bookingRepo.findAll();
-//	    }
-//	    
-//	    @PostMapping("/new")
-//	    public ResponseEntity<Booking> saveBooking(@RequestBody BookingDTO dto) {
-//	        Venue venue = venueRepo.findById(dto.getVenueId())
-//	                .orElseThrow();
-//
-//	        Booking booking = new Booking();
-//	        booking.setVenue(venue);
-//	        booking.setStatus(dto.getStatus());
-//	        booking.setBookedTime(dto.getBookedTime());
-//
-//	        Booking savedBooking = bookingRepo.save(booking);
-//	        return ResponseEntity.ok(savedBooking);
-//	    }
-//	 
-//	    
-//}
+@RequestMapping("/bookings")
+@RestController
+public class BookingController {
+	
+	
+	@Autowired
+	private BookingRepo bookingRepo;
+	    
+
+	@Autowired
+	private VenueRepo venueRepo;
+	  
+	    @GetMapping
+	    public List<Booking> listBooking() {
+	        return  bookingRepo.findAll();
+	    }
+	    
+	    @PostMapping("/new")
+	    public ResponseEntity<Booking> saveBooking(@RequestBody BookingDTO dto) {
+	        Venue venue = venueRepo.findById(dto.getVenueId())
+	                .orElseThrow();
+
+	        Booking booking = new Booking();
+	        booking.setVenue(venue);
+	        booking.setStatus(dto.getStatus());
+	        booking.setBookedTime(dto.getBookedTime());
+
+	        Booking savedBooking = bookingRepo.save(booking);
+	        return ResponseEntity.ok(savedBooking);
+	    }
+	 
+	    
+}
 	
 

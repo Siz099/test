@@ -1,6 +1,6 @@
 package com.event.dto;
 
-
+import com.event.model.Venue;
 
 public class VenueDTO {
 
@@ -13,22 +13,49 @@ public class VenueDTO {
 	    private String bookings;
 	    private String status;
 	    private String partnerName;
+	    private Long partnerId;
+	    private String imageUrl;
 	    
 	    
+	    public VenueDTO(Long venue_id, String venueName, String location,
+                String capacity, String price, String bookings,
+                String status, String partnerName, String imageUrl) {
+    this.venue_id = venue_id;
+    this.venueName = venueName;
+    this.location = location;
+    this.capacity = capacity;
+    this.price = price;
+    this.bookings = bookings;
+    this.status = status;
+    this.partnerName = partnerName;
+    this.imageUrl = imageUrl;
+}
+
+public static VenueDTO fromVenue(Venue v) {
+    return new VenueDTO(
+        v.getVenue_id(),
+        v.getVenueName(),
+        v.getLocation(),
+        String.valueOf(v.getCapacity()),
+        String.valueOf(v.getPrice()),
+        String.valueOf(v.getBookings()),
+        v.getStatus(),
+        String.valueOf(v.getImageUrl()),
+        v.getPartner() != null ? v.getPartner().getFullname() : "Unknown"
+        
+    );
+}
+
 	    
-	    public VenueDTO(Long venue_id, String venueName, String location, String capacity, String price, String bookings, String status, String partnerName) {
-	        this.venue_id = venue_id;
-	        this.venueName = venueName;
-	        this.location = location;
-	        this.capacity = capacity;
-	        this.price = price;
-	        this.bookings = bookings;
-	        this.status = status;
-	        this.partnerName = partnerName;
-	    }
 	    
-	    
-	    
+		public Long getPartnerId() {
+	return partnerId;
+}
+
+public void setPartnerId(Long partnerId) {
+	this.partnerId = partnerId;
+}
+
 		public Long getVenue_id() {
 			return venue_id;
 		}
@@ -82,6 +109,14 @@ public class VenueDTO {
 
 		public void setPartnerName(String partnerName) {
 			this.partnerName = partnerName;
+		}
+
+		public String getImageUrl() {
+			return imageUrl;
+		}
+
+		public void setImageUrl(String imageUrl) {
+			this.imageUrl = imageUrl;
 		}
 		
 		

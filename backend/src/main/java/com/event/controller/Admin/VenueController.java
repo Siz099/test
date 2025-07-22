@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +20,7 @@ import com.event.dto.VenueDTO;
 import com.event.model.Partner;
 import com.event.model.Venue;
 import com.event.repository.PartnerRepo;
+import com.event.repository.UserRepo;
 import com.event.repository.VenueRepo;
 
 import org.springframework.ui.Model;
@@ -33,22 +35,39 @@ public class VenueController {
 	
 	@Autowired
 	private PartnerRepo partnerRepo;
-
 	
+	
+	@Autowired
+	private UserRepo userRepo;
 	
 	@GetMapping
-	public List<VenueDTO> getPartnerVenues(Authentication authentication) {
-	    // Get the logged-in partner's email (if email is the principal)
-	    String email = authentication.getName();
+	public List<VenueDTO> getVenues(Authentication authentication) {
+	    if (authentication != null && authentication.isAuthenticated()) {
+	        String email = authentication.getName();
+	        boolean isPartner = authentication.getAuthorities().stream()
+	            .anyMatch(auth -> auth.getAuthority().equals("ROLE_PARTNER"));
 
-	    // Use the email to find the Partner
-	    Partner partner = partnerRepo.findByEmail(email)
-	        .orElseThrow(() -> new RuntimeException("Partner not found"));
+	        if (isPartner) {
+	            Partner partner = partnerRepo.findByEmail(email)
+	                .orElseThrow(() -> new RuntimeException("Partner not found"));
+	            return venueRepo.findByPartner(partner).stream()
+	                .map(v -> new VenueDTO(
+	                    v.getVenue_id(),
+	                    v.getVenueName(),
+	                    v.getLocation(),
+	                    v.getCapacity(),
+	                    v.getPrice(),
+	                    v.getBookings(),
+	                    v.getStatus(),
+	                    v.getImageUrl(),
+	                    partner.getFullname()
+	                ))
+	                .collect(Collectors.toList());
+	        }
+	    }
 
-	    // Find venues belonging to this partner
-	    List<Venue> venues = venueRepo.findByPartner(partner);
-
-	    return venues.stream()
+	    // For anonymous or non-partner users
+	    return venueRepo.findAll().stream()
 	        .map(v -> new VenueDTO(
 	            v.getVenue_id(),
 	            v.getVenueName(),
@@ -57,11 +76,14 @@ public class VenueController {
 	            v.getPrice(),
 	            v.getBookings(),
 	            v.getStatus(),
-	            partner.getFullname()
+	            v.getImageUrl(),
+	            v.getPartner() != null ? v.getPartner().getFullname() : "Unknown"
 	        ))
 	        .collect(Collectors.toList());
 	}
-
+	
+	
+	
 	    @PostMapping("/new")
 	    public Venue saveVenue(@RequestBody Venue venue, Authentication authentication) {
 	        String email = authentication.getName();
@@ -72,6 +94,26 @@ public class VenueController {
 	        venue.setPartner(partner); 
 
 	 
+	        partner.getVenues().add(venue);
+
+	        return venueRepo.save(venue);
+	    }
+	    
+	 
+	    @PostMapping("/add")
+	    @PreAuthorize("hasRole('ADMIN')")
+	    public Venue addVenueByAdmin(@RequestBody VenueDTO request) {
+	        Partner partner = partnerRepo.findById(request.getPartnerId())
+	            .orElseThrow(() -> new RuntimeException("Partner not found"));
+
+	        Venue venue = new Venue();
+	        venue.setVenueName(request.getVenueName());
+	        venue.setLocation(request.getLocation());
+	        venue.setPrice(request.getPrice());
+	        venue.setCapacity(request.getCapacity());
+	        venue.setPartner(partner);
+	        venue.setImageUrl(request.getImageUrl());
+
 	        partner.getVenues().add(venue);
 
 	        return venueRepo.save(venue);
@@ -96,6 +138,7 @@ public class VenueController {
 	                    venue.getPrice(),
 	                    venue.getBookings(),
 	                    venue.getStatus(),
+	                    venue.getImageUrl(),
 	                    venue.getPartner() != null ? venue.getPartner().getFullname() : "Unknown"
 	                );
 	                return ResponseEntity.ok(dto);
@@ -127,6 +170,7 @@ public class VenueController {
 	                    saved.getPrice(),
 	                    saved.getBookings(),
 	                    saved.getStatus(),
+	                    saved.getImageUrl(),
 	                    saved.getPartner() != null ? saved.getPartner().getFullname() : "Unknown"
 	                );
 

@@ -48,13 +48,13 @@ import PartnerEditVenue from "./components/partner/EditVenue";
 import PartnerViewVenue from "./components/partner/ViewVenue";
 import PartnerNotification from "./components/partner/Notification";
 import PartnerProfile from "./components/partner/Profile";
-import { UserSessionProvider } from "./context/UserSessionContext";
+// import { UserSessionProvider } from "./context/UserSessionContext";
 
 function App() {
   const { user, isUserLoggedIn, login, logout } = useUserSession();
 
   return (
-     <UserSessionProvider>
+    //  <UserSessionProvider>
     <BrowserRouter>
       <div className="app">
         <Routes>
@@ -178,7 +178,7 @@ function App() {
           />
 
           {/* Admin Management Pages (Unchanged) */}
-          <Route path="/admin/venues/new" element={<VenueAddTest />} />
+          <Route path="/admin/venues/add" element={<VenueAddTest />} />
           <Route path="/admin/partners/new" element={<PartnerAddTest />} />
           <Route path="/admin/users/edit/:userId" element={<EditUsers />} />
           <Route path="/admin/partners/edit/:partnerId" element={<EditPartner />} />
@@ -222,7 +222,7 @@ function App() {
         </Routes>
       </div>
     </BrowserRouter>
-    </UserSessionProvider>
+    // </UserSessionProvider>
   );
 }
 

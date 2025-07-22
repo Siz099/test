@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import '../../styles/admin/PartnerManagement.css';
-import { venueService } from '../../services/api';
+import { venueService, imageService } from '../../services/api';
 import { useNavigate } from 'react-router-dom';
 
 const VenueManagement = () => {
@@ -10,30 +10,64 @@ const VenueManagement = () => {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
     const [menuOpenId, setMenuOpenId] = useState(null);
+     const [images, setImages] = useState({});
 
   useEffect(() => {
       const fetchVenues = async () => {
     setLoading(true);
-    try {
-      const response = await venueService.listVenue();
-      // Map the response to match the keys your frontend expects
-      const mappedVenues = response.map(v => ({
-        venue_id: v.venue_id,
-        venueName: v.venueName || v.venue_name, // handle both just in case
-        location: v.location,
-        capacity: v.capacity,
-        price: v.price,
-      }));
-      setVenues(mappedVenues);
-    } catch (err) {
-      setError('Failed to fetch venues.');
-      setVenues([]);
-    } finally {
-      setLoading(false);
-    }
-  };
-  fetchVenues();
-}, []);
+   try {
+        const response = await venueService.listVenue();
+
+        // Map venues and set initial state
+        const mappedVenues = response.map(v => ({
+          venue_id: v.venue_id,
+          venueName: v.venueName || v.venue_name,
+          location: v.location,
+          capacity: v.capacity,
+          price: v.price,
+       
+        }));
+
+        setVenues(mappedVenues);
+
+        // Fetch images one by one (or in parallel)
+        const imagePromises = mappedVenues.map(async (venue) => {
+          try {
+            const imageBlob = await imageService.getImage(venue.venue_id);
+            return {
+              venue_id: venue.venue_id,
+              imageUrl: URL.createObjectURL(imageBlob),
+            };
+          } catch {
+            return {
+              venue_id: venue.venue_id,
+              imageUrl: null, 
+            };
+          }
+        });
+
+        const imagesArray = await Promise.all(imagePromises);
+
+        // Convert to an object for easy access
+        const imagesMap = {};
+        imagesArray.forEach(({ venue_id, imageUrl }) => {
+          imagesMap[venue_id] = imageUrl;
+        });
+
+        setImages(imagesMap);
+
+      } catch (err) {
+        console.error(err);
+        setError('Failed to fetch venues or images.');
+        setVenues([]);
+        setImages({});
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchVenues();
+  }, []);
 
   const filteredVenues = venues.filter(venue => {
     const term = searchTerm.toLowerCase();
@@ -107,32 +141,41 @@ const VenueManagement = () => {
             <thead>
               <tr>
                 <th>ID</th>
+                <th>Venue Image</th>
                 <th>Venue Name</th>
+  
                 <th>Location</th>
                 <th>Capacity</th>
                 <th>Price</th>
                 <th>Action</th>
               </tr>
             </thead>
-            <tbody>
-              {filteredVenues.map(venue => (
-                <tr key={venue.venue_id}>
-                  <td>{venue.venue_id}</td>
-                  <td>{venue.venueName}</td>
-                  <td>{venue.location}</td>
-                  <td>{venue.capacity}</td>
-                  <td>{venue.price}</td>
-                  <td className="action-cell">
-                    <button className="action-btn" onClick={() => handleViewVenue(venue)}>
-                      View
-                    </button>
-                    <button className="action-btn" onClick={() => handleEditVenue(venue)}>
-                      Edit
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
+           <tbody>
+  {filteredVenues.map((venue) => (
+    <tr key={venue.venue_id}>
+      <td>{venue.venue_id}</td>
+      <td>
+         {images[venue.venue_id] ? (
+            <img
+              src={images[venue.venue_id]}
+              alt={venue.venueName}
+              style={{ width: 200, height: 'auto' }}
+            />
+          ) : (
+            <div>No image available</div>
+          )}
+      </td>
+      <td>{venue.venueName}</td>
+      <td>{venue.location}</td>
+      <td>{venue.capacity}</td>
+      <td>{venue.price}</td>
+      <td className="action-cell">
+        <button className="action-btn" onClick={() => handleViewVenue(venue)}>View</button>
+        <button className="action-btn" onClick={() => handleEditVenue(venue)}>Edit</button>
+      </td>
+    </tr>
+  ))}
+</tbody>
           </table>
         </div>
       </div>

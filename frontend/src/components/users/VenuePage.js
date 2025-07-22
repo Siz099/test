@@ -3,7 +3,7 @@ import Header from "./Header";
 import Footer from "./Footer";
 import PopularVenues from "./PopularVenues";
 import HeroSection from "./HeroSection";
-import { venueService } from "../../services/api";
+import { venueService, imageService } from "../../services/api";
 import "../../styles/VenuePage.css";
 
 export default function VenuePage() {
@@ -19,52 +19,79 @@ export default function VenuePage() {
   });
 
   useEffect(() => {
+    let isMounted = true;  // to prevent state update if unmounted
+
     const fetchVenues = async () => {
       try {
         setLoading(true);
         const response = await venueService.listVenue();
-        console.log("Venues fetched:", response);
-        
         const venueList = Array.isArray(response) ? response : [];
-        setVenues(venueList);
-        setFilteredVenues(venueList);
-        setError(null);
+        
+        // Fetch images for venues
+        const venuesWithImages = await Promise.all(
+          venueList.map(async (venue, index) => {
+            let imageUrl = '';
+            try {
+              const imageBlob = await imageService.getImage(venue.venue_id);
+              imageUrl = URL.createObjectURL(imageBlob);
+            } catch (imgErr) {
+              console.error(`Error loading image for venue ${venue.venue_id}:`, imgErr);
+              // fallback image if error
+              imageUrl = `https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80`;
+            }
+            return {
+              ...venue,
+              image: imageUrl,
+            };
+          })
+        );
+
+        if (isMounted) {
+          setVenues(venuesWithImages);
+          setFilteredVenues(venuesWithImages);
+          setError(null);
+        }
       } catch (error) {
         console.error("Error fetching venues:", error);
-        setError("Failed to load venues. Please try again later.");
+        if (isMounted) setError("Failed to load venues. Please try again later.");
       } finally {
-        setLoading(false);
+        if (isMounted) setLoading(false);
       }
     };
 
     fetchVenues();
+
+    // Cleanup function to revoke blob URLs when component unmounts
+    return () => {
+      isMounted = false;
+      venues.forEach(v => {
+        if (v.image && v.image.startsWith('blob:')) {
+          URL.revokeObjectURL(v.image);
+        }
+      });
+    };
   }, []);
 
   const handleFilterChange = (filterName, value) => {
     const newFilters = { ...filters, [filterName]: value };
     setFilters(newFilters);
 
-    // Apply filters
     let filtered = venues;
-    
+
     if (newFilters.guests) {
       const guestCount = parseInt(newFilters.guests);
-      filtered = filtered.filter(venue => 
-        parseInt(venue.capacity) >= guestCount
-      );
+      filtered = filtered.filter(venue => parseInt(venue.capacity) >= guestCount);
     }
 
     if (newFilters.venueType && newFilters.venueType !== '') {
-      filtered = filtered.filter(venue => 
+      filtered = filtered.filter(venue =>
         venue.venueName?.toLowerCase().includes(newFilters.venueType.toLowerCase())
       );
     }
 
     if (newFilters.rating && newFilters.rating !== '') {
       const minRating = parseFloat(newFilters.rating);
-      filtered = filtered.filter(venue => 
-        (venue.rating || 4.5) >= minRating
-      );
+      filtered = filtered.filter(venue => (venue.rating || 4.5) >= minRating);
     }
 
     setFilteredVenues(filtered);
@@ -72,7 +99,6 @@ export default function VenuePage() {
 
   const handleSearch = () => {
     console.log("Search triggered with filters:", filters);
-    // Filters are already applied in real-time
   };
 
   if (loading) {
@@ -80,17 +106,8 @@ export default function VenuePage() {
       <div className="venue-page">
         <Header />
         <HeroSection />
-        <div className="container">
-          <div style={{ 
-            display: 'flex', 
-            justifyContent: 'center', 
-            alignItems: 'center', 
-            height: '300px',
-            fontSize: '18px',
-            color: '#666'
-          }}>
-            Loading venues...
-          </div>
+        <div className="container" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '300px', fontSize: '18px', color: '#666' }}>
+          Loading venues...
         </div>
       </div>
     );
@@ -101,32 +118,14 @@ export default function VenuePage() {
       <div className="venue-page">
         <Header />
         <HeroSection />
-        <div className="container">
-          <div style={{ 
-            display: 'flex', 
-            flexDirection: 'column',
-            justifyContent: 'center', 
-            alignItems: 'center', 
-            height: '300px',
-            fontSize: '18px',
-            color: '#e74c3c',
-            textAlign: 'center'
-          }}>
-            <p>{error}</p>
-            <button 
-              onClick={() => window.location.reload()}
-              style={{
-                marginTop: '20px',
-                padding: '10px 20px',
-                backgroundColor: '#ffc107',
-                border: 'none',
-                borderRadius: '5px',
-                cursor: 'pointer'
-              }}
-            >
-              Try Again
-            </button>
-          </div>
+        <div className="container" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', height: '300px', fontSize: '18px', color: '#e74c3c', textAlign: 'center' }}>
+          <p>{error}</p>
+          <button
+            onClick={() => window.location.reload()}
+            style={{ marginTop: '20px', padding: '10px 20px', backgroundColor: '#ffc107', border: 'none', borderRadius: '5px', cursor: 'pointer' }}
+          >
+            Try Again
+          </button>
         </div>
       </div>
     );
@@ -139,7 +138,7 @@ export default function VenuePage() {
       <div className="container">
         {/* Filter Section */}
         <div className="filter-section">
-          <select 
+          <select
             className="dropdown"
             value={filters.guests}
             onChange={(e) => handleFilterChange('guests', e.target.value)}
@@ -150,8 +149,8 @@ export default function VenuePage() {
             <option value="200">200+ Guests</option>
             <option value="500">500+ Guests</option>
           </select>
-          
-          <select 
+
+          <select
             className="dropdown"
             value={filters.venueType}
             onChange={(e) => handleFilterChange('venueType', e.target.value)}
@@ -162,8 +161,8 @@ export default function VenuePage() {
             <option value="conference">Conference</option>
             <option value="banquet">Banquet</option>
           </select>
-          
-          <select 
+
+          <select
             className="dropdown"
             value={filters.spacePreference}
             onChange={(e) => handleFilterChange('spacePreference', e.target.value)}
@@ -173,8 +172,8 @@ export default function VenuePage() {
             <option value="outdoor">Outdoor</option>
             <option value="mixed">Indoor/Outdoor</option>
           </select>
-          
-          <select 
+
+          <select
             className="dropdown"
             value={filters.rating}
             onChange={(e) => handleFilterChange('rating', e.target.value)}
@@ -184,7 +183,7 @@ export default function VenuePage() {
             <option value="4.5">4.5+ Stars</option>
             <option value="5">5 Stars</option>
           </select>
-          
+
           <button className="search-button" onClick={handleSearch}>
             Search
           </button>
@@ -199,12 +198,7 @@ export default function VenuePage() {
         </div>
 
         {filteredVenues.length === 0 ? (
-          <div style={{ 
-            textAlign: 'center', 
-            padding: '50px', 
-            color: '#666',
-            fontSize: '18px'
-          }}>
+          <div style={{ textAlign: 'center', padding: '50px', color: '#666', fontSize: '18px' }}>
             No venues found matching your criteria. Try adjusting your filters.
           </div>
         ) : (
@@ -212,10 +206,10 @@ export default function VenuePage() {
             {filteredVenues.map((venue, index) => (
               <div key={venue.venue_id || index} className="venue-card">
                 <div className="image-container">
-                  <img 
-                    src={`https://images.unsplash.com/photo-${1506744038136 + index}?auto=format&fit=crop&w=600&q=80`} 
-                    alt={venue.venueName || "Venue"} 
-                    className="venue-image" 
+                  <img
+                    src={venue.image || `https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80`}
+                    alt={venue.venueName || "Venue"}
+                    className="venue-image"
                   />
                   <div className="explore-overlay">Explore</div>
                 </div>
@@ -228,7 +222,8 @@ export default function VenuePage() {
                   </div>
                   <div className="price-row">
                     <span className="price">
-                      NPR {venue.price || "15,000"}<span className="price-unit">/hour</span>
+                      NPR {venue.price || "15,000"}
+                      <span className="price-unit">/hour</span>
                     </span>
                   </div>
                   <div className="stars">★★★★★</div>

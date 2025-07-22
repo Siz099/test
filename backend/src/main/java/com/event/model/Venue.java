@@ -19,6 +19,7 @@ public class Venue {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "partner_id") 
+    
     private Partner partner;
 
     private String location;
@@ -30,6 +31,8 @@ public class Venue {
     private String bookings;
 
     private String status;
+    
+    private String imageUrl;
 
     // Getters and setters
 
@@ -96,4 +99,15 @@ public class Venue {
     public void setStatus(String status) {
         this.status = status;
     }
+
+	public String getImageUrl() {
+		return imageUrl;
+	}
+
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
+	}
+    
+    
+    
 }

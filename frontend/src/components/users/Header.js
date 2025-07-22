@@ -191,21 +191,16 @@ export default function Header({ hasNotifications = true, isLoggedIn = false, us
   }
 
   const handleLogout = async () => {
-    try {
-      if (onLogout) {
-        onLogout()
-      } else {
-        localStorage.removeItem("auth_token")
-        localStorage.removeItem("user")
-        // Replace with your navigation method
-        window.location.href = "/home"
-      }
-      setProfileDropdownOpen(false)
-      console.log("Logged out successfully")
-    } catch (error) {
-      console.error("Logout failed:", error)
-    }
+  try {
+    logout();               // <-- Call context logout method here
+    setProfileDropdownOpen(false);
+    window.location.href = "/home"; // Navigate to home or login
+    console.log("Logged out successfully");
+  } catch (error) {
+    console.error("Logout failed:", error);
   }
+};
+
 
   const handleSignInClick = () => {
     // Replace with your navigation method

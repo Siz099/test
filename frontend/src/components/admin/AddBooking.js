@@ -6,6 +6,7 @@ const AddBook = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     venueId: "",
+    partnerName:"",
     date: "",
     status: "",
   });

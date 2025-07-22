@@ -28,6 +28,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
+    	
 
         try {
             if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
@@ -50,7 +51,10 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                     
 
                     if (username != null && role != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-                        List<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_" + role.toUpperCase()));
+                        List<GrantedAuthority> authorities = List.of(
+                            new SimpleGrantedAuthority(role.toLowerCase()),         // "admin"
+                            new SimpleGrantedAuthority("ROLE_" + role.toUpperCase()) // "ROLE_ADMIN"
+                        );
 
                         UsernamePasswordAuthenticationToken auth =
                                 new UsernamePasswordAuthenticationToken(username, null, authorities);
@@ -58,6 +62,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                         SecurityContextHolder.getContext().setAuthentication(auth);
 
                         System.out.println("[JwtRequestFilter] Authentication set for user: " + username);
+                    
                     } else {
                         System.out.println("[JwtRequestFilter] Authentication not set: username or role null or authentication already exists");
                     }
@@ -75,4 +80,6 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             chain.doFilter(request, response);
         }
     }
+    
+    
 }

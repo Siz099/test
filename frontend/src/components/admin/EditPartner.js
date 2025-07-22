@@ -1,24 +1,24 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { partnerService } from '../../services/api';
-
+import '../../styles/admin/EditUsers.css';
 
 const EditPartner = () => {
   const { partnerId } = useParams();
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
-    fullname: "",
-    email: "",
-    phoneNumber: "",
-    company: "",
-    panCard: "",
-    businessTranscripts: "",
-    status: "",
+    fullname: '',
+    email: '',
+    phoneNumber: '',
+    company: '',
+    panCard: '',
+    businessTranscripts: '',
+    status: '',
   });
 
   const [errors, setErrors] = useState({});
-  const [apiError, setApiError] = useState("");
+  const [apiError, setApiError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
@@ -26,16 +26,16 @@ const EditPartner = () => {
       try {
         const data = await partnerService.getPartner(partnerId);
         setFormData({
-          fullname: data.fullname || "",
-          email: data.email || "",
-          phoneNumber: data.phoneNumber || "",
-          company: data.company || "",
-          panCard: data.panCard || "",
-          businessTranscripts: data.businessTranscripts || "",
-          status: data.status || "",
+          fullname: data.fullname || '',
+          email: data.email || '',
+          phoneNumber: data.phoneNumber || '',
+          company: data.company || '',
+          panCard: data.panCard || '',
+          businessTranscripts: data.businessTranscripts || '',
+          status: data.status || '',
         });
       } catch {
-        setApiError("Failed to load partner data");
+        setApiError('Failed to load partner data');
       }
     };
     fetchPartner();
@@ -48,18 +48,13 @@ const EditPartner = () => {
 
   const validate = () => {
     const errs = {};
-    if (!formData.fullname.trim()) errs.fullname = "Full name is required";
-    if (
-      !formData.email.trim() ||
-      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)
-    )
-      errs.email = "Valid email is required";
-    if (!formData.phoneNumber.trim()) errs.phoneNumber = "Phone number is required";
-    if (!formData.company.trim()) errs.company = "Company is required";
-    if (!formData.panCard.trim()) errs.panCard = "PAN Card is required";
-    if (!formData.businessTranscripts.trim())
-      errs.businessTranscripts = "Business transcripts are required";
-
+    if (!formData.fullname.trim()) errs.fullname = 'Full name is required';
+    if (!formData.email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email))
+      errs.email = 'Valid email is required';
+    if (!formData.phoneNumber.trim()) errs.phoneNumber = 'Phone number is required';
+    if (!formData.company.trim()) errs.company = 'Company is required';
+    if (!formData.panCard.trim()) errs.panCard = 'PAN Card is required';
+    if (!formData.businessTranscripts.trim()) errs.businessTranscripts = 'Business transcripts are required';
     setErrors(errs);
     return Object.keys(errs).length === 0;
   };
@@ -67,70 +62,154 @@ const EditPartner = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validate()) return;
-
     setIsSubmitting(true);
-    setApiError("");
-
+    setApiError('');
     try {
       await partnerService.editPartner(partnerId, formData);
-      navigate("/admin/partners");
+      navigate('/admin/partners');
     } catch {
-      setApiError("Failed to update partner");
+      setApiError('Failed to update partner');
     } finally {
       setIsSubmitting(false);
     }
   };
 
   if (apiError)
-    return <div style={{ color: "red", maxWidth: 600, margin: "auto" }}>{apiError}</div>;
+    return <div className="edit-user-error" role="alert">{apiError}</div>;
 
   return (
-    <form onSubmit={handleSubmit} style={{ maxWidth: 600, margin: "auto" }}>
-      <h2>Edit Partner</h2>
+    <div className="edit-user-container">
+      <form onSubmit={handleSubmit} className="edit-user-form" autoComplete="off" aria-label="Edit Partner Form">
+        <fieldset className="edit-user-fieldset">
+          <legend>Edit Partner</legend>
 
-      <label>Full Name</label>
-      <input name="fullname" value={formData.fullname} onChange={handleChange} />
-      {errors.fullname && <span style={{ color: "red" }}>{errors.fullname}</span>}
+          {/* Full Name */}
+          <div className="edit-user-form-group">
+            <label htmlFor="fullname">Full Name</label>
+            <input
+              id="fullname"
+              name="fullname"
+              type="text"
+              value={formData.fullname}
+              onChange={handleChange}
+              placeholder="Enter full name"
+              aria-invalid={!!errors.fullname}
+              aria-describedby={errors.fullname ? 'fullname-error' : undefined}
+              className={errors.fullname ? 'input-error' : ''}
+            />
+            {errors.fullname && <span className="edit-user-error" id="fullname-error">{errors.fullname}</span>}
+          </div>
 
-      <label>Email</label>
-      <input name="email" value={formData.email} onChange={handleChange} />
-      {errors.email && <span style={{ color: "red" }}>{errors.email}</span>}
+          {/* Email */}
+          <div className="edit-user-form-group">
+            <label htmlFor="email">Email</label>
+            <input
+              id="email"
+              name="email"
+              type="email"
+              value={formData.email}
+              onChange={handleChange}
+              placeholder="Enter email address"
+              aria-invalid={!!errors.email}
+              aria-describedby={errors.email ? 'email-error' : undefined}
+              className={errors.email ? 'input-error' : ''}
+            />
+            {errors.email && <span className="edit-user-error" id="email-error">{errors.email}</span>}
+          </div>
 
-      <label>Phone Number</label>
-      <input name="phoneNumber" value={formData.phoneNumber} onChange={handleChange} />
-      {errors.phoneNumber && <span style={{ color: "red" }}>{errors.phoneNumber}</span>}
+          {/* Phone Number */}
+          <div className="edit-user-form-group">
+            <label htmlFor="phoneNumber">Phone Number</label>
+            <input
+              id="phoneNumber"
+              name="phoneNumber"
+              type="tel"
+              value={formData.phoneNumber}
+              onChange={handleChange}
+              placeholder="Enter phone number"
+              aria-invalid={!!errors.phoneNumber}
+              aria-describedby={errors.phoneNumber ? 'phoneNumber-error' : undefined}
+              className={errors.phoneNumber ? 'input-error' : ''}
+            />
+            {errors.phoneNumber && <span className="edit-user-error" id="phoneNumber-error">{errors.phoneNumber}</span>}
+          </div>
 
-      <label>Company</label>
-      <input name="company" value={formData.company} onChange={handleChange} />
-      {errors.company && <span style={{ color: "red" }}>{errors.company}</span>}
+          {/* Company */}
+          <div className="edit-user-form-group">
+            <label htmlFor="company">Company</label>
+            <input
+              id="company"
+              name="company"
+              type="text"
+              value={formData.company}
+              onChange={handleChange}
+              placeholder="Enter company name"
+              aria-invalid={!!errors.company}
+              aria-describedby={errors.company ? 'company-error' : undefined}
+              className={errors.company ? 'input-error' : ''}
+            />
+            {errors.company && <span className="edit-user-error" id="company-error">{errors.company}</span>}
+          </div>
 
-      <label>PAN Card</label>
-      <input name="panCard" value={formData.panCard} onChange={handleChange} />
-      {errors.panCard && <span style={{ color: "red" }}>{errors.panCard}</span>}
+          {/* PAN Card */}
+          <div className="edit-user-form-group">
+            <label htmlFor="panCard">PAN Card</label>
+            <input
+              id="panCard"
+              name="panCard"
+              type="text"
+              value={formData.panCard}
+              onChange={handleChange}
+              placeholder="Enter PAN card number"
+              aria-invalid={!!errors.panCard}
+              aria-describedby={errors.panCard ? 'panCard-error' : undefined}
+              className={errors.panCard ? 'input-error' : ''}
+            />
+            {errors.panCard && <span className="edit-user-error" id="panCard-error">{errors.panCard}</span>}
+          </div>
 
-      <label>Business Transcripts</label>
-      <input
-        name="businessTranscripts"
-        value={formData.businessTranscripts}
-        onChange={handleChange}
-      />
-      {errors.businessTranscripts && (
-        <span style={{ color: "red" }}>{errors.businessTranscripts}</span>
-      )}
+          {/* Business Transcripts */}
+          <div className="edit-user-form-group">
+            <label htmlFor="businessTranscripts">Business Transcripts</label>
+            <input
+              id="businessTranscripts"
+              name="businessTranscripts"
+              type="text"
+              value={formData.businessTranscripts}
+              onChange={handleChange}
+              placeholder="Enter business transcripts"
+              aria-invalid={!!errors.businessTranscripts}
+              aria-describedby={errors.businessTranscripts ? 'businessTranscripts-error' : undefined}
+              className={errors.businessTranscripts ? 'input-error' : ''}
+            />
+            {errors.businessTranscripts && <span className="edit-user-error" id="businessTranscripts-error">{errors.businessTranscripts}</span>}
+          </div>
 
-      <label>Status</label>
-      <select name="status" value={formData.status} onChange={handleChange}>
-        <option value="">Select Status</option>
-        <option value="Pending">Pending</option>
-        <option value="Verified">Verified</option>
-        <option value="Inactive">Inactive</option>
-        <option value="Rejected">Rejected</option>
-      </select>
+          {/* Status */}
+          <div className="edit-user-form-group">
+            <label htmlFor="status">Status</label>
+            <select
+              id="status"
+              name="status"
+              value={formData.status}
+              onChange={handleChange}
+              aria-invalid={!!errors.status}
+              className={errors.status ? 'input-error' : ''}
+            >
+              <option value="">Select Status</option>
+              <option value="Pending">Pending</option>
+              <option value="Verified">Verified</option>
+              <option value="Inactive">Inactive</option>
+              <option value="Rejected">Rejected</option>
+            </select>
+          </div>
 
-      <button type="submit" disabled={isSubmitting} style={{ marginTop: 12 }}>
-        {isSubmitting ? "Saving..." : "Save Changes"}
-      </button>
-    </form>
+          <button type="submit" className="edit-user-submit-btn" disabled={isSubmitting} aria-busy={isSubmitting}>
+            {isSubmitting ? 'Saving...' : 'Save Changes'}
+          </button>
+        </fieldset>
+      </form>
+    </div>
   );
 };
 

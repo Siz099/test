@@ -7,35 +7,51 @@ import BrowseByCategory from "./BrowseByCategory";
 import PopularVenues from "./PopularVenues";
 import ReviewsSection from "./ReviewsSection";
 import Footer from "./Footer";
-import { venueService } from "../../services/api";
+import { venueService,imageService } from "../../services/api";
 import "../../styles/HomePage.css";
 
 const HomePage = () => {
   const [venues, setVenues] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+const [images, setImages] = useState({});
 
   useEffect(() => {
-    const fetchTopVenues = async () => {
-      try {
-        setLoading(true);
-        const response = await venueService.listVenue();
-        console.log("Top venues fetched:", response);
-        
-        // Get top 8 venues for homepage display
-        const topVenues = Array.isArray(response) ? response.slice(0, 8) : [];
-        setVenues(topVenues);
-        setError(null);
-      } catch (error) {
-        console.error("Error fetching top venues:", error);
-        setError("Failed to load venues. Please try again later.");
-      } finally {
-        setLoading(false);
-      }
-    };
+   const fetchTopVenues = async () => {
+    try {
+      setLoading(true);
+      const response = await venueService.listVenue();
+      const topVenues = Array.isArray(response) ? response.slice(0, 8) : [];
+      setVenues(topVenues);
+      setError(null);
 
-    fetchTopVenues();
-  }, []);
+      // Fetch images for each venue
+      const imagePromises = topVenues.map(async (venue) => {
+        try {
+          const imageBlob = await imageService.getImage(venue.venue_id);
+          return { venue_id: venue.venue_id, imageUrl: URL.createObjectURL(imageBlob) };
+        } catch {
+          return { venue_id: venue.venue_id, imageUrl: null };
+        }
+      });
+
+      const imagesArray = await Promise.all(imagePromises);
+      const imageMap = {};
+      imagesArray.forEach(({ venue_id, imageUrl }) => {
+        imageMap[venue_id] = imageUrl;
+      });
+
+      setImages(imageMap);
+    } catch (error) {
+      console.error("Error fetching top venues:", error);
+      setError("Failed to load venues. Please try again later.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchTopVenues();
+}, []);
 
   if (loading) {
     return (

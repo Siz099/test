@@ -2,45 +2,52 @@
 
 import { useState, useEffect } from "react";
 import VenueGrid from "./VenueGrid";
-import { venueService } from "../../services/api";
-
-const BrowseByCategory = ({ venues: propVenues }) => {
-  const [currentPage, setCurrentPage] = useState(1);
+import { venueService, imageService } from "../../services/api";
+const BrowseByCategory = ({ propVenues }) => {
   const [venues, setVenues] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
     const fetchCategoryVenues = async () => {
-      // If venues are passed as props, use them
-      if (propVenues && propVenues.length > 0) {
-        const categoryVenues = propVenues.map((venue, index) => ({
-          id: venue.venue_id || index + 1,
-          name: venue.venueName || "Venue",
-          image: `https://images.unsplash.com/photo-${1506744038136 + index}?auto=format&fit=crop&w=400&q=80`,
-        }));
-        setVenues(categoryVenues);
-        return;
-      }
-
-      // Otherwise fetch from API
+      setLoading(true);
       try {
-        setLoading(true);
-        const response = await venueService.listVenue();
-        console.log("Category venues fetched:", response);
-        
-        const venueList = Array.isArray(response) ? response : [];
-        const categoryVenues = venueList.map((venue, index) => ({
-          id: venue.venue_id || index + 1,
-          name: venue.venueName || "Venue",
-          image: `https://images.unsplash.com/photo-${1506744038136 + index}?auto=format&fit=crop&w=400&q=80`,
-        }));
-        
-        setVenues(categoryVenues);
+        const venueList = propVenues && propVenues.length > 0
+          ? propVenues
+          : await venueService.listVenue();
+
+        if (!Array.isArray(venueList)) throw new Error('Invalid venue data');
+
+        // Fetch images for each venue asynchronously
+        const venuesWithImages = await Promise.all(
+          venueList.map(async (venue, index) => {
+            let imageUrl = '';
+
+            try {
+              // Fetch image blob via your API proxy
+              const imageBlob = await imageService.getImage(venue.venue_id);
+              // Convert blob to object URL for <img> src
+              imageUrl = URL.createObjectURL(imageBlob);
+            } catch (imgError) {
+              console.error(`Error loading image for venue ${venue.venue_id}:`, imgError);
+              // Fallback to default image if fetching fails
+              imageUrl = `https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80`;
+            }
+
+            return {
+              id: venue.venue_id || index + 1,
+              name: venue.venueName || "Venue",
+              image: imageUrl,
+            };
+          })
+        );
+
+        setVenues(venuesWithImages);
         setError(null);
       } catch (error) {
         console.error("Error fetching category venues:", error);
-        // Use fallback data
+        // Fallback data if the whole fetch fails
         const fallbackVenues = [
           {
             id: 1,
@@ -71,6 +78,15 @@ const BrowseByCategory = ({ venues: propVenues }) => {
     };
 
     fetchCategoryVenues();
+
+    // Cleanup to revoke object URLs when component unmounts or venues change
+    return () => {
+      venues.forEach(v => {
+        if (v.image && v.image.startsWith('blob:')) {
+          URL.revokeObjectURL(v.image);
+        }
+      });
+    };
   }, [propVenues]);
 
   const handlePageChange = (page) => {

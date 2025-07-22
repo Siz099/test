@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { userService } from '../../services/api';
+import '../../styles/admin/EditUsers.css';
 const EditUser = () => {
 
   const { userId } = useParams();
@@ -92,63 +93,88 @@ const EditUser = () => {
     }
   };
 
-  if (apiError) return <div style={{ color: 'red' }}>{apiError}</div>;
+  if (apiError) return <div className="edit-user-error" role="alert">{apiError}</div>;
 
   return (
-    <form onSubmit={handleSubmit} style={{ maxWidth: 500, margin: 'auto' }}>
-      <h2>Edit User</h2>
+    <div className="edit-user-container">
+      <form onSubmit={handleSubmit} className="edit-user-form" autoComplete="off" aria-label="Edit User Form">
+        <fieldset className="edit-user-fieldset">
+          <legend>Edit User</legend>
 
-      {/* fullname, email, role */}
-      {['fullname', 'email','phoneNumber'].map(field => (
-        <div key={field}>
-          <label>{field.charAt(0).toUpperCase() + field.slice(1)}</label>
-          <input
-            name={field}
-            value={formData[field]}
-            onChange={handleChange}
-          />
-          {errors[field] && <span style={{ color: 'red' }}>{errors[field]}</span>}
-        </div>
-      ))}
-
-      {/* <div>
-        <label>Role</label>
-        <select name="role" value={formData.role} onChange={handleChange}>
-          <option value="">Select role</option>
-          <option value="ADMIN">Admin</option>
-          <option value="ATTENDEE">Attendee</option>
-          <option value="PARTNER">Partner</option>
-        </select>
-        {errors.role && <span style={{ color: 'red' }}>{errors.role}</span>}
-      </div> */}
-
-      {/* Show partner-specific fields */}
-      {formData.role === 'PARTNER' && (
-        <>
-          {['company', 'panCard', 'businessTranscripts'].map(field => (
-            <div key={field}>
-              <label>
-                {field
-                  .replace(/([A-Z])/g, ' $1')
-                  .replace(/^./, str => str.toUpperCase())}
-              </label>
+          {/* fullname, email, phoneNumber */}
+          {[{name:'fullname', label:'Full Name', type:'text', placeholder:'Enter full name'},
+            {name:'email', label:'Email', type:'email', placeholder:'Enter email address'},
+            {name:'phoneNumber', label:'Phone Number', type:'tel', placeholder:'Enter phone number'}].map(field => (
+            <div className="edit-user-form-group" key={field.name}>
+              <label htmlFor={field.name}>{field.label}</label>
               <input
-                name={field}
-                value={formData[field]}
+                id={field.name}
+                name={field.name}
+                type={field.type}
+                value={formData[field.name]}
                 onChange={handleChange}
+                placeholder={field.placeholder}
+                aria-invalid={!!errors[field.name]}
+                aria-describedby={errors[field.name] ? `${field.name}-error` : undefined}
+                className={errors[field.name] ? 'input-error' : ''}
               />
-              {errors[field] && (
-                <span style={{ color: 'red' }}>{errors[field]}</span>
-              )}
+              {errors[field.name] && <span className="edit-user-error" id={`${field.name}-error`}>{errors[field.name]}</span>}
             </div>
           ))}
-        </>
-      )}
 
-      <button type="submit" disabled={isSubmitting}>
-        {isSubmitting ? 'Saving...' : 'Save Updates'}
-      </button>
-    </form>
+          <div className="edit-user-form-group">
+            <label htmlFor="role">Role</label>
+            <select
+              id="role"
+              name="role"
+              value={formData.role}
+              onChange={handleChange}
+              aria-invalid={!!errors.role}
+              aria-describedby={errors.role ? 'role-error' : undefined}
+              className={errors.role ? 'input-error' : ''}
+            >
+              <option value="">Select role</option>
+              <option value="ADMIN">Admin</option>
+              <option value="ATTENDEE">Attendee</option>
+              <option value="PARTNER">Partner</option>
+            </select>
+            {errors.role && <span className="edit-user-error" id="role-error">{errors.role}</span>}
+          </div>
+
+          {/* Show partner-specific fields */}
+          {formData.role === 'PARTNER' && (
+            <>
+              {[{name:'company', label:'Company', placeholder:'Enter company name'},
+                {name:'panCard', label:'PAN Card', placeholder:'Enter PAN card number'},
+                {name:'businessTranscripts', label:'Business Transcripts', placeholder:'Enter business transcripts'}].map(field => (
+                <div className="edit-user-form-group" key={field.name}>
+                  <label htmlFor={field.name}>{field.label}</label>
+                  <input
+                    id={field.name}
+                    name={field.name}
+                    value={formData[field.name]}
+                    onChange={handleChange}
+                    placeholder={field.placeholder}
+                    aria-invalid={!!errors[field.name]}
+                    aria-describedby={errors[field.name] ? `${field.name}-error` : undefined}
+                    className={errors[field.name] ? 'input-error' : ''}
+                  />
+                  {errors[field.name] && (
+                    <span className="edit-user-error" id={`${field.name}-error`}>
+                      {errors[field.name]}
+                    </span>
+                  )}
+                </div>
+              ))}
+            </>
+          )}
+
+          <button type="submit" className="edit-user-submit-btn" disabled={isSubmitting} aria-busy={isSubmitting}>
+            {isSubmitting ? 'Saving...' : 'Save Updates'}
+          </button>
+        </fieldset>
+      </form>
+    </div>
   );
 };
 

@@ -1,12 +1,16 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { venueService } from '../../services/api';
+import { venueService,imageService } from '../../services/api';
+
 
 const VenueManagement = () => {
   const [venues, setVenues] = useState([]);
   const [menuOpenId, setMenuOpenId] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
   const menuRef = useRef();
   const navigate = useNavigate();
+    const [images, setImages] = useState({});
 
   // Close menu on click outside
   React.useEffect(() => {
@@ -44,7 +48,7 @@ const VenueManagement = () => {
   };
 
 const handleAdd = (id) => {
-     navigate('/admin/venues/new');
+     navigate('/admin/venues/add');
     setMenuOpenId(null); 
   };
 
@@ -69,17 +73,61 @@ const handleAdd = (id) => {
 
 
 useEffect(() => {
-  const fetchVenues = async () => {
-    try {
-      const data = await venueService.listVenue();
+    const fetchVenues = async () => {
+    setLoading(true);
+   try {
+        const response = await venueService.listVenue();
 
-      setVenues(data);
-    } catch (error) {
-      console.error("Failed to fetch venues", error);
-    }
-  };
-  fetchVenues();
-}, []);
+        // Map venues and set initial state
+        const mappedVenues = response.map(v => ({
+          venue_id: v.venue_id,
+          venueName: v.venueName || v.venue_name,
+          location: v.location,
+          capacity: v.capacity,
+          price: v.price,
+       
+        }));
+
+        setVenues(mappedVenues);
+
+        // Fetch images one by one (or in parallel)
+        const imagePromises = mappedVenues.map(async (venue) => {
+          try {
+            const imageBlob = await imageService.getImage(venue.venue_id);
+            return {
+              venue_id: venue.venue_id,
+              imageUrl: URL.createObjectURL(imageBlob),
+            };
+          } catch {
+            return {
+              venue_id: venue.venue_id,
+              imageUrl: null, 
+            };
+          }
+        });
+
+        const imagesArray = await Promise.all(imagePromises);
+
+        // Convert to an object for easy access
+        const imagesMap = {};
+        imagesArray.forEach(({ venue_id, imageUrl }) => {
+          imagesMap[venue_id] = imageUrl;
+        });
+
+        setImages(imagesMap);
+
+      } catch (err) {
+        console.error(err);
+        setError('Failed to fetch venues or images.');
+        setVenues([]);
+        setImages({});
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchVenues();
+  }, []);
 
 
   
@@ -97,6 +145,7 @@ useEffect(() => {
         <thead>
           <tr style={{ background: '#f7f7f7', textAlign: 'left' }}>
             <th style={{ padding: 10 }}>ID</th>
+            <th>Venue Image</th>
             <th style={{ padding: 10 }}>Venue Name</th>
             <th style={{ padding: 10 }}>Partner</th>
             <th style={{ padding: 10 }}>Location</th>
@@ -111,6 +160,17 @@ useEffect(() => {
   {venues.map((venue) => (
     <tr key={venue.venue_id} style={{ borderBottom: '1px solid #eee' }}>
       <td style={{ padding: 10 }}>{venue.venue_id}</td>
+      <td>
+         {images[venue.venue_id] ? (
+            <img
+              src={images[venue.venue_id]}
+              alt={venue.venueName}
+              style={{ width: 200, height: 'auto' }}
+            />
+          ) : (
+            <div>No image available</div>
+          )}
+      </td>
       <td style={{ padding: 10 }}>{venue.venueName}</td>
       <td style={{ padding: 10 }}>{venue.partnerName}</td>
       <td style={{ padding: 10 }}>{venue.location}</td>

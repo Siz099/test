@@ -1,0 +1,112 @@
+.edit-user-container {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+  padding: 2.5rem 2rem;
+  margin: 2rem auto;
+  max-width: 480px;
+}
+
+.edit-user-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+  align-items: stretch;
+}
+
+.edit-user-fieldset {
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+
+.edit-user-fieldset legend {
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  color: #2d3748;
+  text-align: center;
+}
+
+.edit-user-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.edit-user-form-group label {
+  font-weight: 500;
+  color: #374151;
+  margin-bottom: 0.2rem;
+}
+
+.edit-user-form-group input,
+.edit-user-form-group select {
+  padding: 0.6rem 0.9rem;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 6px;
+  font-size: 1.0rem;
+  background: #f9fafb;
+  transition: border 0.2s, box-shadow 0.2s;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.edit-user-form-group input:focus,
+.edit-user-form-group select:focus {
+  border-color: #6366f1;
+  outline: none;
+  box-shadow: 0 0 0 2px #6366f133;
+}
+
+.input-error {
+  border-color: #ef4444 !important;
+  background: #fef2f2;
+}
+
+.edit-user-error {
+  color: #ef4444;
+  font-size: 0.97rem;
+  margin-top: 0.1rem;
+  font-weight: 500;
+}
+
+.edit-user-submit-btn {
+  margin-top: 1.2rem;
+  padding: 0.55rem 1.3rem;
+  background: #111;
+  color: #fff;
+  font-size: 0.98rem;
+  font-family: 'Inter', 'Segoe UI', 'Roboto', 'Arial Rounded MT Bold', Arial, sans-serif;
+  font-weight: 600;
+  border: none;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s, transform 0.1s;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  letter-spacing: 0.04em;
+  display: inline-block;
+}
+
+.edit-user-submit-btn:hover:not(:disabled) {
+  background: #222;
+  transform: translateY(-1px) scale(1.03);
+  box-shadow: 0 4px 18px rgba(0,0,0,0.12);
+}
+
+.edit-user-submit-btn:disabled {
+  background: #a5b4fc;
+  cursor: not-allowed;
+  opacity: 0.7;
+  box-shadow: none;
+}
+
+@media (max-width: 600px) {
+  .edit-user-container {
+    padding: 1.2rem 0.5rem;
+    max-width: 98vw;
+  }
+  .edit-user-fieldset legend {
+    font-size: 1.3rem;
+  }
+} 

@@ -48,12 +48,11 @@ api.interceptors.response.use(
 const authService = {
   login: async (credentials) => {
     const response = await api.post("/auth/login", credentials);
-    
-    localStorage.setItem("jwtToken", Response.token);
     if (response.data.token) {
       localStorage.setItem("jwtToken", response.data.token);
-    }
-    return response.data;
+}
+return response.data;
+
   },
 
   signup: async (userData) => {
@@ -92,6 +91,17 @@ const venueService = {
   return response.data;
 },
 
+ addVenueA: async (venueData) => {
+  const token = localStorage.getItem("jwtToken");
+  console.log("Sending token:", token);
+  const response = await api.post("/venues/add", venueData, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  });
+  return response.data;
+},
+
   getVenue: async (id) => {
     try {
       const token = localStorage.getItem('jwtToken');
@@ -106,11 +116,15 @@ const venueService = {
     }
   },
 
-
-  listVenue: async () => {
-    const response = await api.get("/venues");
-    return response.data;
-  },
+listVenue: async () => {
+  const token = localStorage.getItem('jwtToken');
+  const response = await api.get("/venues", {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  });
+  return response.data;
+},
 
   deleteVenue: async (id) => {
     const response = await api.delete(`/venues/delete/${id}`);
@@ -235,16 +249,17 @@ console.log('JWT Token:', token);
 };
 
 const partnerService = {
-listPartners: async () => {
-  try {
-    const response = await api.get("/admin/partners");
-    console.log("API response data:", response.data);
-   
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
-},
+  
+ listPartners: async () => {
+    try {
+      const response = await api.get("/admin/partners");
+      console.log("API response data:", response.data);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
+  
   getPartner: async (id) => {
     try {
       const response = await api.get(`/admin/partners/${id}`);
@@ -291,7 +306,7 @@ listPartners: async () => {
   },
 };
 
-export { api, authService, venueService, userService, partnerService,profileService };
+export { api, authService, venueService, userService, partnerService,profileService ,imageService};
 
 // Contact API service
 const contactService = {
@@ -353,21 +368,15 @@ const notificationService = {
 
 const bookingService = {
 
-  createBooking: async (bookingData) => {
-    try {
-      const token = localStorage.getItem('jwtToken');
-      console.log('token:', token);
-      const response = await api.post("/admin/bookings/new", bookingData, {
-        headers: {
-          Authorization: `Bearer ${token}`
-       
-        }
-      });
-      return response.data;
-    } catch (error) {
-      throw error;
+ createBooking: async (payload) => {
+  const token = localStorage.getItem("jwtToken");
+  const response = await api.post("/bookings/new", payload, {
+    headers: {
+      Authorization: `Bearer ${token}`
     }
-  },
+  });
+  return response.data;
+},
 
    listBooking: async () => {
     try {
@@ -419,6 +428,23 @@ const profileService = {
   }
 };
 
+const imageService = {
+  getImage: async (venue_id) => {
+    const token = localStorage.getItem('jwtToken');
+
+    try {
+      const headers = token ? { Authorization: `Bearer ${token}` } : {};
+      const response = await api.get(`/proxy/image?venue_id=${venue_id}`, {
+        headers,
+        responseType: 'blob',
+      });
+      return response.data;  // blob data
+    } catch (error) {
+      console.error('Error fetching image:', error);
+      throw error;
+    }
+  },
+};
 
 
 

@@ -34,28 +34,45 @@ public class SecurityConfig {
         
     }
     
-    
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(csrf -> csrf.disable()) 
+            .csrf(csrf -> csrf.disable())
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .authorizeHttpRequests(auth -> auth
-            		.requestMatchers(HttpMethod.GET, "/venues/**","/profile", "/profile/**","/api/stats","/api/stats/**").hasAnyRole("ADMIN", "ATTENDEE", "PARTNER")
-            		.requestMatchers("/user/**").hasRole("ATTENDEE")
-            	    .requestMatchers("/admin/**").hasRole("ADMIN")
-            	    .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-            	    .requestMatchers("/auth/**", "/users/**", "/partners/**","/bookings/**").permitAll()
-            	    .requestMatchers("/static/**", "/images/**").permitAll()
-            	    .anyRequest().authenticated()
-            	
-           
-            )
-            .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+                    // Allow all GET requests for these endpoints (anonymous access)
+                    .requestMatchers(HttpMethod.GET, "/venues", "/proxy/image", "/proxy/image/**").permitAll()
+                    
+                    // Allow OPTIONS for all (preflight)
+                    .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                    
+                    // Allow static and images folder access
+                    .requestMatchers("/static/**", "/images/**").permitAll()
+                    
+                    // Restricted endpoints needing roles
+                    .requestMatchers(HttpMethod.GET, "/profile", "/profile/**", "/api/stats", "/api/stats/**", "/venues/**")
+                        .hasAnyRole("ADMIN", "ATTENDEE", "PARTNER")
+                    
+                    .requestMatchers("/venues/new", "/venues/add")
+                        .hasAnyRole("ADMIN", "PARTNER")
+                    
+                    .requestMatchers("/user/**")
+                        .hasRole("ATTENDEE")
+                    
+                    .requestMatchers("/admin/**")
+                        .hasRole("ADMIN")
+                    
+                    // Permit auth, users, partners, bookings (if you want anonymous access)
+                    .requestMatchers("/auth/**", "/users/**", "/partners/**", "/bookings/**", "/venues/add", "/venues")
+                        .permitAll()
+                    
+                    // All other requests require authentication
+                    .anyRequest().authenticated()
+                )
+                .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
-
-
+    
 	    @Bean
 	    public CorsConfigurationSource corsConfigurationSource() {
 	        CorsConfiguration config = new CorsConfiguration();
